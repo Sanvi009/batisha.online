@@ -1,1 +1,516 @@
-heloo
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>FreshGrocer · Online Grocery Store</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #f0fdf4 100%);
+      min-height: 100vh;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      color: #1a2e1a;
+    }
+
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #166534;
+      text-decoration: none;
+    }
+
+    .logo span {
+      background: #22c55e;
+      color: white;
+      padding: 0.2rem 0.6rem;
+      border-radius: 0.7rem;
+      font-size: 1.3rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #374151;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #16a34a;
+    }
+
+    .cart-icon {
+      background: #22c55e;
+      color: white;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .cart-icon:hover {
+      background: #16a34a;
+      transform: scale(1.05);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #166534 0%, #15803d 50%, #166534 100%);
+      color: white;
+      text-align: center;
+      padding: 4rem 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -1px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #166534;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(34, 197, 94, 0.1);
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(34, 197, 94, 0.2);
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      background: #f0fdf4;
+      border-bottom: 2px solid #dcfce7;
+    }
+
+    .product-image-placeholder {
+      width: 100%;
+      height: 240px;
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      color: #16a34a;
+    }
+
+    .product-info {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .product-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1a2e1a;
+      line-height: 1.3;
+    }
+
+    .product-description {
+      color: #6b7280;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #f0fdf4;
+    }
+
+    .product-price {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #16a34a;
+    }
+
+    .product-price::before {
+      content: '₹';
+    }
+
+    .add-to-cart-btn {
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 1.5rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .add-to-cart-btn:hover {
+      background: #16a34a;
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(34, 197, 94, 0.3);
+    }
+
+    .loading-container {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .spinner-large {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #dcfce7;
+      border-top-color: #22c55e;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-container {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: #fef2f2;
+      border-radius: 1.5rem;
+      border: 2px solid #fecaca;
+      margin: 2rem 0;
+    }
+
+    .error-container h3 {
+      color: #991b1b;
+      margin-bottom: 0.5rem;
+    }
+
+    .retry-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 0.7rem 2rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #6b7280;
+    }
+
+    .empty-state .emoji {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer {
+      background: #166534;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .nav-container { flex-direction: column; text-align: center; }
+      .products-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+    }
+
+    @media (max-width: 480px) {
+      .hero { padding: 2.5rem 1rem; }
+      .hero h1 { font-size: 1.5rem; }
+      .container { padding: 0 1rem 2rem; }
+      .products-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <span>🥬</span> FreshGrocer
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="#products">Products</a>
+        <a href="#contact">Contact</a>
+        <button class="cart-icon">🛒 Cart (0)</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1>Fresh Groceries Delivered</h1>
+    <p>Farm-fresh products straight to your doorstep. Quality you can trust.</p>
+  </header>
+
+  <main class="container" id="products">
+    <h2 class="section-title">🛍️ Our Products</h2>
+
+    <div id="loadingState" class="loading-container">
+      <div class="spinner-large"></div>
+      <p style="color: #6b7280; font-weight: 500;">Loading fresh products...</p>
+    </div>
+
+    <div id="errorState" class="error-container" style="display: none;">
+      <h3>😕 Oops! Something went wrong</h3>
+      <p style="color: #6b7280; margin-top: 0.5rem;">We couldn't load the products. Please try again.</p>
+      <button class="retry-btn" onclick="location.reload()">🔄 Retry</button>
+    </div>
+
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <div class="emoji">📦</div>
+      <h3>No products available yet</h3>
+      <p>Check back soon for fresh groceries!</p>
+    </div>
+
+    <div id="productsGrid" class="products-grid" style="display: none;"></div>
+  </main>
+
+  <footer class="footer" id="contact">
+    <p>© 2026 FreshGrocer. All rights reserved.</p>
+    <p style="opacity: 0.8; margin-top: 0.5rem;">📞 Contact: support@freshgrocer.com</p>
+  </footer>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // --------------------------------------------------------------
+      // 🔐 SECURE CONFIGURATION
+      // --------------------------------------------------------------
+      // NO HARDCODED KEYS!
+      // Everything is fetched from /api/config which reads Vercel Env Vars
+      // --------------------------------------------------------------
+
+      let supabaseUrl = null;
+      let supabaseAnonKey = null;
+      const TABLE_NAME = 'groceries';
+
+      const loadingState = document.getElementById('loadingState');
+      const errorState = document.getElementById('errorState');
+      const emptyState = document.getElementById('emptyState');
+      const productsGrid = document.getElementById('productsGrid');
+
+      /**
+       * Fetch Supabase configuration from secure API
+       */
+      async function fetchConfig() {
+        try {
+          const response = await fetch('/api/config');
+          
+          if (!response.ok) {
+            throw new Error('Failed to load configuration');
+          }
+
+          const config = await response.json();
+
+          if (!config.supabaseUrl || !config.supabaseAnonKey) {
+            throw new Error('Invalid configuration received');
+          }
+
+          supabaseUrl = config.supabaseUrl;
+          supabaseAnonKey = config.supabaseAnonKey;
+
+          return true;
+        } catch (error) {
+          console.error('Config error:', error);
+          showState('error');
+          return false;
+        }
+      }
+
+      /**
+       * Fetch products from Supabase
+       */
+      async function fetchProducts() {
+        try {
+          showState('loading');
+
+          const response = await fetch(
+            `${supabaseUrl}/rest/v1/${TABLE_NAME}?select=*&order=id.desc`,
+            {
+              method: 'GET',
+              headers: {
+                'apikey': supabaseAnonKey,
+                'Authorization': `Bearer ${supabaseAnonKey}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const products = await response.json();
+
+          if (!products || products.length === 0) {
+            showState('empty');
+            return;
+          }
+
+          renderProducts(products);
+          showState('products');
+
+        } catch (error) {
+          console.error('Error fetching products:', error);
+          showState('error');
+        }
+      }
+
+      function renderProducts(products) {
+        productsGrid.innerHTML = '';
+        products.forEach(product => {
+          productsGrid.appendChild(createProductCard(product));
+        });
+      }
+
+      function createProductCard(product) {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+
+        const imageContent = product.image_url 
+          ? `<img src="${escapeHtml(product.image_url)}" alt="${escapeHtml(product.title)}" class="product-image" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'">`
+          : `<div class="product-image-placeholder">🥬</div>`;
+
+        card.innerHTML = `
+          ${imageContent}
+          <div class="product-info">
+            <h3 class="product-title">${escapeHtml(product.title || 'Untitled Product')}</h3>
+            <p class="product-description">${escapeHtml(product.description || 'No description available')}</p>
+            <div class="product-footer">
+              <span class="product-price">${parseFloat(product.price || 0).toFixed(2)}</span>
+              <button class="add-to-cart-btn" onclick="alert('Added to cart! (Demo)')">🛒 Add</button>
+            </div>
+          </div>
+        `;
+
+        return card;
+      }
+
+      function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      function showState(state) {
+        loadingState.style.display = 'none';
+        errorState.style.display = 'none';
+        emptyState.style.display = 'none';
+        productsGrid.style.display = 'none';
+
+        switch (state) {
+          case 'loading': loadingState.style.display = 'block'; break;
+          case 'error': errorState.style.display = 'block'; break;
+          case 'empty': emptyState.style.display = 'block'; break;
+          case 'products': productsGrid.style.display = 'grid'; break;
+        }
+      }
+
+      async function init() {
+        console.log('🛒 FreshGrocer: Loading...');
+        
+        const configLoaded = await fetchConfig();
+        if (configLoaded) {
+          await fetchProducts();
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', init);
+    })();
+  </script>
+</body>
+</html>
