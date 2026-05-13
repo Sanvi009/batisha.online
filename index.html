@@ -387,7 +387,7 @@
 
       let supabaseUrl = null;
       let supabaseAnonKey = null;
-      const TABLE_NAME = 'product';
+      const TABLE_NAME = 'product'; // Your actual table name
 
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
@@ -395,54 +395,33 @@
       const emptyState = document.getElementById('emptyState');
       const productsGrid = document.getElementById('productsGrid');
 
-      /**
-       * Show detailed error
-       */
       function showDetailedError(message) {
         errorDetails.textContent = message;
         showState('error');
       }
 
-      /**
-       * Fetch Supabase configuration from secure API
-       */
       async function fetchConfig() {
         try {
-          console.log('🔧 Fetching config from /api/config...');
+          console.log('🔧 Fetching config...');
           
           const response = await fetch('/api/config');
           
-          console.log('📡 Config response status:', response.status);
-
           if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(
-              `Config API failed (Status: ${response.status})\n` +
-              `Response: ${errorText}\n\n` +
-              `👉 Make sure api/config.js exists and Vercel env vars are set:\n` +
-              `   - SUPABASE_URL\n` +
-              `   - SUPABASE_ANON_KEY`
-            );
+            throw new Error(`Config API failed (Status: ${response.status})\n${errorText}`);
           }
 
           const config = await response.json();
-          console.log('✅ Config loaded successfully');
-
+          
           if (!config.supabaseUrl || !config.supabaseAnonKey) {
-            throw new Error(
-              `Missing values in config response:\n` +
-              `supabaseUrl: ${config.supabaseUrl || 'MISSING'}\n` +
-              `supabaseAnonKey: ${config.supabaseAnonKey ? 'PRESENT' : 'MISSING'}\n\n` +
-              `👉 Check Vercel Environment Variables`
-            );
+            throw new Error('Missing Supabase configuration');
           }
 
           supabaseUrl = config.supabaseUrl;
           supabaseAnonKey = config.supabaseAnonKey;
           
-          console.log('📍 Supabase URL:', supabaseUrl);
-          console.log('🔑 Anon key length:', supabaseAnonKey.length, 'characters');
-
+          console.log('✅ Config loaded');
+          console.log('URL:', supabaseUrl);
           return true;
         } catch (error) {
           console.error('❌ Config error:', error);
@@ -451,53 +430,100 @@
         }
       }
 
-      /**
-       * Fetch products from Supabase
-       */
       async function fetchProducts() {
         try {
           showState('loading');
 
-          const url = `${supabaseUrl}/rest/v1/${TABLE_NAME}?select=*&order=id.desc`;
-          console.log('🔗 Fetching products from:', url);
+          // --------------------------------------------------------------
+          // STEP 1: Try to fetch ALL columns (no specific column selection)
+          // This will show us exactly what columns exist
+          // --------------------------------------------------------------
+          const url = `${supabaseUrl}/rest/v1/${TABLE_NAME}?select=*`;
+          console.log('🔗 Fetching from:', url);
 
           const response = await fetch(url, {
             method: 'GET',
             headers: {
               'apikey': supabaseAnonKey,
               'Authorization': `Bearer ${supabaseAnonKey}`,
-              'Content-Type': 'application/json',
             },
           });
 
-          console.log('📡 Products response status:', response.status);
+          console.log('📡 Response status:', response.status);
+          
+          // Get the raw text first for debugging
+          const responseText = await response.text();
+          console.log('📄 Raw response:', responseText);
 
           if (!response.ok) {
-            const errorText = await response.text();
             throw new Error(
               `Supabase API failed (Status: ${response.status})\n` +
-              `Response: ${errorText}\n\n` +
-              `👉 Check:\n` +
-              `   1. Table name: "${TABLE_NAME}" exists?\n` +
-              `   2. Columns: id, title, description, price, image_url?\n` +
-              `   3. Row Level Security (RLS) enabled?\n` +
-              `   4. Anon key has SELECT permission?`
+              `Response: ${responseText}\n\n` +
+              `🔍 DEBUG INFO:\n` +
+              `URL called: ${url}\n` +
+              `Table: ${TABLE_NAME}\n` +
+              `Check: Does table '${TABLE_NAME}' exist in Supabase?`
             );
           }
 
-          const products = await response.json();
-          console.log('✅ Products fetched:', products.length);
+          // Try to parse the JSON
+          let products = [];
+          try {
+            products = JSON.parse(responseText);
+          } catch (e) {
+            throw new Error(
+              `Failed to parse response as JSON\n` +
+              `Response: ${responseText}\n\n` +
+              `This usually means the table name is wrong or RLS is blocking access.`
+            );
+          }
 
+          console.log('✅ Products found:', products.length);
+          console.log('📦 First product sample:', products[0]);
+
+          // --------------------------------------------------------------
+          // STEP 2: Check if we got data
+          // --------------------------------------------------------------
           if (!products || products.length === 0) {
-            showState('empty');
+            // Show empty state with debug info
+            showDetailedError(
+              `✅ API call SUCCESS but NO products returned\n\n` +
+              `🔍 DEBUG INFO:\n` +
+              `- Table '${TABLE_NAME}' exists and is accessible\n` +
+              `- But it contains 0 rows\n` +
+              `- Have you added products via Supabase dashboard?\n` +
+              `- Check: Supabase → Table Editor → ${TABLE_NAME}`
+            );
             return;
           }
 
+          // --------------------------------------------------------------
+          // STEP 3: Check if required columns exist
+          // --------------------------------------------------------------
+          const firstProduct = products[0];
+          const missingColumns = [];
+          
+          if (!('title' in firstProduct)) missingColumns.push('title');
+          if (!('description' in firstProduct)) missingColumns.push('description');
+          if (!('price' in firstProduct)) missingColumns.push('price');
+          
+          if (missingColumns.length > 0) {
+            const availableColumns = Object.keys(firstProduct);
+            throw new Error(
+              `❌ MISSING COLUMNS: ${missingColumns.join(', ')}\n\n` +
+              `Available columns in your table: ${availableColumns.join(', ')}\n\n` +
+              `👉 Your table has different column names!\n` +
+              `Expected: title, description, price, image_url\n` +
+              `Found: ${availableColumns.join(', ')}`
+            );
+          }
+
+          // All good - render products
           renderProducts(products);
           showState('products');
 
         } catch (error) {
-          console.error('❌ Products error:', error);
+          console.error('❌ Error:', error);
           showDetailedError(error.message);
         }
       }
@@ -514,14 +540,14 @@
         card.className = 'product-card';
 
         const imageContent = product.image_url 
-          ? `<img src="${escapeHtml(product.image_url)}" alt="${escapeHtml(product.title)}" class="product-image" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'">`
+          ? `<img src="${escapeHtml(product.image_url)}" alt="${escapeHtml(product.title)}" class="product-image" onerror="this.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'">`
           : `<div class="product-image-placeholder">🥬</div>`;
 
         card.innerHTML = `
           ${imageContent}
           <div class="product-info">
-            <h3 class="product-title">${escapeHtml(product.title || 'Untitled Product')}</h3>
-            <p class="product-description">${escapeHtml(product.description || 'No description available')}</p>
+            <h3 class="product-title">${escapeHtml(product.title || 'No Title')}</h3>
+            <p class="product-description">${escapeHtml(product.description || 'No description')}</p>
             <div class="product-footer">
               <span class="product-price">${parseFloat(product.price || 0).toFixed(2)}</span>
               <button class="add-to-cart-btn" onclick="alert('Added to cart! (Demo)')">🛒 Add</button>
@@ -563,6 +589,8 @@
 
       window.addEventListener('DOMContentLoaded', init);
     })();
-  </script>
+</script>
+
+  
 </body>
 </html>
