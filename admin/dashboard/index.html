@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard · Grocery Admin</title>
   <style>
+    /* ----- HIDE EVERYTHING BY DEFAULT ----- */
+    /* Content only becomes visible after JS confirms auth */
+    html.auth-checking body,
+    html:not(.auth-verified) body {
+      display: none !important;
+    }
+
+    /* Only show when authenticated */
+    html.auth-verified body {
+      display: flex !important;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -97,17 +109,17 @@
       'use strict';
 
       // --------------------------------------------------------------
-      // 🛡️ SESSION PROTECTION
+      // 🛡️ IMMEDIATE SESSION CHECK (BEFORE ANY RENDERING)
       // --------------------------------------------------------------
-      // This runs BEFORE anything else.
-      // If no valid session exists, redirect to login immediately.
+      // This runs SYNCHRONOUSLY before DOM is fully built.
+      // If no session, redirect happens BEFORE browser paints anything.
       // --------------------------------------------------------------
       
       const SESSION_KEY = 'grocery_admin_session';
       const LOGIN_PATH = '/admin';
 
       /**
-       * Check if user has valid session
+       * Check session validity
        * Returns true if valid, false otherwise
        */
       function hasValidSession() {
@@ -120,64 +132,57 @@
 
           const parsed = JSON.parse(sessionData);
 
-          // Validate session structure
           if (!parsed || parsed.loggedIn !== true || !parsed.timestamp) {
             localStorage.removeItem(SESSION_KEY);
             return false;
           }
 
-          // Optional: Check session expiry (24 hours)
-          const SESSION_MAX_AGE = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+          // Check session expiry (24 hours)
+          const SESSION_MAX_AGE = 24 * 60 * 60 * 1000;
           const now = Date.now();
           
           if (now - parsed.timestamp > SESSION_MAX_AGE) {
-            // Session expired
             localStorage.removeItem(SESSION_KEY);
             return false;
           }
 
           return true;
         } catch (error) {
-          // If any error, clear and return false
           localStorage.removeItem(SESSION_KEY);
           return false;
         }
       }
 
-      /**
-       * Protect the page
-       * Redirect to login if no valid session
-       */
-      function protectPage() {
-        if (!hasValidSession()) {
-          // ❌ No valid session - redirect to login
-          window.location.href = LOGIN_PATH;
-          return false;
-        }
-        return true;
+      // --------------------------------------------------------------
+      // 🔒 CRITICAL: Check session IMMEDIATELY (synchronously)
+      // This runs before the browser renders ANYTHING
+      // --------------------------------------------------------------
+      if (!hasValidSession()) {
+        // ❌ NO VALID SESSION - Redirect NOW (no flash)
+        // Using location.replace() prevents back button from showing this page
+        window.location.replace(LOGIN_PATH);
+        // Stop all further execution
+        throw new Error('Unauthorized');
       }
+
+      // --------------------------------------------------------------
+      // ✅ SESSION VALID - Now safe to show content
+      // Add class to <html> to make body visible
+      // --------------------------------------------------------------
+      document.documentElement.classList.add('auth-verified');
 
       /**
        * Handle logout
        */
       function handleLogout() {
-        // Clear session
         localStorage.removeItem(SESSION_KEY);
-        
-        // Redirect to login page
-        window.location.href = LOGIN_PATH;
+        window.location.replace(LOGIN_PATH);
       }
 
       /**
        * Initialize dashboard
        */
       function init() {
-        // 🛡️ PROTECT THE PAGE FIRST
-        if (!protectPage()) {
-          return; // Stop execution if redirecting
-        }
-
-        // ✅ User is authenticated - show dashboard
         console.log('✅ Dashboard: User authenticated');
 
         // Attach logout handler
@@ -186,15 +191,21 @@
           logoutButton.addEventListener('click', handleLogout);
         }
 
-        // Optional: Prevent back button after logout
+        // Prevent back button after logout
         window.addEventListener('pageshow', function(event) {
-          // If page is loaded from cache (back button), re-check session
-          if (event.persisted || window.performance && window.performance.navigation.type === 2) {
+          if (event.persisted) {
             if (!hasValidSession()) {
-              window.location.href = LOGIN_PATH;
+              window.location.replace(LOGIN_PATH);
             }
           }
         });
+
+        // Additional security: Check session periodically
+        setInterval(function() {
+          if (!hasValidSession()) {
+            handleLogout();
+          }
+        }, 5000); // Check every 5 seconds
       }
 
       // Run when DOM is ready
