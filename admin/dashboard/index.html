@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard · Admin Panel</title>
   <style>
-    /* ----- HIDE EVERYTHING UNTIL AUTH VERIFIED ----- */
+    /* ----- HIDE UNTIL AUTH VERIFIED ----- */
     html:not(.auth-verified) body {
       display: none !important;
     }
@@ -135,12 +135,152 @@
       background: rgba(107, 114, 128, 0.4);
     }
 
+    .btn-submit {
+      background: #14b8a6;
+      color: #0a1c1a;
+      padding: 0.7rem 2rem;
+      font-size: 0.9rem;
+    }
+
+    .btn-submit:hover {
+      background: #2dd4bf;
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     /* ----- MAIN CONTAINER ----- */
     .main-container {
       max-width: 1300px;
       width: 100%;
       margin: 0 auto;
       padding: 2rem;
+    }
+
+    /* ----- ADD PRODUCT FORM ----- */
+    .form-container {
+      background: rgba(18, 25, 30, 0.95);
+      border: 1px solid rgba(45, 212, 191, 0.2);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      display: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .form-container.active {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #f0f5f2;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: #9abfb5;
+    }
+
+    .form-input {
+      background: #162026;
+      border: 1px solid #2f4247;
+      color: #ebf2ef;
+      padding: 0.7rem 1rem;
+      border-radius: 0.8rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: #2dd4bf;
+      box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
+    }
+
+    textarea.form-input {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .file-upload-wrapper {
+      position: relative;
+    }
+
+    .file-upload-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #162026;
+      border: 2px dashed #2f4247;
+      border-radius: 0.8rem;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #9abfb5;
+    }
+
+    .file-upload-label:hover {
+      border-color: #2dd4bf;
+      color: #5ee3d0;
+    }
+
+    .file-upload-label input[type="file"] {
+      display: none;
+    }
+
+    .image-preview {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 0.8rem;
+      margin-top: 0.5rem;
+      display: none;
+      border: 2px solid rgba(45, 212, 191, 0.3);
+    }
+
+    .image-preview.active {
+      display: block;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      grid-column: 1 / -1;
     }
 
     /* ----- TABLE ----- */
@@ -189,7 +329,6 @@
       border-bottom: none;
     }
 
-    /* ----- EDITABLE INPUTS ----- */
     .editable-input {
       background: #162026;
       border: 1px solid #2f4247;
@@ -233,7 +372,6 @@
       font-size: 1.2rem;
     }
 
-    /* ----- LOADING / ERROR ----- */
     .loading-container {
       text-align: center;
       padding: 3rem;
@@ -253,18 +391,21 @@
       to { transform: rotate(360deg); }
     }
 
-    .success-toast {
+    .toast {
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      background: #22c55e;
-      color: white;
       padding: 0.8rem 1.5rem;
       border-radius: 2rem;
       font-weight: 600;
       animation: slideIn 0.3s ease;
       z-index: 1000;
+      display: none;
+      color: white;
     }
+
+    .toast.success { background: #22c55e; }
+    .toast.error { background: #ef4444; }
 
     @keyframes slideIn {
       from { transform: translateX(100%); opacity: 0; }
@@ -277,8 +418,11 @@
       color: #6b8780;
     }
 
-    /* ----- RESPONSIVE ----- */
     @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
       .dashboard-header {
         flex-direction: column;
         align-items: flex-start;
@@ -303,13 +447,51 @@
       <span class="badge">Admin Panel</span>
     </div>
     <div style="display: flex; gap: 0.8rem; align-items: center;">
-      <a href="/admin/dashboard/add-product" class="btn btn-add">➕ Add Product</a>
+      <button class="btn btn-add" id="toggleFormBtn">➕ Add Product</button>
       <button class="btn btn-logout" id="logoutButton">🚪 Logout</button>
     </div>
   </header>
 
   <!-- ----- MAIN CONTENT ----- -->
   <main class="main-container">
+    <!-- Add Product Form -->
+    <div id="addProductForm" class="form-container">
+      <h2 class="form-title">📦 Add New Product</h2>
+      <form id="productForm" class="form-grid">
+        <div class="form-group">
+          <label for="productTitle">Title *</label>
+          <input type="text" id="productTitle" class="form-input" placeholder="Product name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="productPrice">Price (₹) *</label>
+          <input type="number" id="productPrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+        </div>
+        
+        <div class="form-group full-width">
+          <label for="productDescription">Description</label>
+          <textarea id="productDescription" class="form-input" placeholder="Product description..."></textarea>
+        </div>
+        
+        <div class="form-group full-width">
+          <label>Product Image</label>
+          <div class="file-upload-wrapper">
+            <label class="file-upload-label" for="productImage">
+              📁 Choose Image
+              <input type="file" id="productImage" accept="image/*">
+            </label>
+            <span id="fileName" style="color: #9abfb5; font-size: 0.85rem; margin-left: 0.5rem;"></span>
+          </div>
+          <img id="imagePreview" class="image-preview" src="" alt="Preview">
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-submit" id="submitBtn">💾 Save Product</button>
+          <button type="button" class="btn btn-cancel" id="cancelFormBtn">✖ Cancel</button>
+        </div>
+      </form>
+    </div>
+
     <!-- Loading -->
     <div id="loadingState" class="loading-container">
       <div class="spinner"></div>
@@ -325,7 +507,7 @@
     <!-- Empty -->
     <div id="emptyState" class="loading-container" style="display: none;">
       <p style="color: #6b8780;">📦 No products yet</p>
-      <a href="/admin/dashboard/add-product" class="btn btn-add" style="margin-top: 1rem;">➕ Add Your First Product</a>
+      <button class="btn btn-add" id="emptyAddBtn" style="margin-top: 1rem;">➕ Add Your First Product</button>
     </div>
 
     <!-- Table -->
@@ -347,7 +529,7 @@
   </main>
 
   <!-- Toast -->
-  <div id="toast" class="success-toast" style="display: none;"></div>
+  <div id="toast" class="toast"></div>
 
   <script>
     (function() {
@@ -368,8 +550,7 @@
             localStorage.removeItem(SESSION_KEY);
             return false;
           }
-          const SESSION_MAX_AGE = 24 * 60 * 60 * 1000;
-          if (Date.now() - parsed.timestamp > SESSION_MAX_AGE) {
+          if (Date.now() - parsed.timestamp > 24 * 60 * 60 * 1000) {
             localStorage.removeItem(SESSION_KEY);
             return false;
           }
@@ -388,37 +569,45 @@
       document.documentElement.classList.add('auth-verified');
 
       // --------------------------------------------------------------
-      // 🔧 SUPABASE CONFIG
+      // 🔧 CONFIG
       // --------------------------------------------------------------
       let supabaseUrl = null;
       let supabaseAnonKey = null;
       const TABLE_NAME = 'product';
+      const BUCKET_NAME = 'product';
 
-      // DOM elements
+      const addProductForm = document.getElementById('addProductForm');
+      const productForm = document.getElementById('productForm');
+      const toggleFormBtn = document.getElementById('toggleFormBtn');
+      const cancelFormBtn = document.getElementById('cancelFormBtn');
+      const emptyAddBtn = document.getElementById('emptyAddBtn');
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
       const emptyState = document.getElementById('emptyState');
       const tableContainer = document.getElementById('tableContainer');
       const tableBody = document.getElementById('tableBody');
       const toast = document.getElementById('toast');
+      const imagePreview = document.getElementById('imagePreview');
+      const fileName = document.getElementById('fileName');
+      const productImage = document.getElementById('productImage');
+      const submitBtn = document.getElementById('submitBtn');
 
-      // Track which row is being edited
       let editingRowId = null;
       let allProducts = [];
+      let selectedFile = null;
 
       // --------------------------------------------------------------
       // TOAST
       // --------------------------------------------------------------
-      function showToast(message) {
+      function showToast(message, type = 'success') {
         toast.textContent = message;
+        toast.className = `toast ${type}`;
         toast.style.display = 'block';
-        setTimeout(() => {
-          toast.style.display = 'none';
-        }, 2500);
+        setTimeout(() => { toast.style.display = 'none'; }, 3000);
       }
 
       // --------------------------------------------------------------
-      // FETCH CONFIG
+      // CONFIG
       // --------------------------------------------------------------
       async function fetchConfig() {
         try {
@@ -429,7 +618,7 @@
           supabaseAnonKey = config.supabaseAnonKey;
           return true;
         } catch (e) {
-          console.error('Config error:', e);
+          showToast('Failed to load configuration', 'error');
           return false;
         }
       }
@@ -440,29 +629,22 @@
       async function fetchProducts() {
         try {
           showState('loading');
-
           const response = await fetch(`${supabaseUrl}/rest/v1/${TABLE_NAME}?select=*&order=id.asc`, {
             headers: {
               'apikey': supabaseAnonKey,
               'Authorization': `Bearer ${supabaseAnonKey}`,
             },
           });
-
-          if (!response.ok) throw new Error('Failed to fetch');
-
+          if (!response.ok) throw new Error('Fetch failed');
           const products = await response.json();
           allProducts = products;
-
           if (!products || products.length === 0) {
             showState('empty');
             return;
           }
-
           renderTable(products);
           showState('table');
-
         } catch (e) {
-          console.error('Fetch error:', e);
           showState('error');
         }
       }
@@ -472,17 +654,12 @@
       // --------------------------------------------------------------
       function renderTable(products) {
         tableBody.innerHTML = '';
-
         products.forEach(product => {
           const row = document.createElement('tr');
           row.setAttribute('data-id', product.id);
           row.innerHTML = `
             <td>#${product.id}</td>
-            <td>
-              ${product.image_url 
-                ? `<img src="${escapeHtml(product.image_url)}" class="product-thumb" onerror="this.parentElement.innerHTML='<div class=\\'no-image\\'>🥬</div>'">` 
-                : '<div class="no-image">🥬</div>'}
-            </td>
+            <td>${product.image_url ? `<img src="${escapeHtml(product.image_url)}" class="product-thumb" onerror="this.parentElement.innerHTML='<div class=\\'no-image\\'>🥬</div>'">` : '<div class="no-image">🥬</div>'}</td>
             <td class="cell-title">${escapeHtml(product.title || '—')}</td>
             <td class="cell-description">${escapeHtml(product.description || '—')}</td>
             <td class="cell-price">₹${parseFloat(product.price || 0).toFixed(2)}</td>
@@ -495,54 +672,194 @@
       }
 
       // --------------------------------------------------------------
-      // START EDIT (called from onclick)
+      // IMAGE UPLOAD
+      // --------------------------------------------------------------
+      async function uploadImage(file) {
+        const timestamp = Date.now();
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${timestamp}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const response = await fetch(`${supabaseUrl}/storage/v1/object/${BUCKET_NAME}/${filePath}`, {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseAnonKey,
+            'Authorization': `Bearer ${supabaseAnonKey}`,
+            'Content-Type': file.type,
+          },
+          body: file,
+        });
+
+        if (!response.ok) {
+          const error = await response.text();
+          throw new Error(`Upload failed: ${error}`);
+        }
+
+        // Return public URL
+        return `${supabaseUrl}/storage/v1/object/public/${BUCKET_NAME}/${filePath}`;
+      }
+
+      // --------------------------------------------------------------
+      // ADD PRODUCT
+      // --------------------------------------------------------------
+      productForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('productTitle').value.trim();
+        const price = parseFloat(document.getElementById('productPrice').value) || 0;
+        const description = document.getElementById('productDescription').value.trim();
+
+        if (!title) {
+          showToast('Title is required!', 'error');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Saving...';
+
+        try {
+          let imageUrl = null;
+
+          // Upload image if selected
+          if (selectedFile) {
+            imageUrl = await uploadImage(selectedFile);
+          }
+
+          // Insert into Supabase
+          const response = await fetch(`${supabaseUrl}/rest/v1/${TABLE_NAME}`, {
+            method: 'POST',
+            headers: {
+              'apikey': supabaseAnonKey,
+              'Authorization': `Bearer ${supabaseAnonKey}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation',
+            },
+            body: JSON.stringify({
+              title: title,
+              price: price,
+              description: description,
+              image_url: imageUrl,
+            }),
+          });
+
+          if (!response.ok) {
+            const error = await response.text();
+            throw new Error(`Insert failed: ${error}`);
+          }
+
+          showToast('✅ Product added successfully!');
+          
+          // Reset form
+          productForm.reset();
+          selectedFile = null;
+          imagePreview.classList.remove('active');
+          imagePreview.src = '';
+          fileName.textContent = '';
+          
+          // Hide form and refresh
+          addProductForm.classList.remove('active');
+          toggleFormBtn.textContent = '➕ Add Product';
+          
+          // Refresh products
+          await fetchProducts();
+
+        } catch (error) {
+          console.error('Error:', error);
+          showToast('Failed to add product: ' + error.message, 'error');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '💾 Save Product';
+        }
+      });
+
+      // --------------------------------------------------------------
+      // TOGGLE FORM
+      // --------------------------------------------------------------
+      function showForm() {
+        addProductForm.classList.add('active');
+        toggleFormBtn.textContent = '✖ Close Form';
+        document.getElementById('productTitle').focus();
+      }
+
+      function hideForm() {
+        addProductForm.classList.remove('active');
+        toggleFormBtn.textContent = '➕ Add Product';
+        productForm.reset();
+        selectedFile = null;
+        imagePreview.classList.remove('active');
+        imagePreview.src = '';
+        fileName.textContent = '';
+      }
+
+      toggleFormBtn.addEventListener('click', () => {
+        if (addProductForm.classList.contains('active')) {
+          hideForm();
+        } else {
+          showForm();
+        }
+      });
+
+      cancelFormBtn.addEventListener('click', hideForm);
+      
+      if (emptyAddBtn) {
+        emptyAddBtn.addEventListener('click', showForm);
+      }
+
+      // Image preview
+      productImage.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          selectedFile = file;
+          fileName.textContent = file.name;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            imagePreview.src = event.target.result;
+            imagePreview.classList.add('active');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          selectedFile = null;
+          fileName.textContent = '';
+          imagePreview.classList.remove('active');
+          imagePreview.src = '';
+        }
+      });
+
+      // --------------------------------------------------------------
+      // EDIT PRODUCT
       // --------------------------------------------------------------
       window.startEdit = function(productId) {
         if (editingRowId !== null) {
-          // Cancel any existing edit first
           window.cancelEdit(editingRowId);
         }
-
         editingRowId = productId;
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
-
         const row = document.querySelector(`tr[data-id="${productId}"]`);
         if (!row) return;
 
-        // Replace cells with inputs
         row.querySelector('.cell-title').innerHTML = `<input type="text" class="editable-input edit-title" value="${escapeHtml(product.title || '')}">`;
         row.querySelector('.cell-description').innerHTML = `<input type="text" class="editable-input edit-description" value="${escapeHtml(product.description || '')}">`;
         row.querySelector('.cell-price').innerHTML = `<input type="number" class="editable-input edit-price" value="${product.price || 0}" step="0.01">`;
-
-        // Replace action buttons
         row.querySelector('.actions-cell').innerHTML = `
           <button class="btn btn-save" onclick="window.saveEdit(${productId})">💾 Save</button>
           <button class="btn btn-cancel" onclick="window.cancelEdit(${productId})">✖ Cancel</button>
         `;
       };
 
-      // --------------------------------------------------------------
-      // CANCEL EDIT
-      // --------------------------------------------------------------
       window.cancelEdit = function(productId) {
         editingRowId = null;
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
-
         const row = document.querySelector(`tr[data-id="${productId}"]`);
         if (!row) return;
 
-        // Restore original values
         row.querySelector('.cell-title').innerHTML = escapeHtml(product.title || '—');
         row.querySelector('.cell-description').innerHTML = escapeHtml(product.description || '—');
         row.querySelector('.cell-price').innerHTML = `₹${parseFloat(product.price || 0).toFixed(2)}`;
         row.querySelector('.actions-cell').innerHTML = `<button class="btn btn-edit" onclick="window.startEdit(${productId})">✏️ Edit</button>`;
       };
 
-      // --------------------------------------------------------------
-      // SAVE EDIT
-      // --------------------------------------------------------------
       window.saveEdit = async function(productId) {
         const row = document.querySelector(`tr[data-id="${productId}"]`);
         if (!row) return;
@@ -551,24 +868,22 @@
         const descriptionInput = row.querySelector('.edit-description');
         const priceInput = row.querySelector('.edit-price');
 
-        if (!titleInput || !descriptionInput || !priceInput) return;
+        if (!titleInput || !priceInput) return;
 
         const updatedTitle = titleInput.value.trim();
-        const updatedDescription = descriptionInput.value.trim();
+        const updatedDescription = descriptionInput ? descriptionInput.value.trim() : '';
         const updatedPrice = parseFloat(priceInput.value) || 0;
 
         if (!updatedTitle) {
-          alert('Title is required!');
+          showToast('Title is required!', 'error');
           return;
         }
 
-        // Save button loading state
         const saveBtn = row.querySelector('.btn-save');
-        saveBtn.textContent = '⏳ Saving...';
+        saveBtn.textContent = '⏳...';
         saveBtn.disabled = true;
 
         try {
-          // Update in Supabase
           const response = await fetch(`${supabaseUrl}/rest/v1/${TABLE_NAME}?id=eq.${productId}`, {
             method: 'PATCH',
             headers: {
@@ -584,11 +899,8 @@
             }),
           });
 
-          if (!response.ok) {
-            throw new Error('Update failed');
-          }
+          if (!response.ok) throw new Error('Update failed');
 
-          // Update local data
           const productIndex = allProducts.findIndex(p => p.id === productId);
           if (productIndex !== -1) {
             allProducts[productIndex].title = updatedTitle;
@@ -596,18 +908,16 @@
             allProducts[productIndex].price = updatedPrice;
           }
 
-          // Restore row to view mode
           editingRowId = null;
           row.querySelector('.cell-title').innerHTML = escapeHtml(updatedTitle);
           row.querySelector('.cell-description').innerHTML = escapeHtml(updatedDescription);
           row.querySelector('.cell-price').innerHTML = `₹${updatedPrice.toFixed(2)}`;
           row.querySelector('.actions-cell').innerHTML = `<button class="btn btn-edit" onclick="window.startEdit(${productId})">✏️ Edit</button>`;
 
-          showToast('✅ Product updated successfully!');
+          showToast('✅ Product updated!');
 
         } catch (error) {
-          console.error('Save error:', error);
-          alert('Failed to update product. Please try again.');
+          showToast('Update failed', 'error');
           saveBtn.textContent = '💾 Save';
           saveBtn.disabled = false;
         }
@@ -627,7 +937,6 @@
         errorState.style.display = 'none';
         emptyState.style.display = 'none';
         tableContainer.style.display = 'none';
-
         switch (state) {
           case 'loading': loadingState.style.display = 'block'; break;
           case 'error': errorState.style.display = 'block'; break;
@@ -636,9 +945,6 @@
         }
       }
 
-      // --------------------------------------------------------------
-      // LOGOUT
-      // --------------------------------------------------------------
       function handleLogout() {
         localStorage.removeItem(SESSION_KEY);
         window.location.replace(LOGIN_PATH);
@@ -649,18 +955,11 @@
       // --------------------------------------------------------------
       async function init() {
         document.getElementById('logoutButton').addEventListener('click', handleLogout);
-
-        // Check session periodically
-        setInterval(() => {
-          if (!hasValidSession()) handleLogout();
-        }, 5000);
+        setInterval(() => { if (!hasValidSession()) handleLogout(); }, 5000);
 
         const configOk = await fetchConfig();
-        if (configOk) {
-          await fetchProducts();
-        } else {
-          showState('error');
-        }
+        if (configOk) await fetchProducts();
+        else showState('error');
       }
 
       window.addEventListener('DOMContentLoaded', init);
