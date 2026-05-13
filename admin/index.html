@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Admin · Grocery</title>
+  <style>
+    /* ----- GLOBAL RESET & DARK MODERN BASE ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at 20% 10%, #1e2a2f, #0c1419);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      padding: 1.5rem;
+      margin: 0;
+      color: #e3e9e5;
+    }
+
+    /* ----- MODERN CARD with subtle glass effect ----- */
+    .login-card {
+      background: rgba(18, 25, 30, 0.9);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(70, 130, 120, 0.25);
+      border-radius: 2.5rem;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(74, 144, 130, 0.2);
+      width: 100%;
+      max-width: 420px;
+      padding: 2.8rem 2.2rem;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* header area */
+    .card-header {
+      text-align: center;
+    }
+
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(30, 180, 150, 0.15);
+      border-radius: 3rem;
+      padding: 0.4rem 1.3rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid rgba(30, 200, 160, 0.35);
+    }
+
+    .admin-badge span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #9ee6d7;
+      text-transform: uppercase;
+    }
+
+    .card-header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: #f0f5f2;
+      margin-bottom: 0.3rem;
+    }
+
+    .card-header p {
+      color: #9aaea7;
+      font-size: 0.95rem;
+      font-weight: 400;
+    }
+
+    /* form fields */
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .input-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: #9abfb5;
+      margin-left: 0.2rem;
+    }
+
+    .input-field {
+      background: #1b272c;
+      border: 1px solid #2f4247;
+      border-radius: 1.2rem;
+      padding: 0.9rem 1.2rem;
+      font-size: 1rem;
+      color: #ebf2ef;
+      outline: none;
+      transition: all 0.2s ease;
+      background: #162026;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.4);
+      font-weight: 500;
+    }
+
+    .input-field:focus {
+      border-color: #2dd4bf;
+      box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.25), inset 0 2px 5px rgba(0,0,0,0.5);
+      background: #101a1e;
+    }
+
+    .input-field::placeholder {
+      color: #5b726a;
+      font-weight: 400;
+      font-size: 0.9rem;
+    }
+
+    /* error message */
+    .error-message {
+      background: rgba(220, 60, 70, 0.15);
+      border-left: 4px solid #f87171;
+      color: #fecaca;
+      padding: 0.8rem 1rem;
+      border-radius: 0.9rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      backdrop-filter: blur(5px);
+      margin-top: 0.3rem;
+      transition: opacity 0.2s;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* login button */
+    .login-btn {
+      background: #14b8a6;
+      border: none;
+      border-radius: 2.5rem;
+      padding: 0.9rem 1.8rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.4px;
+      color: #0a1c1a;
+      background: linear-gradient(135deg, #2dd4bf, #0f766e);
+      box-shadow: 0 8px 20px rgba(13, 148, 136, 0.4);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-top: 0.5rem;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(135deg, #5ee3d0, #0d9488);
+      box-shadow: 0 12px 24px rgba(20, 184, 166, 0.55);
+      transform: scale(1.02);
+      color: #030f0d;
+    }
+
+    .login-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 5px 12px rgba(20, 184, 166, 0.6);
+    }
+
+    /* session note */
+    .session-hint {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #6b8780;
+      margin-top: 0.5rem;
+      border-top: 1px dashed #2d4740;
+      padding-top: 1.2rem;
+    }
+
+    /* mobile fine-tuning */
+    @media (max-width: 450px) {
+      .login-card {
+        padding: 2rem 1.5rem;
+        border-radius: 2rem;
+      }
+      .card-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="card-header">
+      <div class="admin-badge">
+        <span>🔐 admin panel</span>
+      </div>
+      <h1>Grocery Hub</h1>
+      <p>Secure staff login</p>
+    </div>
+
+    <form id="loginForm" class="login-form" autocomplete="off">
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          class="input-field" 
+          placeholder="Enter admin username" 
+          autocomplete="off"
+          required
+        >
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          class="input-field" 
+          placeholder="········" 
+          autocomplete="off"
+          required
+        >
+      </div>
+
+      <!-- Dynamic error message area -->
+      <div id="loginError" class="error-message hidden">
+        <span>⚠️</span> <span id="errorText">Invalid credentials</span>
+      </div>
+
+      <button type="submit" class="login-btn">
+        <span>→</span> Log in
+      </button>
+    </form>
+
+    <div class="session-hint">
+      🔒 Session stored securely
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // --------------------------------------------------------------
+      // 🔐 FUTURE INTEGRATION WITH VERCEL ENVIRONMENT VARIABLES
+      // --------------------------------------------------------------
+      // In production, replace these placeholder credentials with
+      // Vercel Environment Variables (process.env.USER_NAME / USER_PASSWORD)
+      // For static hosting, we use a secure approach: these values act as
+      // temporary demo credentials. In a real Vercel deployment, you would
+      // call a serverless function or use edge config to keep secrets hidden.
+      // For now, we implement client-side validation with clear comments.
+      // 
+      // Expected Vercel env variables (to be used later):
+      //   USER_NAME = "admin"
+      //   USER_PASSWORD = "1234"
+      //
+      // Current placeholder credentials for demonstration:
+      // --------------------------------------------------------------
+      const VALID_USERNAME = "admin";
+      const VALID_PASSWORD = "1234";
+
+      // DOM elements
+      const loginForm = document.getElementById('loginForm');
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const loginErrorDiv = document.getElementById('loginError');
+      const errorTextSpan = document.getElementById('errorText');
+
+      // Session storage key
+      const SESSION_KEY = 'grocery_admin_session';
+      const DASHBOARD_PATH = '/admin/dashboard';
+
+      /**
+       * Check if user already has an active session.
+       * If yes, immediately redirect to dashboard.
+       */
+      function checkExistingSession() {
+        try {
+          const sessionData = localStorage.getItem(SESSION_KEY);
+          if (sessionData) {
+            const parsed = JSON.parse(sessionData);
+            // Validate session structure (must contain loggedIn flag and timestamp)
+            if (parsed && parsed.loggedIn === true && parsed.timestamp) {
+              // Optional: check session expiry (e.g., 24 hours). For now, any valid session redirects.
+              window.location.href = DASHBOARD_PATH;
+              return true;
+            } else {
+              // Corrupted session – clear it
+              localStorage.removeItem(SESSION_KEY);
+            }
+          }
+        } catch (e) {
+          // If localStorage parsing fails, clean up
+          localStorage.removeItem(SESSION_KEY);
+        }
+        return false;
+      }
+
+      /**
+       * Save login session to localStorage
+       */
+      function createSession() {
+        const sessionObject = {
+          loggedIn: true,
+          user: 'admin',
+          timestamp: Date.now(),
+          // Additional secure flag can be added later
+        };
+        localStorage.setItem(SESSION_KEY, JSON.stringify(sessionObject));
+      }
+
+      /**
+       * Display error message
+       * @param {string} message 
+       */
+      function showError(message) {
+        errorTextSpan.textContent = message || 'Invalid username or password.';
+        loginErrorDiv.classList.remove('hidden');
+      }
+
+      /**
+       * Hide error message
+       */
+      function hideError() {
+        loginErrorDiv.classList.add('hidden');
+      }
+
+      /**
+       * Handle login form submission
+       * @param {Event} event 
+       */
+      function handleLogin(event) {
+        event.preventDefault();
+        
+        // Hide any previous error
+        hideError();
+
+        // Get trimmed values
+        const enteredUsername = usernameInput.value.trim();
+        const enteredPassword = passwordInput.value.trim();
+
+        // Basic validation
+        if (!enteredUsername || !enteredPassword) {
+          showError('Both username and password are required.');
+          return;
+        }
+
+        // --------------------------------------------------------------
+        // AUTHENTICATION CHECK (placeholder → future env variable logic)
+        // In future Vercel deployment, replace with secure fetch or env
+        // --------------------------------------------------------------
+        if (enteredUsername === VALID_USERNAME && enteredPassword === VALID_PASSWORD) {
+          // Success: create session and redirect
+          createSession();
+          
+          // Redirect to admin dashboard
+          window.location.href = DASHBOARD_PATH;
+        } else {
+          // Wrong credentials
+          showError('Incorrect username or password. Please try again.');
+          
+          // Shake effect or focus (optional subtle feedback)
+          passwordInput.classList.add('input-field'); // no extra class needed, just refocus
+          passwordInput.focus();
+          // Clear password field for security
+          passwordInput.value = '';
+        }
+      }
+
+      /**
+       * Initialize page: check session, attach events
+       */
+      function init() {
+        // If already logged in, redirect immediately
+        if (checkExistingSession()) {
+          return; // stop further initialization (redirect happens)
+        }
+
+        // Attach form submit event
+        loginForm.addEventListener('submit', handleLogin);
+
+        // Clear any residual error on user input (better UX)
+        usernameInput.addEventListener('input', hideError);
+        passwordInput.addEventListener('input', hideError);
+
+        // Set focus on username field for quick access
+        usernameInput.focus();
+      }
+
+      // Run initialization when DOM is ready
+      window.addEventListener('DOMContentLoaded', init);
+    })();
+  </script>
+</body>
+</html>
