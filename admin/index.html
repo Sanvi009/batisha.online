@@ -169,6 +169,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.4rem;
+      position: relative;
     }
 
     .login-btn:hover {
@@ -181,6 +182,28 @@
     .login-btn:active {
       transform: scale(0.97);
       box-shadow: 0 5px 12px rgba(20, 184, 166, 0.6);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spin 0.6s linear infinite;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     /* session note */
@@ -245,13 +268,13 @@
         <span>⚠️</span> <span id="errorText">Invalid credentials</span>
       </div>
 
-      <button type="submit" class="login-btn">
-        <span>→</span> Log in
+      <button type="submit" id="loginButton" class="login-btn">
+        <span id="btnText">→ Log in</span>
       </button>
     </form>
 
     <div class="session-hint">
-      🔒 Session stored securely
+      🔒 Environment variables active
     </div>
   </div>
 
@@ -260,28 +283,23 @@
       'use strict';
 
       // --------------------------------------------------------------
-      // 🔐 FUTURE INTEGRATION WITH VERCEL ENVIRONMENT VARIABLES
+      // 🔐 VERCEL ENVIRONMENT VARIABLES INTEGRATION
       // --------------------------------------------------------------
-      // In production, replace these placeholder credentials with
-      // Vercel Environment Variables (process.env.USER_NAME / USER_PASSWORD)
-      // For static hosting, we use a secure approach: these values act as
-      // temporary demo credentials. In a real Vercel deployment, you would
-      // call a serverless function or use edge config to keep secrets hidden.
-      // For now, we implement client-side validation with clear comments.
-      // 
-      // Expected Vercel env variables (to be used later):
-      //   USER_NAME = "admin"
-      //   USER_PASSWORD = "1234"
+      // This code now calls a secure serverless function (/api/auth)
+      // which reads Vercel Environment Variables:
+      //   - USER_NAME
+      //   - USER_PASSWORD
       //
-      // Current placeholder credentials for demonstration:
+      // These are NEVER exposed to the browser.
+      // The API validates credentials server-side.
       // --------------------------------------------------------------
-      const VALID_USERNAME = "admin";
-      const VALID_PASSWORD = "1234";
 
       // DOM elements
       const loginForm = document.getElementById('loginForm');
       const usernameInput = document.getElementById('username');
       const passwordInput = document.getElementById('password');
+      const loginButton = document.getElementById('loginButton');
+      const btnText = document.getElementById('btnText');
       const loginErrorDiv = document.getElementById('loginError');
       const errorTextSpan = document.getElementById('errorText');
 
@@ -298,9 +316,8 @@
           const sessionData = localStorage.getItem(SESSION_KEY);
           if (sessionData) {
             const parsed = JSON.parse(sessionData);
-            // Validate session structure (must contain loggedIn flag and timestamp)
             if (parsed && parsed.loggedIn === true && parsed.timestamp) {
-              // Optional: check session expiry (e.g., 24 hours). For now, any valid session redirects.
+              // Session exists - redirect to dashboard
               window.location.href = DASHBOARD_PATH;
               return true;
             } else {
@@ -309,7 +326,6 @@
             }
           }
         } catch (e) {
-          // If localStorage parsing fails, clean up
           localStorage.removeItem(SESSION_KEY);
         }
         return false;
@@ -323,14 +339,12 @@
           loggedIn: true,
           user: 'admin',
           timestamp: Date.now(),
-          // Additional secure flag can be added later
         };
         localStorage.setItem(SESSION_KEY, JSON.stringify(sessionObject));
       }
 
       /**
        * Display error message
-       * @param {string} message 
        */
       function showError(message) {
         errorTextSpan.textContent = message || 'Invalid username or password.';
@@ -345,10 +359,23 @@
       }
 
       /**
-       * Handle login form submission
-       * @param {Event} event 
+       * Set loading state on button
        */
-      function handleLogin(event) {
+      function setLoading(isLoading) {
+        if (isLoading) {
+          loginButton.disabled = true;
+          btnText.innerHTML = '<span class="spinner"></span> Verifying...';
+        } else {
+          loginButton.disabled = false;
+          btnText.textContent = '→ Log in';
+        }
+      }
+
+      /**
+       * Handle login form submission
+       * Calls Vercel serverless function for secure auth
+       */
+      async function handleLogin(event) {
         event.preventDefault();
         
         // Hide any previous error
@@ -364,49 +391,72 @@
           return;
         }
 
-        // --------------------------------------------------------------
-        // AUTHENTICATION CHECK (placeholder → future env variable logic)
-        // In future Vercel deployment, replace with secure fetch or env
-        // --------------------------------------------------------------
-        if (enteredUsername === VALID_USERNAME && enteredPassword === VALID_PASSWORD) {
-          // Success: create session and redirect
-          createSession();
-          
-          // Redirect to admin dashboard
-          window.location.href = DASHBOARD_PATH;
-        } else {
-          // Wrong credentials
-          showError('Incorrect username or password. Please try again.');
-          
-          // Shake effect or focus (optional subtle feedback)
-          passwordInput.classList.add('input-field'); // no extra class needed, just refocus
-          passwordInput.focus();
-          // Clear password field for security
-          passwordInput.value = '';
+        // Show loading state
+        setLoading(true);
+
+        try {
+          // --------------------------------------------------------------
+          // SECURE API CALL TO VERCEL SERVERLESS FUNCTION
+          // --------------------------------------------------------------
+          // This calls /api/auth.js which reads:
+          //   process.env.USER_NAME
+          //   process.env.USER_PASSWORD
+          //
+          // The actual credentials NEVER reach the browser.
+          // --------------------------------------------------------------
+          const response = await fetch('/api/auth', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              username: enteredUsername,
+              password: enteredPassword,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            // ✅ Login successful
+            createSession();
+            window.location.href = DASHBOARD_PATH;
+          } else {
+            // ❌ Invalid credentials
+            showError(data.message || 'Invalid username or password.');
+            passwordInput.value = '';
+            passwordInput.focus();
+          }
+        } catch (error) {
+          // Network or server error
+          console.error('Login error:', error);
+          showError('Connection error. Please try again.');
+        } finally {
+          setLoading(false);
         }
       }
 
       /**
-       * Initialize page: check session, attach events
+       * Initialize page
        */
       function init() {
-        // If already logged in, redirect immediately
+        // Check if already logged in
         if (checkExistingSession()) {
-          return; // stop further initialization (redirect happens)
+          return;
         }
 
         // Attach form submit event
         loginForm.addEventListener('submit', handleLogin);
 
-        // Clear any residual error on user input (better UX)
+        // Clear error on user input
         usernameInput.addEventListener('input', hideError);
         passwordInput.addEventListener('input', hideError);
 
-        // Set focus on username field for quick access
+        // Focus on username field
         usernameInput.focus();
       }
 
-      // Run initialization when DOM is ready
+      // Run when DOM is ready
       window.addEventListener('DOMContentLoaded', init);
     })();
   </script>
