@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard · Grocery Admin</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at 20% 10%, #1e2a2f, #0c1419);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      padding: 1.5rem;
+      color: #e3e9e5;
+    }
+
+    .dashboard-container {
+      background: rgba(18, 25, 30, 0.9);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(70, 130, 120, 0.25);
+      border-radius: 2.5rem;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7);
+      width: 100%;
+      max-width: 800px;
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #f0f5f2;
+      margin-bottom: 1rem;
+    }
+
+    .welcome-badge {
+      display: inline-block;
+      background: rgba(30, 200, 160, 0.2);
+      padding: 0.5rem 1.5rem;
+      border-radius: 2rem;
+      color: #5ee3d0;
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    .logout-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 2rem;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: #dc2626;
+      transform: scale(1.05);
+    }
+
+    .placeholder-text {
+      color: #9aaea7;
+      font-size: 1.1rem;
+      margin: 2rem 0;
+      padding: 2rem;
+      border: 2px dashed #2d4740;
+      border-radius: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <h1>🛒 Admin Dashboard</h1>
+    <div class="welcome-badge">✅ Authenticated</div>
+    
+    <div class="placeholder-text">
+      📊 Dashboard content will go here<br>
+      <small style="color: #6b8780;">Products, orders, analytics...</small>
+    </div>
+
+    <button class="logout-btn" id="logoutButton">🚪 Logout</button>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // --------------------------------------------------------------
+      // 🛡️ SESSION PROTECTION
+      // --------------------------------------------------------------
+      // This runs BEFORE anything else.
+      // If no valid session exists, redirect to login immediately.
+      // --------------------------------------------------------------
+      
+      const SESSION_KEY = 'grocery_admin_session';
+      const LOGIN_PATH = '/admin';
+
+      /**
+       * Check if user has valid session
+       * Returns true if valid, false otherwise
+       */
+      function hasValidSession() {
+        try {
+          const sessionData = localStorage.getItem(SESSION_KEY);
+          
+          if (!sessionData) {
+            return false;
+          }
+
+          const parsed = JSON.parse(sessionData);
+
+          // Validate session structure
+          if (!parsed || parsed.loggedIn !== true || !parsed.timestamp) {
+            localStorage.removeItem(SESSION_KEY);
+            return false;
+          }
+
+          // Optional: Check session expiry (24 hours)
+          const SESSION_MAX_AGE = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+          const now = Date.now();
+          
+          if (now - parsed.timestamp > SESSION_MAX_AGE) {
+            // Session expired
+            localStorage.removeItem(SESSION_KEY);
+            return false;
+          }
+
+          return true;
+        } catch (error) {
+          // If any error, clear and return false
+          localStorage.removeItem(SESSION_KEY);
+          return false;
+        }
+      }
+
+      /**
+       * Protect the page
+       * Redirect to login if no valid session
+       */
+      function protectPage() {
+        if (!hasValidSession()) {
+          // ❌ No valid session - redirect to login
+          window.location.href = LOGIN_PATH;
+          return false;
+        }
+        return true;
+      }
+
+      /**
+       * Handle logout
+       */
+      function handleLogout() {
+        // Clear session
+        localStorage.removeItem(SESSION_KEY);
+        
+        // Redirect to login page
+        window.location.href = LOGIN_PATH;
+      }
+
+      /**
+       * Initialize dashboard
+       */
+      function init() {
+        // 🛡️ PROTECT THE PAGE FIRST
+        if (!protectPage()) {
+          return; // Stop execution if redirecting
+        }
+
+        // ✅ User is authenticated - show dashboard
+        console.log('✅ Dashboard: User authenticated');
+
+        // Attach logout handler
+        const logoutButton = document.getElementById('logoutButton');
+        if (logoutButton) {
+          logoutButton.addEventListener('click', handleLogout);
+        }
+
+        // Optional: Prevent back button after logout
+        window.addEventListener('pageshow', function(event) {
+          // If page is loaded from cache (back button), re-check session
+          if (event.persisted || window.performance && window.performance.navigation.type === 2) {
+            if (!hasValidSession()) {
+              window.location.href = LOGIN_PATH;
+            }
+          }
+        });
+      }
+
+      // Run when DOM is ready
+      window.addEventListener('DOMContentLoaded', init);
+    })();
+  </script>
+</body>
+</html>
