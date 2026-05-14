@@ -550,7 +550,7 @@
             <p class="product-description">${escapeHtml(product.description || 'No description')}</p>
             <div class="product-footer">
               <span class="product-price">${parseFloat(product.price || 0).toFixed(2)}</span>
-              <button class="add-to-cart-btn" onclick="alert('Added to cart! (Demo)')">🛒 Add</button>
+              <button class="add-to-cart-btn" onclick="window.addToCart(${product.id}, '${escapeHtml(product.title || 'Product')}', ${product.price || 0}, '${escapeHtml(product.image_url || '')}')">🛒 Add</button>
             </div>
           </div>
         `;
@@ -586,6 +586,50 @@
           await fetchProducts();
         }
       }
+      // --------------------------------------------------------------
+// ADD TO CART (localStorage)
+// --------------------------------------------------------------
+window.addToCart = function(id, title, price, imageUrl) {
+  let cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
+  
+  const existingItem = cart.find(item => item.id === id);
+  
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    cart.push({
+      id: id,
+      title: title,
+      price: price,
+      imageUrl: imageUrl,
+      quantity: 1
+    });
+  }
+  
+  localStorage.setItem('grocery_cart', JSON.stringify(cart));
+  
+  // Show brief feedback
+  const cartBtn = document.querySelector('.cart-icon');
+  if (cartBtn) {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartBtn.textContent = `🛒 Cart (${totalItems})`;
+    cartBtn.style.transform = 'scale(1.1)';
+    setTimeout(() => { cartBtn.style.transform = 'scale(1)'; }, 200);
+  }
+};
+
+// Update cart count on page load
+function updateCartCount() {
+  const cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartBtn = document.querySelector('.cart-icon');
+  if (cartBtn) {
+    cartBtn.textContent = `🛒 Cart (${totalItems})`;
+  }
+}
+
+// Add this inside init() or after DOMContentLoaded
+updateCartCount();
 
       window.addEventListener('DOMContentLoaded', init);
     })();
