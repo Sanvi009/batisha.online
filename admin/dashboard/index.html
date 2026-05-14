@@ -231,6 +231,11 @@
       background: #dc2626;
     }
 
+    .btn-confirm-delete:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .btn-modal-cancel {
       background: rgba(107, 114, 128, 0.3);
       color: #d1d5db;
@@ -707,6 +712,7 @@
       let selectedFile = null;
       let deleteTargetId = null;
       let deleteTargetTitle = null;
+      let deleteTargetImageUrl = null;
 
       // --------------------------------------------------------------
       // TOAST
@@ -719,11 +725,72 @@
       }
 
       // --------------------------------------------------------------
+      // EXTRACT FILE PATH FROM SUPABASE URL
+      // --------------------------------------------------------------
+      function extractFilePathFromUrl(imageUrl) {
+        if (!imageUrl) return null;
+        try {
+          // URL format: https://xxx.supabase.co/storage/v1/object/public/product/filename.jpg
+          const url = new URL(imageUrl);
+          const pathParts = url.pathname.split('/');
+          // Find 'product' in path and get everything after it
+          const bucketIndex = pathParts.indexOf(BUCKET_NAME);
+          if (bucketIndex !== -1 && bucketIndex < pathParts.length - 1) {
+            return pathParts.slice(bucketIndex + 1).join('/');
+          }
+          return null;
+        } catch (e) {
+          console.error('Failed to parse image URL:', e);
+          return null;
+        }
+      }
+
+      // --------------------------------------------------------------
+      // DELETE IMAGE FROM STORAGE
+      // --------------------------------------------------------------
+      async function deleteImageFromStorage(imageUrl) {
+        if (!imageUrl) return true; // No image to delete
+
+        const filePath = extractFilePathFromUrl(imageUrl);
+        if (!filePath) {
+          console.warn('Could not extract file path from URL:', imageUrl);
+          return true; // Continue with product deletion even if image path extraction fails
+        }
+
+        try {
+          const response = await fetch(
+            `${supabaseUrl}/storage/v1/object/${BUCKET_NAME}/${filePath}`,
+            {
+              method: 'DELETE',
+              headers: {
+                'apikey': supabaseAnonKey,
+                'Authorization': `Bearer ${supabaseAnonKey}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.warn('Image deletion warning:', errorData);
+            // Don't throw - continue with product deletion
+            return true;
+          }
+
+          console.log('✅ Image deleted from storage:', filePath);
+          return true;
+        } catch (error) {
+          console.warn('Image deletion error (continuing):', error);
+          return true; // Continue even if image deletion fails
+        }
+      }
+
+      // --------------------------------------------------------------
       // DELETE MODAL
       // --------------------------------------------------------------
-      function showDeleteModal(productId, productTitle) {
+      function showDeleteModal(productId, productTitle, imageUrl) {
         deleteTargetId = productId;
         deleteTargetTitle = productTitle;
+        deleteTargetImageUrl = imageUrl;
         deleteMessage.innerHTML = `Are you sure you want to delete <strong>"${escapeHtml(productTitle)}"</strong>?<br>This action <strong>cannot be undone</strong>.`;
         deleteModal.style.display = 'flex';
       }
@@ -732,6 +799,7 @@
         deleteModal.style.display = 'none';
         deleteTargetId = null;
         deleteTargetTitle = null;
+        deleteTargetImageUrl = null;
       }
 
       modalCancelBtn.addEventListener('click', hideDeleteModal);
@@ -749,6 +817,12 @@
         modalConfirmBtn.textContent = '⏳ Deleting...';
 
         try {
+          // Step 1: Delete image from storage first
+          if (deleteTargetImageUrl) {
+            await deleteImageFromStorage(deleteTargetImageUrl);
+          }
+
+          // Step 2: Delete product from database
           const response = await fetch(`${supabaseUrl}/rest/v1/${TABLE_NAME}?id=eq.${deleteTargetId}`, {
             method: 'DELETE',
             headers: {
@@ -757,12 +831,15 @@
             },
           });
 
-          if (!response.ok) throw new Error('Delete failed');
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || 'Delete failed');
+          }
 
           // Remove from local array
           allProducts = allProducts.filter(p => p.id !== deleteTargetId);
 
-          // Remove row from table
+          // Remove row from table with animation
           const row = document.querySelector(`tr[data-id="${deleteTargetId}"]`);
           if (row) {
             row.style.transition = 'all 0.3s ease';
@@ -771,7 +848,7 @@
             setTimeout(() => row.remove(), 300);
           }
 
-          showToast(`🗑️ "${deleteTargetTitle}" deleted!`);
+          showToast(`🗑️ "${deleteTargetTitle}" deleted successfully!`);
 
           // If no products left, show empty state
           if (allProducts.length === 0) {
@@ -780,7 +857,7 @@
 
         } catch (error) {
           console.error('Delete error:', error);
-          showToast('Failed to delete product', 'error');
+          showToast(`Failed to delete: ${error.message}`, 'error');
         } finally {
           hideDeleteModal();
           modalConfirmBtn.disabled = false;
@@ -847,7 +924,7 @@
             <td class="cell-price">₹${parseFloat(product.price || 0).toFixed(2)}</td>
             <td class="actions-cell">
               <button class="btn btn-edit" onclick="window.startEdit(${product.id})">✏️ Edit</button>
-              <button class="btn btn-delete" onclick="window.confirmDelete(${product.id}, '${escapeHtml(product.title || 'this product')}')">🗑️ Delete</button>
+              <button class="btn btn-delete" onclick="window.confirmDelete(${product.id}, '${escapeHtml(product.title || 'this product')}', '${escapeHtml(product.image_url || '')}')">🗑️ Delete</button>
             </td>
           `;
           tableBody.appendChild(row);
@@ -1034,7 +1111,7 @@
         row.querySelector('.cell-price').innerHTML = `₹${parseFloat(product.price || 0).toFixed(2)}`;
         row.querySelector('.actions-cell').innerHTML = `
           <button class="btn btn-edit" onclick="window.startEdit(${productId})">✏️ Edit</button>
-          <button class="btn btn-delete" onclick="window.confirmDelete(${productId}, '${escapeHtml(product.title || 'this product')}')">🗑️ Delete</button>
+          <button class="btn btn-delete" onclick="window.confirmDelete(${productId}, '${escapeHtml(product.title || 'this product')}', '${escapeHtml(product.image_url || '')}')">🗑️ Delete</button>
         `;
       };
 
@@ -1092,7 +1169,7 @@
           row.querySelector('.cell-price').innerHTML = `₹${updatedPrice.toFixed(2)}`;
           row.querySelector('.actions-cell').innerHTML = `
             <button class="btn btn-edit" onclick="window.startEdit(${productId})">✏️ Edit</button>
-            <button class="btn btn-delete" onclick="window.confirmDelete(${productId}, '${escapeHtml(updatedTitle)}')">🗑️ Delete</button>
+            <button class="btn btn-delete" onclick="window.confirmDelete(${productId}, '${escapeHtml(updatedTitle)}', '${escapeHtml(allProducts[productIndex]?.image_url || '')}')">🗑️ Delete</button>
           `;
 
           showToast('✅ Product updated!');
@@ -1105,10 +1182,10 @@
       };
 
       // --------------------------------------------------------------
-      // DELETE PRODUCT (with confirmation)
+      // DELETE PRODUCT (with confirmation + image deletion)
       // --------------------------------------------------------------
-      window.confirmDelete = function(productId, productTitle) {
-        showDeleteModal(productId, productTitle);
+      window.confirmDelete = function(productId, productTitle, imageUrl) {
+        showDeleteModal(productId, productTitle, imageUrl);
       };
 
       // --------------------------------------------------------------
