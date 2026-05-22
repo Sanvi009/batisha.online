@@ -149,109 +149,49 @@
       padding-left: 1rem;
     }
 
-    /* ----- COMING SOON HERO (professional, clean) ----- */
+    /* ----- COMING SOON (clean, minimal) ----- */
     .coming-soon-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 4rem 1.5rem;
+      padding: 5rem 1.5rem;
       background: white;
       border-radius: 16px;
       border: 1px solid #eef2f6;
       box-shadow: 0 1px 6px rgba(0,0,0,0.02);
-      min-height: 420px;
+      min-height: 460px;
       text-align: center;
     }
 
     .coming-soon-icon {
-      font-size: 5rem;
-      margin-bottom: 1rem;
+      font-size: 5.5rem;
+      margin-bottom: 0.8rem;
       line-height: 1;
-    }
-    .coming-soon-title {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #1a3428;
-      letter-spacing: -0.5px;
-      margin-bottom: 0.5rem;
-    }
-    .coming-soon-sub {
-      font-size: 1rem;
-      color: #4b5f53;
-      max-width: 480px;
-      margin: 0 auto 1.5rem;
-      font-weight: 400;
     }
     .coming-soon-divider {
       width: 60px;
       height: 3px;
       background: #1f8b4c;
       border-radius: 4px;
-      margin: 0.5rem auto 1.2rem;
+      margin: 0.5rem auto 1rem;
     }
-    .coming-soon-btn {
-      background: #1f8b4c;
-      color: white;
-      padding: 0.7rem 2.2rem;
-      border-radius: 40px;
-      text-decoration: none;
-      font-weight: 600;
-      display: inline-block;
-      transition: 0.15s;
-      box-shadow: 0 2px 8px rgba(31, 139, 76, 0.15);
-      border: none;
-      cursor: pointer;
-      font-size: 0.95rem;
+    .coming-soon-title {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #1a3428;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.3rem;
     }
-    .coming-soon-btn:hover {
-      background: #0f6e3a;
-      transform: scale(1.02);
+    .coming-soon-sub {
+      font-size: 1rem;
+      color: #4b5f53;
+      max-width: 480px;
+      margin: 0 auto;
+      font-weight: 400;
     }
 
-    /* ----- NOTIFICATION FORM (optional mini) ----- */
-    .notify-form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      justify-content: center;
-      margin-top: 1.5rem;
-      max-width: 500px;
-      width: 100%;
-    }
-    .notify-form input {
-      flex: 1;
-      min-width: 200px;
-      padding: 0.6rem 1rem;
-      border-radius: 40px;
-      border: 1px solid #dde5ed;
-      background: #f8fbf9;
-      font-family: inherit;
-      font-size: 0.9rem;
-      outline: none;
-      transition: 0.15s;
-    }
-    .notify-form input:focus {
-      border-color: #1f8b4c;
-      box-shadow: 0 0 0 3px rgba(31, 139, 76, 0.08);
-    }
-    .notify-form button {
-      background: #1f8b4c;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.6rem;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: 0.15s;
-      box-shadow: 0 2px 8px rgba(31, 139, 76, 0.12);
-    }
-    .notify-form button:hover {
-      background: #0f6e3a;
-    }
-
-    /* ----- FOOTER (minimal, matches home) ----- */
+    /* ----- FOOTER (minimal) ----- */
     .footer {
       background: #f8fbf9;
       border-top: 1px solid #e4ece8;
@@ -344,12 +284,11 @@
 
       .coming-soon-title { font-size: 1.8rem; }
       .container { padding: 1rem; }
-      .notify-form input { min-width: 150px; }
     }
 
     @media (max-width: 480px) {
       .coming-soon-title { font-size: 1.5rem; }
-      .coming-soon-icon { font-size: 3.8rem; }
+      .coming-soon-icon { font-size: 4rem; }
       .mobile-bottom-nav a { max-width: 70px; }
       .mobile-bottom-nav .nav-home { max-width: 90px; }
     }
@@ -386,31 +325,17 @@
   <main class="container">
     <h1 class="page-title">🛍️ Our products</h1>
 
-    <!-- COMING SOON (professional, clean) -->
+    <!-- COMING SOON (clean, no email, no extra buttons) -->
     <div class="coming-soon-wrapper">
       <div class="coming-soon-icon">🚀</div>
       <div class="coming-soon-divider"></div>
       <h2 class="coming-soon-title">Coming Soon</h2>
-      <p class="coming-soon-sub">
-        We're curating the freshest groceries and pantry essentials just for you.  
-        Our product catalog will be live shortly — stay tuned!
-      </p>
       
-      <!-- Optional notification signup (keeps it interactive) -->
-      <form class="notify-form" onsubmit="event.preventDefault(); showToast('✅ You\'ll be the first to know!');">
-        <input type="email" placeholder="Enter your email for updates" required>
-        <button type="submit">Notify Me</button>
-      </form>
-      
-      <a href="/" class="coming-soon-btn" style="margin-top:1rem;">🏠 Back to Home</a>
     </div>
   </main>
 
   <!-- FOOTER (minimal) -->
   <footer class="footer"></footer>
-
-  <!-- TOAST (for notification feedback) -->
-  <div id="toast" class="toast" style="position:fixed;bottom:2rem;right:2rem;padding:0.7rem 1.5rem;border-radius:40px;font-weight:500;z-index:3000;display:none;animation:slideIn 0.3s ease;color:white;box-shadow:0 4px 14px rgba(0,0,0,0.12);background:#1f8b4c;"></div>
 
   <script>
     (function() {
@@ -427,17 +352,6 @@
         if (mobileEl) mobileEl.textContent = total;
       }
 
-      // Toast for notification
-      window.showToast = function(msg, type = 'success') {
-        const toast = document.getElementById('toast');
-        if (!toast) return;
-        toast.textContent = msg;
-        toast.style.background = type === 'success' ? '#1f8b4c' : '#dc2626';
-        toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 3000);
-      };
-
-      // Init
       updateCartCount();
       window.addEventListener('storage', updateCartCount);
     })();
