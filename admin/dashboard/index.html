@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard · Admin Panel</title>
+  <title>Dashboard · Batisha admin</title>
   <style>
     /* ----- HIDE UNTIL AUTH VERIFIED ----- */
     html:not(.auth-verified) body {
@@ -22,143 +22,205 @@
     }
 
     body {
-      background: #0c1419;
+      background: #fcfcfc;
       min-height: 100vh;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      color: #e3e9e5;
+      font-family: 'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
+      color: #1e2b3a;
     }
 
-    /* ----- HEADER ----- */
+    /* ----- HEADER (matches main site) ----- */
     .dashboard-header {
-      background: rgba(18, 25, 30, 0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(45, 212, 191, 0.2);
-      padding: 1.2rem 2rem;
+      background: #ffffff;
+      border-bottom: 1px solid #eaeef3;
+      padding: 0.7rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 0.8rem 1.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
     }
 
     .header-left {
       display: flex;
       align-items: center;
       gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #1f2a3a;
+    }
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(145deg, #1e6b3e, #2b7a4a);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(30, 107, 62, 0.12);
+    }
+    .logo-icon svg {
+      width: 26px;
+      height: 26px;
+      fill: white;
+      display: block;
+    }
+    .logo-text {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #1f2a3a;
+    }
+    .logo-text span {
+      font-weight: 400;
+      color: #4b6b5e;
+      font-size: 0.8rem;
+      margin-left: 0.1rem;
     }
 
     .dashboard-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #f0f5f2;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #1a3428;
+      margin-left: 0.5rem;
     }
 
     .badge {
-      background: rgba(45, 212, 191, 0.15);
-      color: #5ee3d0;
-      padding: 0.3rem 0.8rem;
-      border-radius: 1rem;
-      font-size: 0.75rem;
+      background: #f0f8f2;
+      color: #1f8b4c;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
       font-weight: 600;
-      border: 1px solid rgba(45, 212, 191, 0.3);
+      border: 1px solid #dce8e2;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    /* ----- NAV LINKS (admin navigation) ----- */
+    .admin-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .admin-nav a {
+      text-decoration: none;
+      color: #2f3e4e;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      transition: 0.15s;
+    }
+    .admin-nav a:hover {
+      background: #f0f8f2;
+      color: #0f6e3a;
+    }
+    .admin-nav a.active {
+      background: #f0f8f2;
+      color: #0f6e3a;
+      font-weight: 600;
     }
 
     /* ----- BUTTONS ----- */
     .btn {
-      padding: 0.6rem 1.3rem;
-      border-radius: 2rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
       font-weight: 600;
       font-size: 0.85rem;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: 0.15s;
       border: none;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.3rem;
       text-decoration: none;
     }
 
     .btn-add {
-      background: #14b8a6;
-      color: #0a1c1a;
+      background: #1f8b4c;
+      color: white;
+      box-shadow: 0 2px 8px rgba(31, 139, 76, 0.15);
     }
-
     .btn-add:hover {
-      background: #2dd4bf;
+      background: #0f6e3a;
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(20, 184, 166, 0.3);
+      box-shadow: 0 6px 16px rgba(31, 139, 76, 0.2);
     }
 
     .btn-logout {
-      background: rgba(239, 68, 68, 0.15);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
     }
-
     .btn-logout:hover {
-      background: rgba(239, 68, 68, 0.3);
-      color: #fecaca;
+      background: #fee2e2;
     }
 
     .btn-edit {
-      background: rgba(59, 130, 246, 0.15);
-      color: #93c5fd;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      padding: 0.4rem 0.9rem;
-      font-size: 0.8rem;
+      background: #f0f5fc;
+      color: #1e3a5f;
+      border: 1px solid #dde5ed;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
     }
-
     .btn-edit:hover {
-      background: rgba(59, 130, 246, 0.3);
+      background: #e4edf7;
     }
 
     .btn-delete {
-      background: rgba(239, 68, 68, 0.15);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      padding: 0.4rem 0.9rem;
-      font-size: 0.8rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
     }
-
     .btn-delete:hover {
-      background: rgba(239, 68, 68, 0.3);
-      color: #fecaca;
+      background: #fee2e2;
     }
 
     .btn-save {
-      background: #22c55e;
+      background: #1f8b4c;
       color: white;
-      padding: 0.4rem 0.9rem;
-      font-size: 0.8rem;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
     }
-
     .btn-save:hover {
-      background: #16a34a;
+      background: #0f6e3a;
     }
 
     .btn-cancel {
-      background: rgba(107, 114, 128, 0.2);
-      color: #d1d5db;
-      border: 1px solid rgba(107, 114, 128, 0.3);
-      padding: 0.4rem 0.9rem;
-      font-size: 0.8rem;
+      background: #f0f5fc;
+      color: #1f2a3a;
+      border: 1px solid #dde5ed;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
     }
-
     .btn-cancel:hover {
-      background: rgba(107, 114, 128, 0.4);
+      background: #e4edf7;
     }
 
     .btn-submit {
-      background: #14b8a6;
-      color: #0a1c1a;
-      padding: 0.7rem 2rem;
+      background: #1f8b4c;
+      color: white;
+      padding: 0.6rem 1.8rem;
       font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(31, 139, 76, 0.15);
     }
-
     .btn-submit:hover {
-      background: #2dd4bf;
+      background: #0f6e3a;
     }
-
     .btn-submit:disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -171,7 +233,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(4px);
       display: flex;
       align-items: center;
@@ -179,107 +241,96 @@
       z-index: 2000;
       animation: fadeIn 0.2s ease;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
 
     .modal-box {
-      background: #1a272e;
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      border-radius: 1.5rem;
+      background: #ffffff;
+      border-radius: 16px;
       padding: 2rem;
       max-width: 420px;
-      width: 90%;
+      width: 92%;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+      border: 1px solid #eef2f6;
     }
-
     .modal-icon {
       font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .modal-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #fecaca;
       margin-bottom: 0.5rem;
     }
-
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1a3428;
+      margin-bottom: 0.4rem;
+    }
     .modal-message {
-      color: #d1d5db;
+      color: #4b5f53;
       font-size: 0.9rem;
       margin-bottom: 1.5rem;
       line-height: 1.5;
     }
-
     .modal-actions {
       display: flex;
       gap: 0.8rem;
       justify-content: center;
     }
-
     .btn-confirm-delete {
-      background: #ef4444;
-      color: white;
-      padding: 0.6rem 1.5rem;
-    }
-
-    .btn-confirm-delete:hover {
       background: #dc2626;
+      color: white;
+      padding: 0.5rem 1.5rem;
     }
-
+    .btn-confirm-delete:hover {
+      background: #b91c1c;
+    }
     .btn-confirm-delete:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
-
     .btn-modal-cancel {
-      background: rgba(107, 114, 128, 0.3);
-      color: #d1d5db;
-      padding: 0.6rem 1.5rem;
+      background: #f0f5fc;
+      color: #1f2a3a;
+      border: 1px solid #dde5ed;
+      padding: 0.5rem 1.5rem;
     }
-
     .btn-modal-cancel:hover {
-      background: rgba(107, 114, 128, 0.5);
+      background: #e4edf7;
     }
 
     /* ----- MAIN CONTAINER ----- */
     .main-container {
-      max-width: 1300px;
+      max-width: 1400px;
       width: 100%;
       margin: 0 auto;
       padding: 2rem;
     }
 
-    /* ----- ADD PRODUCT FORM ----- */
+    /* ----- ADD PRODUCT FORM (clean, white) ----- */
     .form-container {
-      background: rgba(18, 25, 30, 0.95);
-      border: 1px solid rgba(45, 212, 191, 0.2);
-      border-radius: 1.5rem;
+      background: #ffffff;
+      border: 1px solid #eef2f6;
+      border-radius: 16px;
       padding: 2rem;
       margin-bottom: 2rem;
       display: none;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.02);
     }
-
     .form-container.active {
       display: block;
-      animation: slideDown 0.3s ease;
+      animation: slideDown 0.25s ease;
     }
-
     @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-20px); }
+      from { opacity: 0; transform: translateY(-12px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     .form-title {
       font-size: 1.3rem;
       font-weight: 700;
-      color: #f0f5f2;
-      margin-bottom: 1.5rem;
+      color: #1a3428;
+      margin-bottom: 1.2rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -288,85 +339,77 @@
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+      gap: 1.2rem;
     }
-
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.3rem;
     }
-
     .form-group.full-width {
       grid-column: 1 / -1;
     }
-
     .form-group label {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.7px;
-      color: #9abfb5;
+      letter-spacing: 0.5px;
+      color: #1a3428;
     }
-
     .form-input {
-      background: #162026;
-      border: 1px solid #2f4247;
-      color: #ebf2ef;
-      padding: 0.7rem 1rem;
-      border-radius: 0.8rem;
+      background: #f8fbf9;
+      border: 1px solid #dde5ed;
+      color: #1e2b3a;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
       font-size: 0.9rem;
       font-family: inherit;
       outline: none;
-      transition: all 0.2s;
+      transition: 0.15s;
+      width: 100%;
     }
-
     .form-input:focus {
-      border-color: #2dd4bf;
-      box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31, 139, 76, 0.08);
+      background: #ffffff;
     }
-
     textarea.form-input {
       resize: vertical;
-      min-height: 80px;
+      min-height: 70px;
     }
 
     .file-upload-wrapper {
       position: relative;
     }
-
     .file-upload-label {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      background: #162026;
-      border: 2px dashed #2f4247;
-      border-radius: 0.8rem;
-      padding: 1rem;
+      background: #f8fbf9;
+      border: 2px dashed #dde5ed;
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
       cursor: pointer;
-      transition: all 0.2s;
-      color: #9abfb5;
+      transition: 0.15s;
+      color: #4b5f53;
     }
-
     .file-upload-label:hover {
-      border-color: #2dd4bf;
-      color: #5ee3d0;
+      border-color: #1f8b4c;
+      color: #1f8b4c;
     }
-
     .file-upload-label input[type="file"] {
       display: none;
     }
-
     .image-preview {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 0.8rem;
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 10px;
       margin-top: 0.5rem;
       display: none;
-      border: 2px solid rgba(45, 212, 191, 0.3);
+      border: 1px solid #eef2f6;
+      background: #f8fbf9;
     }
-
     .image-preview.active {
       display: block;
     }
@@ -378,110 +421,103 @@
       grid-column: 1 / -1;
     }
 
-    /* ----- TABLE ----- */
+    /* ----- TABLE (clean, white) ----- */
     .table-wrapper {
-      background: rgba(18, 25, 30, 0.9);
-      border: 1px solid rgba(70, 130, 120, 0.2);
-      border-radius: 1.5rem;
+      background: #ffffff;
+      border: 1px solid #eef2f6;
+      border-radius: 16px;
       overflow-x: auto;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.02);
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       min-width: 700px;
     }
-
     thead {
-      background: rgba(30, 180, 150, 0.08);
-      border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+      background: #f8fbf9;
+      border-bottom: 1px solid #eef2f6;
     }
-
     th {
-      padding: 1rem 1.2rem;
+      padding: 0.8rem 1.2rem;
       text-align: left;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.7px;
-      color: #9abfb5;
-      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #4b5f53;
+      font-weight: 600;
     }
-
     td {
-      padding: 0.9rem 1.2rem;
-      border-bottom: 1px solid rgba(70, 130, 120, 0.1);
-      font-size: 0.9rem;
-      color: #d1d5db;
+      padding: 0.7rem 1.2rem;
+      border-bottom: 1px solid #f0f5f2;
+      font-size: 0.85rem;
+      color: #1e2b3a;
       vertical-align: middle;
     }
-
     tbody tr:hover {
-      background: rgba(30, 180, 150, 0.05);
+      background: #f8fbf9;
     }
-
     tbody tr:last-child td {
       border-bottom: none;
     }
 
     .editable-input {
-      background: #162026;
-      border: 1px solid #2f4247;
-      color: #ebf2ef;
-      padding: 0.5rem 0.7rem;
-      border-radius: 0.6rem;
+      background: #f8fbf9;
+      border: 1px solid #dde5ed;
+      color: #1e2b3a;
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
       font-size: 0.85rem;
       width: 100%;
       font-family: inherit;
       outline: none;
-      transition: all 0.2s;
+      transition: 0.15s;
     }
-
     .editable-input:focus {
-      border-color: #2dd4bf;
-      box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.2);
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 2px rgba(31, 139, 76, 0.08);
     }
 
     .actions-cell {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.3rem;
       flex-wrap: wrap;
     }
-
     .product-thumb {
-      width: 50px;
-      height: 50px;
-      object-fit: cover;
-      border-radius: 0.5rem;
-      background: #1a272e;
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #f8fbf9;
+      border: 1px solid #eef2f6;
     }
-
     .no-image {
-      width: 50px;
-      height: 50px;
-      background: rgba(45, 212, 191, 0.1);
-      border-radius: 0.5rem;
+      width: 45px;
+      height: 45px;
+      background: #f8fbf9;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.2rem;
+      border: 1px solid #eef2f6;
     }
 
+    /* ----- LOADING / EMPTY / ERROR ----- */
     .loading-container {
       text-align: center;
       padding: 3rem;
+      color: #4b5f53;
     }
-
     .spinner {
       width: 40px;
       height: 40px;
-      border: 3px solid rgba(45, 212, 191, 0.2);
-      border-top-color: #2dd4bf;
+      border: 3px solid #e2ebe6;
+      border-top-color: #1f8b4c;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
       margin: 0 auto 1rem;
     }
-
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
@@ -490,46 +526,52 @@
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      padding: 0.8rem 1.5rem;
-      border-radius: 2rem;
-      font-weight: 600;
+      padding: 0.6rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 500;
       animation: slideIn 0.3s ease;
       z-index: 1000;
       display: none;
       color: white;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
     }
-
-    .toast.success { background: #22c55e; }
-    .toast.error { background: #ef4444; }
-
+    .toast.success { background: #1f8b4c; }
+    .toast.error { background: #dc2626; }
     @keyframes slideIn {
       from { transform: translateX(100%); opacity: 0; }
       to { transform: translateX(0); opacity: 1; }
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 3rem;
-      color: #6b8780;
-    }
-
+    /* ----- MOBILE ----- */
     @media (max-width: 768px) {
+      .dashboard-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.8rem 1rem;
+      }
+      .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      .header-right {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+      .admin-nav {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+      }
       .form-grid {
         grid-template-columns: 1fr;
       }
-      
-      .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
       .main-container {
         padding: 1rem;
       }
-      
       th, td {
-        padding: 0.6rem 0.8rem;
-        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+        font-size: 0.75rem;
       }
     }
   </style>
@@ -538,10 +580,23 @@
   <!-- ----- HEADER ----- -->
   <header class="dashboard-header">
     <div class="header-left">
-      <h1 class="dashboard-title">📊 Product Dashboard</h1>
-      <span class="badge">Admin Panel</span>
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 10v-2a6 6 0 0 1 12 0v2h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2h4zm2 0h8v-2a4 4 0 0 0-8 0v2zm-2 2v2h2v-2h-2zm4 0v2h4v-2h-4zm8 0v2h2v-2h-2zM8 14v2h2v-2H8zm16 0v2h2v-2h-2zM8 18v8h16v-8H8z"/>
+          </svg>
+        </div>
+        <span class="logo-text">Batisha <span>online</span></span>
+      </a>
+      <span class="dashboard-title">📊 Dashboard</span>
+      <span class="badge">Admin</span>
     </div>
-    <div style="display: flex; gap: 0.8rem; align-items: center;">
+
+    <div class="header-right">
+      <nav class="admin-nav">
+        <a href="/admin">Products</a>
+        <a href="/admin/orders">📦 Orders</a>
+      </nav>
       <button class="btn btn-add" id="toggleFormBtn">➕ Add Product</button>
       <button class="btn btn-logout" id="logoutButton">🚪 Logout</button>
     </div>
@@ -557,17 +612,14 @@
           <label for="productTitle">Title *</label>
           <input type="text" id="productTitle" class="form-input" placeholder="Product name" required>
         </div>
-        
         <div class="form-group">
           <label for="productPrice">Price (₹) *</label>
           <input type="number" id="productPrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
         </div>
-        
         <div class="form-group full-width">
           <label for="productDescription">Description</label>
           <textarea id="productDescription" class="form-input" placeholder="Product description..."></textarea>
         </div>
-        
         <div class="form-group full-width">
           <label>Product Image</label>
           <div class="file-upload-wrapper">
@@ -575,11 +627,10 @@
               📁 Choose Image
               <input type="file" id="productImage" accept="image/*">
             </label>
-            <span id="fileName" style="color: #9abfb5; font-size: 0.85rem; margin-left: 0.5rem;"></span>
+            <span id="fileName" style="color: #4b5f53; font-size: 0.85rem; margin-left: 0.5rem;"></span>
           </div>
           <img id="imagePreview" class="image-preview" src="" alt="Preview">
         </div>
-        
         <div class="form-actions">
           <button type="submit" class="btn btn-submit" id="submitBtn">💾 Save Product</button>
           <button type="button" class="btn btn-cancel" id="cancelFormBtn">✖ Cancel</button>
@@ -590,18 +641,18 @@
     <!-- Loading -->
     <div id="loadingState" class="loading-container">
       <div class="spinner"></div>
-      <p style="color: #6b8780;">Loading products...</p>
+      <p>Loading products...</p>
     </div>
 
     <!-- Error -->
     <div id="errorState" class="loading-container" style="display: none;">
-      <p style="color: #fca5a5;">❌ Failed to load products</p>
+      <p style="color: #991b1b;">❌ Failed to load products</p>
       <button class="btn btn-add" onclick="location.reload()" style="margin-top: 1rem;">🔄 Retry</button>
     </div>
 
     <!-- Empty -->
     <div id="emptyState" class="loading-container" style="display: none;">
-      <p style="color: #6b8780;">📦 No products yet</p>
+      <p style="color: #4b5f53;">📦 No products yet</p>
       <button class="btn btn-add" id="emptyAddBtn" style="margin-top: 1rem;">➕ Add Your First Product</button>
     </div>
 
@@ -666,7 +717,7 @@
             return false;
           }
           return true;
-        } catch (e) {
+        } catch {
           localStorage.removeItem(SESSION_KEY);
           return false;
         }
@@ -730,17 +781,14 @@
       function extractFilePathFromUrl(imageUrl) {
         if (!imageUrl) return null;
         try {
-          // URL format: https://xxx.supabase.co/storage/v1/object/public/product/filename.jpg
           const url = new URL(imageUrl);
           const pathParts = url.pathname.split('/');
-          // Find 'product' in path and get everything after it
           const bucketIndex = pathParts.indexOf(BUCKET_NAME);
           if (bucketIndex !== -1 && bucketIndex < pathParts.length - 1) {
             return pathParts.slice(bucketIndex + 1).join('/');
           }
           return null;
-        } catch (e) {
-          console.error('Failed to parse image URL:', e);
+        } catch {
           return null;
         }
       }
@@ -749,14 +797,9 @@
       // DELETE IMAGE FROM STORAGE
       // --------------------------------------------------------------
       async function deleteImageFromStorage(imageUrl) {
-        if (!imageUrl) return true; // No image to delete
-
+        if (!imageUrl) return true;
         const filePath = extractFilePathFromUrl(imageUrl);
-        if (!filePath) {
-          console.warn('Could not extract file path from URL:', imageUrl);
-          return true; // Continue with product deletion even if image path extraction fails
-        }
-
+        if (!filePath) return true;
         try {
           const response = await fetch(
             `${supabaseUrl}/storage/v1/object/${BUCKET_NAME}/${filePath}`,
@@ -768,19 +811,12 @@
               },
             }
           );
-
           if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            console.warn('Image deletion warning:', errorData);
-            // Don't throw - continue with product deletion
-            return true;
+            console.warn('Image deletion warning:', await response.text());
           }
-
-          console.log('✅ Image deleted from storage:', filePath);
           return true;
-        } catch (error) {
-          console.warn('Image deletion error (continuing):', error);
-          return true; // Continue even if image deletion fails
+        } catch {
+          return true;
         }
       }
 
@@ -803,26 +839,19 @@
       }
 
       modalCancelBtn.addEventListener('click', hideDeleteModal);
-
       deleteModal.addEventListener('click', (e) => {
-        if (e.target === deleteModal) {
-          hideDeleteModal();
-        }
+        if (e.target === deleteModal) hideDeleteModal();
       });
 
       modalConfirmBtn.addEventListener('click', async () => {
         if (!deleteTargetId) return;
-
         modalConfirmBtn.disabled = true;
         modalConfirmBtn.textContent = '⏳ Deleting...';
 
         try {
-          // Step 1: Delete image from storage first
           if (deleteTargetImageUrl) {
             await deleteImageFromStorage(deleteTargetImageUrl);
           }
-
-          // Step 2: Delete product from database
           const response = await fetch(`${supabaseUrl}/rest/v1/${TABLE_NAME}?id=eq.${deleteTargetId}`, {
             method: 'DELETE',
             headers: {
@@ -830,16 +859,9 @@
               'Authorization': `Bearer ${supabaseAnonKey}`,
             },
           });
+          if (!response.ok) throw new Error('Delete failed');
 
-          if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || 'Delete failed');
-          }
-
-          // Remove from local array
           allProducts = allProducts.filter(p => p.id !== deleteTargetId);
-
-          // Remove row from table with animation
           const row = document.querySelector(`tr[data-id="${deleteTargetId}"]`);
           if (row) {
             row.style.transition = 'all 0.3s ease';
@@ -847,16 +869,9 @@
             row.style.transform = 'translateX(20px)';
             setTimeout(() => row.remove(), 300);
           }
-
-          showToast(`🗑️ "${deleteTargetTitle}" deleted successfully!`);
-
-          // If no products left, show empty state
-          if (allProducts.length === 0) {
-            showState('empty');
-          }
-
+          showToast(`🗑️ "${deleteTargetTitle}" deleted!`);
+          if (allProducts.length === 0) showState('empty');
         } catch (error) {
-          console.error('Delete error:', error);
           showToast(`Failed to delete: ${error.message}`, 'error');
         } finally {
           hideDeleteModal();
@@ -876,7 +891,7 @@
           supabaseUrl = config.supabaseUrl;
           supabaseAnonKey = config.supabaseAnonKey;
           return true;
-        } catch (e) {
+        } catch {
           showToast('Failed to load configuration', 'error');
           return false;
         }
@@ -903,7 +918,7 @@
           }
           renderTable(products);
           showState('table');
-        } catch (e) {
+        } catch {
           showState('error');
         }
       }
@@ -938,7 +953,6 @@
         const timestamp = Date.now();
         const fileExt = file.name.split('.').pop();
         const uniqueName = `${timestamp}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-
         const response = await fetch(`${supabaseUrl}/storage/v1/object/${BUCKET_NAME}/${uniqueName}`, {
           method: 'POST',
           headers: {
@@ -948,12 +962,7 @@
           },
           body: file,
         });
-
-        if (!response.ok) {
-          const error = await response.text();
-          throw new Error(`Upload failed: ${error}`);
-        }
-
+        if (!response.ok) throw new Error('Upload failed');
         return `${supabaseUrl}/storage/v1/object/public/${BUCKET_NAME}/${uniqueName}`;
       }
 
@@ -962,26 +971,20 @@
       // --------------------------------------------------------------
       productForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         const title = document.getElementById('productTitle').value.trim();
         const price = parseFloat(document.getElementById('productPrice').value) || 0;
         const description = document.getElementById('productDescription').value.trim();
-
         if (!title) {
           showToast('Title is required!', 'error');
           return;
         }
-
         submitBtn.disabled = true;
         submitBtn.textContent = '⏳ Saving...';
-
         try {
           let imageUrl = null;
-
           if (selectedFile) {
             imageUrl = await uploadImage(selectedFile);
           }
-
           const response = await fetch(`${supabaseUrl}/rest/v1/${TABLE_NAME}`, {
             method: 'POST',
             headers: {
@@ -990,34 +993,19 @@
               'Content-Type': 'application/json',
               'Prefer': 'return=representation',
             },
-            body: JSON.stringify({
-              title: title,
-              price: price,
-              description: description,
-              image_url: imageUrl,
-            }),
+            body: JSON.stringify({ title, price, description, image_url: imageUrl }),
           });
-
-          if (!response.ok) {
-            const error = await response.text();
-            throw new Error(`Insert failed: ${error}`);
-          }
-
-          showToast('✅ Product added successfully!');
-          
+          if (!response.ok) throw new Error('Insert failed');
+          showToast('✅ Product added!');
           productForm.reset();
           selectedFile = null;
           imagePreview.classList.remove('active');
           imagePreview.src = '';
           fileName.textContent = '';
-          
           addProductForm.classList.remove('active');
           toggleFormBtn.textContent = '➕ Add Product';
-          
           await fetchProducts();
-
         } catch (error) {
-          console.error('Error:', error);
           showToast('Failed to add product: ' + error.message, 'error');
         } finally {
           submitBtn.disabled = false;
@@ -1033,7 +1021,6 @@
         toggleFormBtn.textContent = '✖ Close Form';
         document.getElementById('productTitle').focus();
       }
-
       function hideForm() {
         addProductForm.classList.remove('active');
         toggleFormBtn.textContent = '➕ Add Product';
@@ -1043,20 +1030,11 @@
         imagePreview.src = '';
         fileName.textContent = '';
       }
-
       toggleFormBtn.addEventListener('click', () => {
-        if (addProductForm.classList.contains('active')) {
-          hideForm();
-        } else {
-          showForm();
-        }
+        addProductForm.classList.contains('active') ? hideForm() : showForm();
       });
-
       cancelFormBtn.addEventListener('click', hideForm);
-      
-      if (emptyAddBtn) {
-        emptyAddBtn.addEventListener('click', showForm);
-      }
+      if (emptyAddBtn) emptyAddBtn.addEventListener('click', showForm);
 
       productImage.addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -1081,15 +1059,12 @@
       // EDIT PRODUCT
       // --------------------------------------------------------------
       window.startEdit = function(productId) {
-        if (editingRowId !== null) {
-          window.cancelEdit(editingRowId);
-        }
+        if (editingRowId !== null) window.cancelEdit(editingRowId);
         editingRowId = productId;
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
         const row = document.querySelector(`tr[data-id="${productId}"]`);
         if (!row) return;
-
         row.querySelector('.cell-title').innerHTML = `<input type="text" class="editable-input edit-title" value="${escapeHtml(product.title || '')}">`;
         row.querySelector('.cell-description').innerHTML = `<input type="text" class="editable-input edit-description" value="${escapeHtml(product.description || '')}">`;
         row.querySelector('.cell-price').innerHTML = `<input type="number" class="editable-input edit-price" value="${product.price || 0}" step="0.01">`;
@@ -1105,7 +1080,6 @@
         if (!product) return;
         const row = document.querySelector(`tr[data-id="${productId}"]`);
         if (!row) return;
-
         row.querySelector('.cell-title').innerHTML = escapeHtml(product.title || '—');
         row.querySelector('.cell-description').innerHTML = escapeHtml(product.description || '—');
         row.querySelector('.cell-price').innerHTML = `₹${parseFloat(product.price || 0).toFixed(2)}`;
@@ -1118,26 +1092,20 @@
       window.saveEdit = async function(productId) {
         const row = document.querySelector(`tr[data-id="${productId}"]`);
         if (!row) return;
-
         const titleInput = row.querySelector('.edit-title');
         const descriptionInput = row.querySelector('.edit-description');
         const priceInput = row.querySelector('.edit-price');
-
         if (!titleInput || !priceInput) return;
-
         const updatedTitle = titleInput.value.trim();
         const updatedDescription = descriptionInput ? descriptionInput.value.trim() : '';
         const updatedPrice = parseFloat(priceInput.value) || 0;
-
         if (!updatedTitle) {
           showToast('Title is required!', 'error');
           return;
         }
-
         const saveBtn = row.querySelector('.btn-save');
         saveBtn.textContent = '⏳...';
         saveBtn.disabled = true;
-
         try {
           const response = await fetch(`${supabaseUrl}/rest/v1/${TABLE_NAME}?id=eq.${productId}`, {
             method: 'PATCH',
@@ -1147,22 +1115,15 @@
               'Content-Type': 'application/json',
               'Prefer': 'return=representation',
             },
-            body: JSON.stringify({
-              title: updatedTitle,
-              description: updatedDescription,
-              price: updatedPrice,
-            }),
+            body: JSON.stringify({ title: updatedTitle, description: updatedDescription, price: updatedPrice }),
           });
-
           if (!response.ok) throw new Error('Update failed');
-
           const productIndex = allProducts.findIndex(p => p.id === productId);
           if (productIndex !== -1) {
             allProducts[productIndex].title = updatedTitle;
             allProducts[productIndex].description = updatedDescription;
             allProducts[productIndex].price = updatedPrice;
           }
-
           editingRowId = null;
           row.querySelector('.cell-title').innerHTML = escapeHtml(updatedTitle);
           row.querySelector('.cell-description').innerHTML = escapeHtml(updatedDescription);
@@ -1171,10 +1132,8 @@
             <button class="btn btn-edit" onclick="window.startEdit(${productId})">✏️ Edit</button>
             <button class="btn btn-delete" onclick="window.confirmDelete(${productId}, '${escapeHtml(updatedTitle)}', '${escapeHtml(allProducts[productIndex]?.image_url || '')}')">🗑️ Delete</button>
           `;
-
           showToast('✅ Product updated!');
-
-        } catch (error) {
+        } catch {
           showToast('Update failed', 'error');
           saveBtn.textContent = '💾 Save';
           saveBtn.disabled = false;
@@ -1182,7 +1141,7 @@
       };
 
       // --------------------------------------------------------------
-      // DELETE PRODUCT (with confirmation + image deletion)
+      // DELETE PRODUCT
       // --------------------------------------------------------------
       window.confirmDelete = function(productId, productTitle, imageUrl) {
         showDeleteModal(productId, productTitle, imageUrl);
@@ -1202,12 +1161,10 @@
         errorState.style.display = 'none';
         emptyState.style.display = 'none';
         tableContainer.style.display = 'none';
-        switch (state) {
-          case 'loading': loadingState.style.display = 'block'; break;
-          case 'error': errorState.style.display = 'block'; break;
-          case 'empty': emptyState.style.display = 'block'; break;
-          case 'table': tableContainer.style.display = 'block'; break;
-        }
+        if (state === 'loading') loadingState.style.display = 'block';
+        else if (state === 'error') errorState.style.display = 'block';
+        else if (state === 'empty') emptyState.style.display = 'block';
+        else if (state === 'table') tableContainer.style.display = 'block';
       }
 
       function handleLogout() {
@@ -1221,7 +1178,6 @@
       async function init() {
         document.getElementById('logoutButton').addEventListener('click', handleLogout);
         setInterval(() => { if (!hasValidSession()) handleLogout(); }, 5000);
-
         const configOk = await fetchConfig();
         if (configOk) await fetchProducts();
         else showState('error');
