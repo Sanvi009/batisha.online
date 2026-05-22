@@ -158,10 +158,10 @@
       padding-left: 1rem;
     }
 
-    /* ===== SEARCH BAR (professional) ===== */
+    /* ===== SEARCH BAR (top of container) ===== */
     .search-wrapper {
       max-width: 700px;
-      margin: 0 auto 2rem;
+      margin: 0 auto 1.8rem;
       position: relative;
     }
     .search-box {
@@ -496,9 +496,7 @@
   <header class="hero"></header>
 
   <main class="container">
-    <h2 class="section-title">🛍️ Our products</h2>
-
-    <!-- SEARCH BAR -->
+    <!-- SEARCH BAR – top of container -->
     <div class="search-wrapper">
       <div class="search-box">
         <input type="text" id="searchInput" placeholder="Search products... (e.g. red chilly hot donut)" autocomplete="off">
@@ -506,6 +504,8 @@
       </div>
       <div class="search-stats" id="searchStats"></div>
     </div>
+
+    <h2 class="section-title">🛍️ Our products</h2>
 
     <div id="loadingState" class="loading-container">
       <div class="spinner-large"></div>
@@ -542,7 +542,7 @@
       let supabaseUrl = null;
       let supabaseAnonKey = null;
       const TABLE_NAME = 'product';
-      let allProducts = []; // cache for search
+      let allProducts = [];
 
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
@@ -616,7 +616,7 @@
         }
       }
 
-      // ----- SEARCH (keyword matching with ranking) -----
+      // ----- SEARCH (keyword matching, Enter key) -----
       function performSearch(query) {
         if (!query.trim()) {
           renderProducts(allProducts);
@@ -637,7 +637,6 @@
           const desc = (product.description || '').toLowerCase();
           let score = 0;
           for (const kw of keywords) {
-            // title matches get higher weight
             if (title.includes(kw)) score += 3;
             if (desc.includes(kw)) score += 1;
           }
@@ -723,23 +722,16 @@
         if (mobileCartCountEl) mobileCartCountEl.textContent = total;
       }
 
-      // ----- search events -----
-      searchBtn.addEventListener('click', () => {
-        performSearch(searchInput.value);
-      });
+      // ----- search: Enter key triggers search -----
       searchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
           performSearch(searchInput.value);
         }
       });
-      // realtime search (optional, debounced)
-      let debounceTimer;
-      searchInput.addEventListener('input', () => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-          performSearch(searchInput.value);
-        }, 400);
+      // search button also works
+      searchBtn.addEventListener('click', () => {
+        performSearch(searchInput.value);
       });
 
       async function init() {
