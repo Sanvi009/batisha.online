@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orders · Admin Panel</title>
+  <title>Orders · Batisha admin</title>
   <style>
     /* ----- HIDE UNTIL AUTH VERIFIED ----- */
     html:not(.auth-verified) body {
@@ -22,252 +22,286 @@
     }
 
     body {
-      background: #0c1419;
+      background: #fcfcfc;
       min-height: 100vh;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      color: #e3e9e5;
+      font-family: 'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
+      color: #1e2b3a;
     }
 
-    /* ----- HEADER ----- */
+    /* ----- HEADER (matches main site) ----- */
     .dashboard-header {
-      background: rgba(18, 25, 30, 0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(45, 212, 191, 0.2);
-      padding: 1.2rem 2rem;
+      background: #ffffff;
+      border-bottom: 1px solid #eaeef3;
+      padding: 0.7rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 0.8rem 1.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
     }
 
     .header-left {
       display: flex;
       align-items: center;
       gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #1f2a3a;
+    }
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(145deg, #1e6b3e, #2b7a4a);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(30, 107, 62, 0.12);
+    }
+    .logo-icon svg {
+      width: 26px;
+      height: 26px;
+      fill: white;
+      display: block;
+    }
+    .logo-text {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #1f2a3a;
+    }
+    .logo-text span {
+      font-weight: 400;
+      color: #4b6b5e;
+      font-size: 0.8rem;
+      margin-left: 0.1rem;
     }
 
     .dashboard-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #f0f5f2;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: #9abfb5;
-      text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 1.2rem;
       font-weight: 600;
-      transition: color 0.2s;
-      padding: 0.4rem 0.8rem;
-      border-radius: 1rem;
+      color: #1a3428;
+      margin-left: 0.5rem;
     }
 
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: #5ee3d0;
-      background: rgba(45, 212, 191, 0.1);
+    .badge {
+      background: #f0f8f2;
+      color: #1f8b4c;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border: 1px solid #dce8e2;
     }
 
-    .btn-logout {
-      background: rgba(239, 68, 68, 0.15);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.3);
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    /* ----- NAV LINKS (admin navigation) ----- */
+    .admin-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .admin-nav a {
+      text-decoration: none;
+      color: #2f3e4e;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      transition: 0.15s;
+    }
+    .admin-nav a:hover {
+      background: #f0f8f2;
+      color: #0f6e3a;
+    }
+    .admin-nav a.active {
+      background: #f0f8f2;
+      color: #0f6e3a;
+      font-weight: 600;
+    }
+
+    /* ----- BUTTONS ----- */
+    .btn {
       padding: 0.5rem 1.2rem;
-      border-radius: 2rem;
+      border-radius: 40px;
       font-weight: 600;
       font-size: 0.85rem;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: 0.15s;
       border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      text-decoration: none;
     }
 
+    .btn-logout {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
     .btn-logout:hover {
-      background: rgba(239, 68, 68, 0.3);
+      background: #fee2e2;
     }
 
-    /* ----- MAIN ----- */
-    .main-container {
-      max-width: 1300px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 2rem;
+    .btn-view {
+      background: #f0f5fc;
+      color: #1e3a5f;
+      border: 1px solid #dde5ed;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
+    }
+    .btn-view:hover {
+      background: #e4edf7;
     }
 
-    /* ----- STATS ----- */
+    .btn-deliver {
+      background: #f0fdf4;
+      color: #0f6e3a;
+      border: 1px solid #bbf7d0;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
+    }
+    .btn-deliver:hover {
+      background: #dcfce7;
+    }
+
+    .btn-cancel-order {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
+    }
+    .btn-cancel-order:hover {
+      background: #fee2e2;
+    }
+
+    /* ----- STATS CARDS (clean, white) ----- */
     .stats-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 1rem;
       margin-bottom: 2rem;
     }
 
     .stat-card {
-      background: rgba(18, 25, 30, 0.9);
-      border: 1px solid rgba(70, 130, 120, 0.2);
-      border-radius: 1.2rem;
-      padding: 1.5rem;
+      background: #ffffff;
+      border: 1px solid #eef2f6;
+      border-radius: 12px;
+      padding: 1.5rem 1.2rem;
       text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
     }
-
     .stat-number {
       font-size: 2rem;
-      font-weight: 800;
-      color: #5ee3d0;
+      font-weight: 700;
+      color: #1a3428;
     }
-
+    .stat-number.green {
+      color: #0f6e3a;
+    }
     .stat-label {
-      font-size: 0.8rem;
-      color: #9abfb5;
+      font-size: 0.75rem;
+      color: #4b5f53;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin-top: 0.3rem;
+      margin-top: 0.2rem;
+      font-weight: 600;
     }
 
-    /* ----- TABLE ----- */
+    /* ----- TABLE (clean, white) ----- */
     .table-wrapper {
-      background: rgba(18, 25, 30, 0.9);
-      border: 1px solid rgba(70, 130, 120, 0.2);
-      border-radius: 1.5rem;
+      background: #ffffff;
+      border: 1px solid #eef2f6;
+      border-radius: 16px;
       overflow-x: auto;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.02);
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 900px;
+      min-width: 800px;
     }
-
     thead {
-      background: rgba(30, 180, 150, 0.08);
-      border-bottom: 2px solid rgba(45, 212, 191, 0.2);
+      background: #f8fbf9;
+      border-bottom: 1px solid #eef2f6;
     }
-
     th {
-      padding: 1rem 1.2rem;
+      padding: 0.8rem 1.2rem;
       text-align: left;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.7px;
-      color: #9abfb5;
-      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #4b5f53;
+      font-weight: 600;
     }
-
     td {
-      padding: 0.9rem 1.2rem;
-      border-bottom: 1px solid rgba(70, 130, 120, 0.1);
-      font-size: 0.9rem;
-      color: #d1d5db;
+      padding: 0.7rem 1.2rem;
+      border-bottom: 1px solid #f0f5f2;
+      font-size: 0.85rem;
+      color: #1e2b3a;
       vertical-align: middle;
     }
-
     tbody tr:hover {
-      background: rgba(30, 180, 150, 0.05);
+      background: #f8fbf9;
     }
-
     tbody tr:last-child td {
       border-bottom: none;
     }
 
     /* ----- STATUS BADGES ----- */
     .status-badge {
-      padding: 0.3rem 0.8rem;
-      border-radius: 1rem;
-      font-size: 0.75rem;
-      font-weight: 700;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
       display: inline-block;
     }
-
     .status-pending {
-      background: rgba(251, 191, 36, 0.2);
-      color: #fbbf24;
-      border: 1px solid rgba(251, 191, 36, 0.3);
+      background: #fefce8;
+      color: #a16207;
+      border: 1px solid #fde68a;
     }
-
     .status-confirmed {
-      background: rgba(59, 130, 246, 0.2);
-      color: #93c5fd;
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
     }
-
     .status-delivered {
-      background: rgba(34, 197, 94, 0.2);
-      color: #86efac;
-      border: 1px solid rgba(34, 197, 94, 0.3);
+      background: #f0fdf4;
+      color: #0f6e3a;
+      border: 1px solid #bbf7d0;
     }
-
     .status-cancelled {
-      background: rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
     }
 
-    /* ----- BUTTONS ----- */
-    .btn {
-      padding: 0.4rem 0.9rem;
-      border-radius: 1.5rem;
-      font-weight: 600;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .btn-view {
-      background: rgba(59, 130, 246, 0.15);
-      color: #93c5fd;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-
-    .btn-view:hover {
-      background: rgba(59, 130, 246, 0.3);
-    }
-
-    .btn-deliver {
-      background: rgba(34, 197, 94, 0.15);
-      color: #86efac;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-    }
-
-    .btn-deliver:hover {
-      background: rgba(34, 197, 94, 0.3);
-    }
-
-    .btn-cancel-order {
-      background: rgba(239, 68, 68, 0.15);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    .btn-cancel-order:hover {
-      background: rgba(239, 68, 68, 0.3);
-    }
-
-    .btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    /* ----- MODAL ----- */
+    /* ----- MODAL (clean, white) ----- */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(4px);
       display: flex;
       align-items: center;
@@ -275,64 +309,58 @@
       z-index: 2000;
       animation: fadeIn 0.2s ease;
     }
-
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
 
     .modal-box {
-      background: #1a272e;
-      border: 1px solid rgba(45, 212, 191, 0.3);
-      border-radius: 1.5rem;
+      background: #ffffff;
+      border-radius: 16px;
       padding: 2rem;
       max-width: 700px;
       width: 95%;
       max-height: 85vh;
       overflow-y: auto;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+      border: 1px solid #eef2f6;
     }
-
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.5rem;
     }
-
     .modal-title {
       font-size: 1.3rem;
       font-weight: 700;
-      color: #f0f5f2;
+      color: #1a3428;
     }
-
     .modal-close {
       background: none;
       border: none;
-      color: #9abfb5;
+      color: #4b5f53;
       font-size: 1.5rem;
       cursor: pointer;
       padding: 0.3rem;
+      transition: 0.15s;
     }
-
     .modal-close:hover {
-      color: #fca5a5;
+      color: #991b1b;
     }
 
     .info-row {
       display: flex;
       justify-content: space-between;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid rgba(70, 130, 120, 0.1);
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f0f5f2;
     }
-
     .info-label {
-      color: #9abfb5;
+      color: #4b5f53;
       font-size: 0.85rem;
     }
-
     .info-value {
-      color: #e3e9e5;
+      color: #1e2b3a;
       font-weight: 600;
       font-size: 0.9rem;
     }
@@ -340,19 +368,21 @@
     .order-items-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 1.5rem;
+      margin-top: 1.2rem;
       min-width: auto;
     }
-
     .order-items-table th {
-      background: rgba(30, 180, 150, 0.08);
-      padding: 0.7rem 1rem;
+      background: #f8fbf9;
+      padding: 0.6rem 1rem;
       font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #4b5f53;
     }
-
     .order-items-table td {
-      padding: 0.7rem 1rem;
+      padding: 0.6rem 1rem;
       font-size: 0.85rem;
+      border-bottom: 1px solid #f0f5f2;
     }
 
     .modal-actions {
@@ -362,22 +392,21 @@
       margin-top: 1.5rem;
     }
 
-    /* ----- LOADING ----- */
+    /* ----- LOADING / EMPTY / ERROR ----- */
     .loading-container {
       text-align: center;
       padding: 3rem;
+      color: #4b5f53;
     }
-
     .spinner {
       width: 40px;
       height: 40px;
-      border: 3px solid rgba(45, 212, 191, 0.2);
-      border-top-color: #2dd4bf;
+      border: 3px solid #e2ebe6;
+      border-top-color: #1f8b4c;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
       margin: 0 auto 1rem;
     }
-
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
@@ -386,39 +415,50 @@
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      padding: 0.8rem 1.5rem;
-      border-radius: 2rem;
-      font-weight: 600;
-      z-index: 3000;
-      display: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 500;
       animation: slideIn 0.3s ease;
+      z-index: 1000;
+      display: none;
       color: white;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
     }
-
-    .toast.success { background: #22c55e; }
-    .toast.error { background: #ef4444; }
-
+    .toast.success { background: #1f8b4c; }
+    .toast.error { background: #dc2626; }
     @keyframes slideIn {
       from { transform: translateX(100%); opacity: 0; }
       to { transform: translateX(0); opacity: 1; }
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 3rem;
-      color: #6b8780;
-    }
-
+    /* ----- MOBILE ----- */
     @media (max-width: 768px) {
       .dashboard-header {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
+        padding: 0.8rem 1rem;
       }
-      
+      .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      .header-right {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+      .admin-nav {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+      }
       .main-container {
         padding: 1rem;
       }
-      
+      th, td {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.75rem;
+      }
       .stats-row {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -429,18 +469,28 @@
   <!-- ----- HEADER ----- -->
   <header class="dashboard-header">
     <div class="header-left">
-      <h1 class="dashboard-title">📋 Order Management</h1>
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 10v-2a6 6 0 0 1 12 0v2h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2h4zm2 0h8v-2a4 4 0 0 0-8 0v2zm-2 2v2h2v-2h-2zm4 0v2h4v-2h-4zm8 0v2h2v-2h-2zM8 14v2h2v-2H8zm16 0v2h2v-2h-2zM8 18v8h16v-8H8z"/>
+          </svg>
+        </div>
+        <span class="logo-text">Batisha <span>online</span></span>
+      </a>
+      <span class="dashboard-title">📋 Orders</span>
+      <span class="badge">Admin</span>
     </div>
-    <div style="display: flex; gap: 1.5rem; align-items: center;">
-      <div class="nav-links">
+
+    <div class="header-right">
+      <nav class="admin-nav">
         <a href="/admin/dashboard">📊 Products</a>
-        <a href="/admin/orders" class="active">📋 Orders</a>
-      </div>
-      <button class="btn-logout" id="logoutButton">🚪 Logout</button>
+        <a href="/admin/orders" class="active">📦 Orders</a>
+      </nav>
+      <button class="btn btn-logout" id="logoutButton">🚪 Logout</button>
     </div>
   </header>
 
-  <!-- ----- MAIN ----- -->
+  <!-- ----- MAIN CONTENT ----- -->
   <main class="main-container">
     <!-- Stats -->
     <div class="stats-row">
@@ -449,15 +499,15 @@
         <div class="stat-label">Total Orders</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" id="statPending">0</div>
+        <div class="stat-number green" id="statPending">0</div>
         <div class="stat-label">Pending</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" id="statDelivered">0</div>
+        <div class="stat-number green" id="statDelivered">0</div>
         <div class="stat-label">Delivered</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" id="statRevenue">₹0</div>
+        <div class="stat-number green" id="statRevenue">₹0</div>
         <div class="stat-label">Total Revenue</div>
       </div>
     </div>
@@ -465,18 +515,18 @@
     <!-- Loading -->
     <div id="loadingState" class="loading-container">
       <div class="spinner"></div>
-      <p style="color: #6b8780;">Loading orders...</p>
+      <p>Loading orders...</p>
     </div>
 
     <!-- Error -->
     <div id="errorState" class="loading-container" style="display: none;">
-      <p style="color: #fca5a5;">❌ Failed to load orders</p>
+      <p style="color: #991b1b;">❌ Failed to load orders</p>
       <button class="btn btn-view" onclick="location.reload()" style="margin-top: 1rem;">🔄 Retry</button>
     </div>
 
     <!-- Empty -->
     <div id="emptyState" class="loading-container" style="display: none;">
-      <p style="color: #6b8780;">📦 No orders yet</p>
+      <p style="color: #4b5f53;">📦 No orders yet</p>
     </div>
 
     <!-- Table -->
@@ -538,7 +588,7 @@
             return false;
           }
           return true;
-        } catch (e) {
+        } catch {
           localStorage.removeItem(SESSION_KEY);
           return false;
         }
@@ -592,7 +642,7 @@
           supabaseUrl = config.supabaseUrl;
           supabaseAnonKey = config.supabaseAnonKey;
           return true;
-        } catch (e) {
+        } catch {
           showToast('Failed to load configuration', 'error');
           return false;
         }
@@ -630,8 +680,7 @@
           updateStats(orders);
           showState('table');
 
-        } catch (e) {
-          console.error('Fetch error:', e);
+        } catch {
           showState('error');
         }
       }
@@ -650,11 +699,9 @@
               },
             }
           );
-
           if (!response.ok) throw new Error('Failed to fetch items');
           return await response.json();
-        } catch (e) {
-          console.error('Items error:', e);
+        } catch {
           return [];
         }
       }
@@ -756,10 +803,10 @@
           </div>
           <div class="info-row">
             <span class="info-label">Total</span>
-            <span class="info-value" style="color: #5ee3d0; font-size: 1.1rem;">₹${parseFloat(order.total_price).toFixed(2)}</span>
+            <span class="info-value" style="color: #0f6e3a; font-size: 1.1rem;">₹${parseFloat(order.total_price).toFixed(2)}</span>
           </div>
 
-          <h4 style="color: #9abfb5; margin-top: 1.5rem; margin-bottom: 0.8rem;">📦 Order Items</h4>
+          <h4 style="color: #1a3428; margin-top: 1.5rem; margin-bottom: 0.8rem;">📦 Order Items</h4>
           <table class="order-items-table">
             <thead>
               <tr>
@@ -774,7 +821,7 @@
                 <tr>
                   <td>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                      ${item.product_image_url ? `<img src="${escapeHtml(item.product_image_url)}" style="width:35px;height:35px;border-radius:0.4rem;object-fit:cover;">` : '🥬'}
+                      ${item.product_image_url ? `<img src="${escapeHtml(item.product_image_url)}" style="width:35px;height:35px;border-radius:8px;object-fit:contain;background:#f8fbf9;border:1px solid #eef2f6;">` : '🥬'}
                       ${escapeHtml(item.product_title)}
                     </div>
                   </td>
@@ -836,13 +883,12 @@
 
           if (!response.ok) throw new Error('Update failed');
 
-          // Update local data
           const order = allOrders.find(o => o.id === orderId);
           if (order) order.status = newStatus;
 
           showToast(`✅ Order #${orderId} marked as ${newStatus}!`);
-          fetchOrders(); // Refresh
-        } catch (e) {
+          fetchOrders();
+        } catch {
           showToast('Failed to update status', 'error');
         }
       }
@@ -874,12 +920,10 @@
         errorState.style.display = 'none';
         emptyState.style.display = 'none';
         tableContainer.style.display = 'none';
-        switch (state) {
-          case 'loading': loadingState.style.display = 'block'; break;
-          case 'error': errorState.style.display = 'block'; break;
-          case 'empty': emptyState.style.display = 'block'; break;
-          case 'table': tableContainer.style.display = 'block'; break;
-        }
+        if (state === 'loading') loadingState.style.display = 'block';
+        else if (state === 'error') errorState.style.display = 'block';
+        else if (state === 'empty') emptyState.style.display = 'block';
+        else if (state === 'table') tableContainer.style.display = 'block';
       }
 
       function handleLogout() {
