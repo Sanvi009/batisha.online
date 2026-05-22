@@ -17,6 +17,8 @@
       color: #1e2b3a;
       line-height: 1.4;
       -webkit-font-smoothing: antialiased;
+      /* add padding-bottom for mobile bottom nav */
+      padding-bottom: 70px;
     }
 
     /* ----- navbar (clean, crisp) ----- */
@@ -77,7 +79,7 @@
       margin-left: 0.1rem;
     }
 
-    /* ----- nav links ----- */
+    /* ----- nav links (desktop) ----- */
     .nav-links {
       display: flex;
       align-items: center;
@@ -134,17 +136,14 @@
       margin-left: 0.2rem;
     }
 
-    /* ----- hero minimal (removed text as requested) ----- */
+    /* ----- hero minimal (no text) ----- */
     .hero {
       background: #f8fbf9;
-      padding: 1.2rem 1.5rem;
+      padding: 0.5rem 1.5rem;
       border-bottom: 1px solid #e4ece8;
-      text-align: center;
-      min-height: 30px;
+      min-height: 12px;
     }
-    .hero h1, .hero p {
-      display: none;
-    }
+    .hero h1, .hero p { display: none; }
 
     /* ----- container & grid (compact) ----- */
     .container {
@@ -268,7 +267,7 @@
       box-shadow: 0 4px 10px rgba(22, 163, 74, 0.2);
     }
 
-    /* ----- loading / error / empty (unchanged core) ----- */
+    /* ----- loading / error / empty ----- */
     .loading-container { text-align: center; padding: 2rem; }
     .spinner-large { width: 40px; height: 40px; border: 3px solid #e2ebe6; border-top-color: #1f8b4c; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 0.8rem; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -278,7 +277,7 @@
     .empty-state { text-align: center; padding: 2.5rem; color: #4b5f53; }
     .empty-state .emoji { font-size: 3rem; margin-bottom: 0.3rem; }
 
-    /* ----- footer (ultra minimal, no text as requested) ----- */
+    /* ----- footer minimal (no text) ----- */
     .footer {
       background: #f8fbf9;
       border-top: 1px solid #e4ece8;
@@ -287,35 +286,105 @@
       text-align: center;
       height: 20px;
     }
-    .footer p {
-      display: none;
+    .footer p { display: none; }
+
+    /* ===== MOBILE BOTTOM NAV (app-like) ===== */
+    .mobile-bottom-nav {
+      display: none; /* hidden on desktop */
     }
 
-    /* ----- responsive (mobile first) ----- */
     @media (max-width: 700px) {
-      .nav-container { flex-direction: column; align-items: stretch; text-align: center; }
-      .nav-links { justify-content: center; gap: 1.2rem; flex-wrap: wrap; }
-      .products-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.8rem; }
+      body {
+        padding-bottom: 70px;
+      }
+      /* hide desktop nav links on mobile */
+      .nav-links {
+        display: none;
+      }
+      .navbar {
+        padding: 0.5rem 1rem;
+      }
+      .nav-container {
+        justify-content: center;
+      }
+      /* show bottom nav */
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #ffffff;
+        border-top: 1px solid #e4eaf0;
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
+        justify-content: space-around;
+        align-items: center;
+        padding: 0.5rem 0.4rem 0.7rem;
+        z-index: 200;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+      .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: #2f3e4e;
+        font-size: 0.6rem;
+        font-weight: 500;
+        gap: 2px;
+        padding: 0.2rem 0.6rem;
+        transition: 0.1s;
+        flex: 1;
+        max-width: 80px;
+      }
+      .mobile-bottom-nav a:hover {
+        color: #0f6e3a;
+      }
+      .mobile-bottom-nav a .nav-icon {
+        font-size: 1.3rem;
+        line-height: 1;
+      }
+      .mobile-bottom-nav a .nav-label {
+        font-size: 0.55rem;
+        opacity: 0.75;
+      }
+      .mobile-bottom-nav .cart-badge {
+        background: #1f8b4c;
+        color: white;
+        border-radius: 40px;
+        padding: 0.02rem 0.5rem;
+        font-size: 0.5rem;
+        font-weight: 600;
+        margin-left: 0.1rem;
+        display: inline-block;
+      }
+
+      /* adjust grid for mobile */
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 0.8rem;
+      }
       .container { padding: 0 1rem 1.5rem; }
       .product-image { height: 120px; }
       .product-image-placeholder { height: 120px; }
     }
+
     @media (max-width: 480px) {
-      .navbar { padding: 0.5rem 0.8rem; }
-      .container { padding: 0 0.6rem 1.2rem; }
       .products-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
       .product-image { height: 100px; }
       .product-image-placeholder { height: 100px; }
       .product-title { font-size: 0.7rem; }
       .product-price { font-size: 0.9rem; }
       .add-to-cart-btn { font-size: 0.55rem; padding: 0.15rem 0.7rem; }
+      .mobile-bottom-nav a { max-width: 70px; }
     }
   </style>
 </head>
 <body>
   <nav class="navbar">
     <div class="nav-container">
-      <!-- LOGO: bag icon + Batisha online -->
+      <!-- LOGO -->
       <a href="/" class="logo">
         <div class="logo-icon">
           <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -325,6 +394,7 @@
         <span class="logo-text">Batisha <span>online</span></span>
       </a>
 
+      <!-- DESKTOP NAV LINKS -->
       <div class="nav-links">
         <a href="/">Home</a>
         <a href="/product">Products</a>
@@ -332,6 +402,22 @@
       </div>
     </div>
   </nav>
+
+  <!-- MOBILE BOTTOM NAV (app-like) -->
+  <div class="mobile-bottom-nav">
+    <a href="/">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="/product">
+      <span class="nav-icon">📦</span>
+      <span class="nav-label">Products</span>
+    </a>
+    <a href="/cart">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
+    </a>
+  </div>
 
   <!-- hero empty (no text) -->
   <header class="hero"></header>
@@ -374,6 +460,7 @@
       const emptyState = document.getElementById('emptyState');
       const productsGrid = document.getElementById('productsGrid');
       const cartCountSpan = document.getElementById('cartCount');
+      const mobileCartCountSpan = document.getElementById('mobileCartCount');
 
       function showDetailedError(msg) {
         errorDetails.textContent = msg;
@@ -490,6 +577,7 @@
         const cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
         const total = cart.reduce((sum, i) => sum + i.quantity, 0);
         if (cartCountSpan) cartCountSpan.textContent = total;
+        if (mobileCartCountSpan) mobileCartCountSpan.textContent = total;
       }
 
       async function init() {
