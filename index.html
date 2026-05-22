@@ -12,22 +12,22 @@
     }
 
     body {
-      background: #ffffff;
+      background: #fcfcfc;
       font-family: 'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
-      color: #1f2a3a;
-      line-height: 1.5;
+      color: #1e2b3a;
+      line-height: 1.4;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ----- professional navbar (clean, border, subtle) ----- */
+    /* ----- navbar (clean, crisp) ----- */
     .navbar {
       background: #ffffff;
-      border-bottom: 1px solid #eef2f6;
-      padding: 0.9rem 2.4rem;
+      border-bottom: 1px solid #eaeef3;
+      padding: 0.7rem 2rem;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.02);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
     }
     .nav-container {
       max-width: 1400px;
@@ -36,36 +36,36 @@
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 0.5rem 2rem;
+      gap: 0.4rem 1.8rem;
     }
 
     /* ----- LOGO (bag icon + Batisha online) ----- */
     .logo {
       display: flex;
       align-items: center;
-      gap: 0.7rem;
+      gap: 0.6rem;
       text-decoration: none;
-      color: #1a2a2a;
+      color: #1f2a3a;
     }
     .logo-icon {
-      width: 46px;
-      height: 46px;
-      background: linear-gradient(145deg, #2563eb, #7c3aed);
-      border-radius: 14px;
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(145deg, #1e6b3e, #2b7a4a);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
+      box-shadow: 0 4px 10px rgba(30, 107, 62, 0.12);
       transition: 0.2s;
     }
     .logo-icon svg {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       fill: white;
       display: block;
     }
     .logo-text {
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       font-weight: 700;
       letter-spacing: -0.3px;
       color: #1f2a3a;
@@ -73,20 +73,20 @@
     .logo-text span {
       font-weight: 400;
       color: #4b6b5e;
-      font-size: 0.9rem;
-      margin-left: 0.2rem;
+      font-size: 0.8rem;
+      margin-left: 0.1rem;
     }
 
-    /* ----- nav links (clean, modern) ----- */
+    /* ----- nav links ----- */
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 2.2rem;
+      gap: 1.8rem;
     }
     .nav-links a {
       text-decoration: none;
       font-weight: 500;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: #2f3e4e;
       transition: 0.15s;
       letter-spacing: -0.2px;
@@ -95,7 +95,7 @@
     .nav-links a::after {
       content: '';
       position: absolute;
-      bottom: -4px;
+      bottom: -3px;
       left: 0;
       width: 0;
       height: 2px;
@@ -105,13 +105,13 @@
     .nav-links a:hover::after { width: 100%; }
     .nav-links a:hover { color: #0f6e3a; }
 
-    /* ----- cart as pill (elegant) ----- */
+    /* ----- cart pill (minimal) ----- */
     .cart-pill {
       background: #f0f5fc;
-      padding: 0.4rem 1.2rem 0.4rem 1rem;
+      padding: 0.3rem 1.1rem 0.3rem 0.9rem;
       border-radius: 40px;
       font-weight: 500;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       display: flex;
       align-items: center;
       gap: 0.3rem;
@@ -128,102 +128,92 @@
       background: #1f8b4c;
       color: white;
       border-radius: 40px;
-      padding: 0.05rem 0.65rem;
-      font-size: 0.75rem;
+      padding: 0.02rem 0.6rem;
+      font-size: 0.7rem;
       font-weight: 600;
       margin-left: 0.2rem;
     }
 
-    /* ----- hero (professional, clean) ----- */
+    /* ----- hero minimal (removed text as requested) ----- */
     .hero {
       background: #f8fbf9;
-      padding: 3.2rem 2rem 2.8rem;
-      text-align: center;
+      padding: 1.2rem 1.5rem;
       border-bottom: 1px solid #e4ece8;
+      text-align: center;
+      min-height: 30px;
     }
-    .hero h1 {
-      font-size: 2.6rem;
-      font-weight: 650;
-      color: #173e2a;
-      letter-spacing: -0.8px;
-    }
-    .hero p {
-      color: #3d5a4b;
-      font-size: 1.1rem;
-      max-width: 580px;
-      margin: 0.3rem auto 0;
-      font-weight: 400;
-      opacity: 0.85;
+    .hero h1, .hero p {
+      display: none;
     }
 
-    /* ----- container & grid (professional spacing) ----- */
+    /* ----- container & grid (compact) ----- */
     .container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0 2rem 3rem;
+      padding: 0.8rem 2rem 2rem;
     }
     .section-title {
-      font-size: 1.8rem;
+      font-size: 1.4rem;
       font-weight: 600;
       color: #1a3428;
-      margin: 2rem 0 1.8rem;
+      margin: 0.8rem 0 1.2rem;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      border-left: 5px solid #1f8b4c;
-      padding-left: 1.2rem;
+      gap: 0.5rem;
+      border-left: 4px solid #1f8b4c;
+      padding-left: 1rem;
     }
 
     .products-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 1.6rem;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 1.2rem;
     }
 
-    /* ----- product card (daraz/amazon style, modern) ----- */
+    /* ----- product card (smaller, professional) ----- */
     .product-card {
       background: white;
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
       border: 1px solid #eef2f6;
-      transition: 0.2s ease;
+      transition: 0.15s ease;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     }
     .product-card:hover {
       border-color: #c8d8d0;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+      transform: translateY(-2px);
     }
 
     .product-image {
       width: 100%;
-      height: 170px;
+      height: 140px;
       object-fit: cover;
       background: #f3f8f5;
       display: block;
     }
     .product-image-placeholder {
       width: 100%;
-      height: 170px;
+      height: 140px;
       background: #eaf1ec;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.8rem;
+      font-size: 2.4rem;
       color: #2d7a4b;
     }
 
     .product-info {
-      padding: 0.9rem 1rem 1rem;
+      padding: 0.6rem 0.8rem 0.8rem;
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
+      gap: 0.1rem;
     }
     .product-title {
-      font-size: 0.95rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: #1e2e2a;
       line-height: 1.3;
@@ -234,25 +224,25 @@
     }
     .product-description {
       color: #5f6f6a;
-      font-size: 0.75rem;
-      line-height: 1.4;
+      font-size: 0.65rem;
+      line-height: 1.3;
       display: -webkit-box;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      margin-top: 0.1rem;
+      margin-top: 0.05rem;
     }
     .product-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 0.6rem;
-      padding-top: 0.5rem;
+      margin-top: 0.4rem;
+      padding-top: 0.3rem;
       border-top: 1px solid #edf2ef;
     }
     .product-price {
       font-weight: 700;
-      font-size: 1.2rem;
+      font-size: 1rem;
       color: #0f6e3a;
       letter-spacing: -0.2px;
     }
@@ -262,64 +252,70 @@
       background: #1f8b4c;
       color: white;
       border: none;
-      padding: 0.3rem 1.2rem;
-      border-radius: 40px;
+      padding: 0.2rem 0.9rem;
+      border-radius: 30px;
       font-weight: 500;
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       cursor: pointer;
       transition: 0.15s;
       display: flex;
       align-items: center;
-      gap: 0.2rem;
+      gap: 0.15rem;
       letter-spacing: 0.2px;
     }
     .add-to-cart-btn:hover {
       background: #0f6e3a;
-      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+      box-shadow: 0 4px 10px rgba(22, 163, 74, 0.2);
     }
 
     /* ----- loading / error / empty (unchanged core) ----- */
-    .loading-container { text-align: center; padding: 3rem 2rem; }
-    .spinner-large { width: 44px; height: 44px; border: 4px solid #e2ebe6; border-top-color: #1f8b4c; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 1rem; }
+    .loading-container { text-align: center; padding: 2rem; }
+    .spinner-large { width: 40px; height: 40px; border: 3px solid #e2ebe6; border-top-color: #1f8b4c; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 0.8rem; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .error-container { text-align: center; padding: 2rem; background: #fef2f2; border-radius: 1rem; border: 1px solid #fecaca; margin: 2rem 0; }
-    .error-details { background: white; padding: 0.8rem; border-radius: 0.6rem; margin: 0.8rem 0; font-family: monospace; font-size: 0.7rem; color: #b91c1c; white-space: pre-wrap; word-break: break-all; }
-    .retry-btn { background: #dc2626; color: white; border: none; padding: 0.5rem 2rem; border-radius: 2rem; font-weight: 500; cursor: pointer; }
-    .empty-state { text-align: center; padding: 3rem; color: #4b5f53; }
-    .empty-state .emoji { font-size: 3.5rem; margin-bottom: 0.5rem; }
+    .error-container { text-align: center; padding: 1.5rem; background: #fef2f2; border-radius: 1rem; border: 1px solid #fecaca; margin: 1.5rem 0; }
+    .error-details { background: white; padding: 0.6rem; border-radius: 0.5rem; margin: 0.6rem 0; font-family: monospace; font-size: 0.65rem; color: #b91c1c; white-space: pre-wrap; word-break: break-all; }
+    .retry-btn { background: #dc2626; color: white; border: none; padding: 0.4rem 1.8rem; border-radius: 2rem; font-weight: 500; cursor: pointer; }
+    .empty-state { text-align: center; padding: 2.5rem; color: #4b5f53; }
+    .empty-state .emoji { font-size: 3rem; margin-bottom: 0.3rem; }
 
-    /* footer */
+    /* ----- footer (ultra minimal, no text as requested) ----- */
     .footer {
-      background: #1a2e23;
-      color: #d6e5db;
+      background: #f8fbf9;
+      border-top: 1px solid #e4ece8;
+      padding: 0.8rem;
+      margin-top: 2.5rem;
       text-align: center;
-      padding: 2rem;
-      margin-top: 3.5rem;
-      border-top: 1px solid #2c4f39;
+      height: 20px;
     }
-    .footer p { opacity: 0.75; font-size: 0.9rem; }
+    .footer p {
+      display: none;
+    }
 
-    /* responsive */
+    /* ----- responsive (mobile first) ----- */
     @media (max-width: 700px) {
       .nav-container { flex-direction: column; align-items: stretch; text-align: center; }
-      .nav-links { justify-content: center; gap: 1.4rem; flex-wrap: wrap; }
-      .hero h1 { font-size: 2rem; }
-      .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.2rem; }
+      .nav-links { justify-content: center; gap: 1.2rem; flex-wrap: wrap; }
+      .products-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.8rem; }
+      .container { padding: 0 1rem 1.5rem; }
+      .product-image { height: 120px; }
+      .product-image-placeholder { height: 120px; }
     }
     @media (max-width: 480px) {
-      .navbar { padding: 0.6rem 1rem; }
-      .container { padding: 0 1rem 2rem; }
-      .products-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-      .product-image { height: 130px; }
-      .product-image-placeholder { height: 130px; }
-      .hero h1 { font-size: 1.6rem; }
+      .navbar { padding: 0.5rem 0.8rem; }
+      .container { padding: 0 0.6rem 1.2rem; }
+      .products-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+      .product-image { height: 100px; }
+      .product-image-placeholder { height: 100px; }
+      .product-title { font-size: 0.7rem; }
+      .product-price { font-size: 0.9rem; }
+      .add-to-cart-btn { font-size: 0.55rem; padding: 0.15rem 0.7rem; }
     }
   </style>
 </head>
 <body>
   <nav class="navbar">
     <div class="nav-container">
-      <!-- LOGO: bag icon + Batisha online (professional) -->
+      <!-- LOGO: bag icon + Batisha online -->
       <a href="/" class="logo">
         <div class="logo-icon">
           <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -337,35 +333,31 @@
     </div>
   </nav>
 
-  <header class="hero">
-    <h1>Fresh groceries, delivered</h1>
-    <p>Quality produce from farm to table — thoughtfully sourced, every day.</p>
-  </header>
+  <!-- hero empty (no text) -->
+  <header class="hero"></header>
 
   <main class="container">
     <h2 class="section-title">🛍️ Our products</h2>
 
     <div id="loadingState" class="loading-container">
       <div class="spinner-large"></div>
-      <p style="color: #3d5a4b;">Loading fresh products...</p>
+      <p style="color: #3d5a4b; font-size: 0.9rem;">Loading products…</p>
     </div>
     <div id="errorState" class="error-container" style="display: none;">
-      <h3>😕 Something went wrong</h3>
+      <h3 style="font-size: 1rem;">😕 Something went wrong</h3>
       <div id="errorDetails" class="error-details"></div>
       <button class="retry-btn" onclick="location.reload()">Retry</button>
     </div>
     <div id="emptyState" class="empty-state" style="display: none;">
       <div class="emoji">📦</div>
-      <h3>No products yet</h3>
-      <p>We’ll be back soon with fresh groceries.</p>
+      <h3 style="font-size: 1rem;">No products</h3>
+      <p style="font-size: 0.85rem;">Check back later.</p>
     </div>
     <div id="productsGrid" class="products-grid" style="display: none;"></div>
   </main>
 
-  <footer class="footer">
-    <p>© 2026 Batisha online · fresh grocery</p>
-    <p style="opacity: 0.65; margin-top: 0.3rem;">support@batisha.online</p>
-  </footer>
+  <!-- footer minimal (no text) -->
+  <footer class="footer"></footer>
 
   <script>
     (function() {
