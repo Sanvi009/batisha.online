@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Products · Batisha online</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #fcfcfc;
+      font-family: 'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
+      color: #1e2b3a;
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 70px;
+    }
+
+    /* ----- NAVBAR (matches home & cart) ----- */
+    .navbar {
+      background: #ffffff;
+      border-bottom: 1px solid #eaeef3;
+      padding: 0.7rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+    }
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.8rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #1f2a3a;
+    }
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(145deg, #1e6b3e, #2b7a4a);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(30, 107, 62, 0.12);
+    }
+    .logo-icon svg {
+      width: 26px;
+      height: 26px;
+      fill: white;
+      display: block;
+    }
+    .logo-text {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #1f2a3a;
+    }
+    .logo-text span {
+      font-weight: 400;
+      color: #4b6b5e;
+      font-size: 0.8rem;
+      margin-left: 0.1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #2f3e4e;
+      transition: 0.15s;
+      letter-spacing: -0.2px;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #1f8b4c;
+      transition: 0.2s;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a:hover { color: #0f6e3a; }
+
+    .cart-pill {
+      background: #f0f5fc;
+      padding: 0.3rem 1.1rem 0.3rem 0.9rem;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      border: 1px solid #dde5ed;
+      transition: 0.15s;
+      color: #1f2a3a;
+    }
+    .cart-pill:hover {
+      background: #e4edf7;
+      border-color: #b8cee0;
+    }
+    .cart-pill span {
+      background: #1f8b4c;
+      color: white;
+      border-radius: 40px;
+      padding: 0.02rem 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-left: 0.2rem;
+    }
+
+    /* ----- MAIN (coming soon) ----- */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 2rem 3rem;
+    }
+
+    .page-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #1a3428;
+      margin: 0.5rem 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-left: 4px solid #1f8b4c;
+      padding-left: 1rem;
+    }
+
+    /* ----- COMING SOON HERO (professional, clean) ----- */
+    .coming-soon-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 1.5rem;
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #eef2f6;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.02);
+      min-height: 420px;
+      text-align: center;
+    }
+
+    .coming-soon-icon {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+    .coming-soon-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #1a3428;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.5rem;
+    }
+    .coming-soon-sub {
+      font-size: 1rem;
+      color: #4b5f53;
+      max-width: 480px;
+      margin: 0 auto 1.5rem;
+      font-weight: 400;
+    }
+    .coming-soon-divider {
+      width: 60px;
+      height: 3px;
+      background: #1f8b4c;
+      border-radius: 4px;
+      margin: 0.5rem auto 1.2rem;
+    }
+    .coming-soon-btn {
+      background: #1f8b4c;
+      color: white;
+      padding: 0.7rem 2.2rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-block;
+      transition: 0.15s;
+      box-shadow: 0 2px 8px rgba(31, 139, 76, 0.15);
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .coming-soon-btn:hover {
+      background: #0f6e3a;
+      transform: scale(1.02);
+    }
+
+    /* ----- NOTIFICATION FORM (optional mini) ----- */
+    .notify-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+      max-width: 500px;
+      width: 100%;
+    }
+    .notify-form input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.6rem 1rem;
+      border-radius: 40px;
+      border: 1px solid #dde5ed;
+      background: #f8fbf9;
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: 0.15s;
+    }
+    .notify-form input:focus {
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31, 139, 76, 0.08);
+    }
+    .notify-form button {
+      background: #1f8b4c;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.6rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.15s;
+      box-shadow: 0 2px 8px rgba(31, 139, 76, 0.12);
+    }
+    .notify-form button:hover {
+      background: #0f6e3a;
+    }
+
+    /* ----- FOOTER (minimal, matches home) ----- */
+    .footer {
+      background: #f8fbf9;
+      border-top: 1px solid #e4ece8;
+      padding: 0.8rem;
+      margin-top: 2.5rem;
+      text-align: center;
+      height: 20px;
+    }
+    .footer p { display: none; }
+
+    /* ----- MOBILE BOTTOM NAV (matches home) ----- */
+    .mobile-bottom-nav {
+      display: none;
+    }
+
+    @media (max-width: 700px) {
+      body { padding-bottom: 75px; }
+      .nav-links { display: none; }
+      .navbar { padding: 0.5rem 1rem; }
+      .nav-container { justify-content: flex-start; }
+
+      .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(8px);
+        border-top: 1px solid #e4eaf0;
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
+        justify-content: space-around;
+        align-items: center;
+        padding: 0.45rem 0 0.6rem;
+        z-index: 200;
+      }
+      .mobile-bottom-nav a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: #2f3e4e;
+        font-size: 0.6rem;
+        font-weight: 500;
+        gap: 0.1rem;
+        padding: 0.2rem 0.4rem;
+        transition: 0.1s;
+        flex: 1;
+        max-width: 90px;
+        border-radius: 40px;
+      }
+      .mobile-bottom-nav a:hover {
+        color: #0f6e3a;
+        background: #f0f8f2;
+      }
+      .mobile-bottom-nav a .nav-icon {
+        font-size: 1.4rem;
+        line-height: 1;
+      }
+      .mobile-bottom-nav a .nav-label {
+        font-size: 0.55rem;
+        opacity: 0.7;
+        letter-spacing: 0.2px;
+      }
+      .mobile-bottom-nav .nav-home {
+        background: #f0f8f2;
+        border-radius: 40px;
+        padding: 0.3rem 0.6rem;
+        margin: 0 0.2rem;
+        flex: 1.2;
+        max-width: 110px;
+      }
+      .mobile-bottom-nav .nav-home .nav-icon {
+        font-size: 1.6rem;
+      }
+      .mobile-bottom-nav .nav-home .nav-label {
+        font-weight: 600;
+        opacity: 0.9;
+      }
+      .mobile-bottom-nav .cart-badge {
+        background: #1f8b4c;
+        color: white;
+        border-radius: 40px;
+        padding: 0.02rem 0.5rem;
+        font-size: 0.5rem;
+        font-weight: 600;
+        margin-left: 0.1rem;
+        display: inline-block;
+      }
+
+      .coming-soon-title { font-size: 1.8rem; }
+      .container { padding: 1rem; }
+      .notify-form input { min-width: 150px; }
+    }
+
+    @media (max-width: 480px) {
+      .coming-soon-title { font-size: 1.5rem; }
+      .coming-soon-icon { font-size: 3.8rem; }
+      .mobile-bottom-nav a { max-width: 70px; }
+      .mobile-bottom-nav .nav-home { max-width: 90px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR (matches home & cart) -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 10v-2a6 6 0 0 1 12 0v2h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2h4zm2 0h8v-2a4 4 0 0 0-8 0v2zm-2 2v2h2v-2h-2zm4 0v2h4v-2h-4zm8 0v2h2v-2h-2zM8 14v2h2v-2H8zm16 0v2h2v-2h-2zM8 18v8h16v-8H8z"/>
+          </svg>
+        </div>
+        <span class="logo-text">Batisha <span>online</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/product">Products</a>
+        <a href="/cart" class="cart-pill">🛒 Cart <span id="cartCount">0</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE BOTTOM NAV (home centered) -->
+  <div class="mobile-bottom-nav">
+    <a href="/product"><span class="nav-icon">📦</span><span class="nav-label">Products</span></a>
+    <a href="/" class="nav-home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+    <a href="/cart"><span class="nav-icon">🛒</span><span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span></a>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="container">
+    <h1 class="page-title">🛍️ Our products</h1>
+
+    <!-- COMING SOON (professional, clean) -->
+    <div class="coming-soon-wrapper">
+      <div class="coming-soon-icon">🚀</div>
+      <div class="coming-soon-divider"></div>
+      <h2 class="coming-soon-title">Coming Soon</h2>
+      <p class="coming-soon-sub">
+        We're curating the freshest groceries and pantry essentials just for you.  
+        Our product catalog will be live shortly — stay tuned!
+      </p>
+      
+      <!-- Optional notification signup (keeps it interactive) -->
+      <form class="notify-form" onsubmit="event.preventDefault(); showToast('✅ You\'ll be the first to know!');">
+        <input type="email" placeholder="Enter your email for updates" required>
+        <button type="submit">Notify Me</button>
+      </form>
+      
+      <a href="/" class="coming-soon-btn" style="margin-top:1rem;">🏠 Back to Home</a>
+    </div>
+  </main>
+
+  <!-- FOOTER (minimal) -->
+  <footer class="footer"></footer>
+
+  <!-- TOAST (for notification feedback) -->
+  <div id="toast" class="toast" style="position:fixed;bottom:2rem;right:2rem;padding:0.7rem 1.5rem;border-radius:40px;font-weight:500;z-index:3000;display:none;animation:slideIn 0.3s ease;color:white;box-shadow:0 4px 14px rgba(0,0,0,0.12);background:#1f8b4c;"></div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // Update cart count (shared with home/cart)
+      function updateCartCount() {
+        let cart = [];
+        try { cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]'); } catch {}
+        const total = cart.reduce((s, i) => s + i.quantity, 0);
+        const el = document.getElementById('cartCount');
+        const mobileEl = document.getElementById('mobileCartCount');
+        if (el) el.textContent = total;
+        if (mobileEl) mobileEl.textContent = total;
+      }
+
+      // Toast for notification
+      window.showToast = function(msg, type = 'success') {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.style.background = type === 'success' ? '#1f8b4c' : '#dc2626';
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+      };
+
+      // Init
+      updateCartCount();
+      window.addEventListener('storage', updateCartCount);
+    })();
+  </script>
+</body>
+</html>
