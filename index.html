@@ -20,7 +20,7 @@
       padding-bottom: 70px;
     }
 
-    /* ----- navbar (clean, crisp) ----- */
+    /* ----- navbar ----- */
     .navbar {
       background: #ffffff;
       border-bottom: 1px solid #eaeef3;
@@ -40,14 +40,12 @@
       gap: 0.4rem 1.8rem;
     }
 
-    /* ----- LOGO (bag icon + Batisha online) - LEFT aligned ----- */
     .logo {
       display: flex;
       align-items: center;
       gap: 0.6rem;
       text-decoration: none;
       color: #1f2a3a;
-      justify-content: flex-start;
     }
     .logo-icon {
       width: 42px;
@@ -58,7 +56,6 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 10px rgba(30, 107, 62, 0.12);
-      transition: 0.2s;
     }
     .logo-icon svg {
       width: 26px;
@@ -79,7 +76,6 @@
       margin-left: 0.1rem;
     }
 
-    /* ----- nav links (desktop) ----- */
     .nav-links {
       display: flex;
       align-items: center;
@@ -107,7 +103,6 @@
     .nav-links a:hover::after { width: 100%; }
     .nav-links a:hover { color: #0f6e3a; }
 
-    /* ----- cart pill (minimal) ----- */
     .cart-pill {
       background: #f0f5fc;
       padding: 0.3rem 1.1rem 0.3rem 0.9rem;
@@ -119,7 +114,6 @@
       gap: 0.3rem;
       border: 1px solid #dde5ed;
       transition: 0.15s;
-      cursor: pointer;
       color: #1f2a3a;
     }
     .cart-pill:hover {
@@ -136,7 +130,7 @@
       margin-left: 0.2rem;
     }
 
-    /* ----- hero minimal (no text) ----- */
+    /* ----- hero minimal ----- */
     .hero {
       background: #f8fbf9;
       padding: 0.5rem 1.5rem;
@@ -145,12 +139,13 @@
     }
     .hero h1, .hero p { display: none; }
 
-    /* ----- container & grid (compact) ----- */
+    /* ----- container ----- */
     .container {
       max-width: 1400px;
       margin: 0 auto;
       padding: 0.8rem 2rem 2rem;
     }
+
     .section-title {
       font-size: 1.4rem;
       font-weight: 600;
@@ -163,13 +158,75 @@
       padding-left: 1rem;
     }
 
+    /* ===== SEARCH BAR (professional) ===== */
+    .search-wrapper {
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 60px;
+      border: 1px solid #e0e8e2;
+      padding: 0.1rem 0.1rem 0.1rem 1.2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+      transition: 0.2s;
+    }
+    .search-box:focus-within {
+      border-color: #1f8b4c;
+      box-shadow: 0 4px 20px rgba(31, 139, 76, 0.08);
+    }
+    .search-box input {
+      flex: 1;
+      border: none;
+      padding: 0.8rem 0.2rem 0.8rem 0;
+      font-size: 0.95rem;
+      background: transparent;
+      outline: none;
+      font-family: inherit;
+      color: #1e2b3a;
+    }
+    .search-box input::placeholder {
+      color: #8b9e92;
+    }
+    .search-box button {
+      background: #1f8b4c;
+      border: none;
+      color: white;
+      padding: 0.6rem 1.6rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.15s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      box-shadow: 0 2px 8px rgba(31, 139, 76, 0.15);
+    }
+    .search-box button:hover {
+      background: #0f6e3a;
+      transform: scale(1.02);
+    }
+
+    .search-stats {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #4b5f53;
+      margin-top: 0.5rem;
+      min-height: 1.6rem;
+    }
+
+    /* ----- product grid ----- */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
       gap: 1.2rem;
     }
 
-    /* ----- product card (4:5 image frame, no distortion) ----- */
     .product-card {
       background: white;
       border-radius: 10px;
@@ -186,11 +243,10 @@
       transform: translateY(-2px);
     }
 
-    /* 4:5 aspect ratio frame – image fits without distortion */
     .product-image-frame {
       position: relative;
       width: 100%;
-      padding-bottom: 125%; /* 4:5 ratio (height = width * 1.25) */
+      padding-bottom: 125%;
       background: #f3f8f5;
       overflow: hidden;
     }
@@ -200,7 +256,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: contain; /* full image visible, no crop */
+      object-fit: contain;
       background: #f3f8f5;
       display: block;
     }
@@ -261,27 +317,26 @@
     }
     .product-price::before { content: '₹'; }
 
-    /* ----- bigger, more professional add-to-cart button ----- */
     .add-to-cart-btn {
       background: #1f8b4c;
       color: white;
       border: none;
-      padding: 0.4rem 1.2rem;
+      padding: 0.3rem 1.2rem;
       border-radius: 30px;
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       cursor: pointer;
       transition: 0.15s;
       display: flex;
       align-items: center;
       gap: 0.2rem;
       letter-spacing: 0.2px;
-      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.15);
+      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.12);
     }
     .add-to-cart-btn:hover {
       background: #0f6e3a;
-      transform: scale(1.03);
-      box-shadow: 0 6px 14px rgba(22, 163, 74, 0.25);
+      transform: scale(1.02);
+      box-shadow: 0 6px 14px rgba(22, 163, 74, 0.2);
     }
 
     /* ----- loading / error / empty ----- */
@@ -294,7 +349,15 @@
     .empty-state { text-align: center; padding: 2.5rem; color: #4b5f53; }
     .empty-state .emoji { font-size: 3rem; margin-bottom: 0.3rem; }
 
-    /* ----- footer minimal (no text) ----- */
+    .no-results {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: #4b5f53;
+    }
+    .no-results .emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+    .no-results h3 { font-size: 1.1rem; font-weight: 600; color: #1a3428; }
+
+    /* ----- footer ----- */
     .footer {
       background: #f8fbf9;
       border-top: 1px solid #e4ece8;
@@ -305,24 +368,16 @@
     }
     .footer p { display: none; }
 
-    /* ===== MOBILE BOTTOM NAV (professional, home centered) ===== */
+    /* ----- mobile bottom nav ----- */
     .mobile-bottom-nav {
       display: none;
     }
 
     @media (max-width: 700px) {
-      body {
-        padding-bottom: 75px;
-      }
-      .nav-links {
-        display: none;
-      }
-      .navbar {
-        padding: 0.5rem 1rem;
-      }
-      .nav-container {
-        justify-content: flex-start; /* logo stays left */
-      }
+      body { padding-bottom: 75px; }
+      .nav-links { display: none; }
+      .navbar { padding: 0.5rem 1rem; }
+      .nav-container { justify-content: flex-start; }
 
       .mobile-bottom-nav {
         display: flex;
@@ -332,7 +387,6 @@
         width: 100%;
         background: rgba(255, 255, 255, 0.96);
         backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
         border-top: 1px solid #e4eaf0;
         box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
         justify-content: space-around;
@@ -340,7 +394,6 @@
         padding: 0.45rem 0 0.6rem;
         z-index: 200;
       }
-
       .mobile-bottom-nav a {
         display: flex;
         flex-direction: column;
@@ -400,13 +453,16 @@
         gap: 0.8rem;
       }
       .container { padding: 0 1rem 1.5rem; }
+      .search-wrapper { max-width: 100%; }
+      .search-box input { font-size: 0.85rem; padding: 0.6rem 0.2rem 0.6rem 0; }
+      .search-box button { padding: 0.4rem 1.2rem; font-size: 0.8rem; }
     }
 
     @media (max-width: 480px) {
       .products-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
       .product-title { font-size: 0.7rem; }
       .product-price { font-size: 0.9rem; }
-      .add-to-cart-btn { font-size: 0.7rem; padding: 0.3rem 1rem; }
+      .add-to-cart-btn { font-size: 0.6rem; padding: 0.2rem 0.9rem; }
       .mobile-bottom-nav a { max-width: 70px; }
       .mobile-bottom-nav .nav-home { max-width: 90px; }
     }
@@ -415,7 +471,6 @@
 <body>
   <nav class="navbar">
     <div class="nav-container">
-      <!-- LOGO left aligned -->
       <a href="/" class="logo">
         <div class="logo-icon">
           <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -424,8 +479,6 @@
         </div>
         <span class="logo-text">Batisha <span>online</span></span>
       </a>
-
-      <!-- DESKTOP NAV LINKS -->
       <div class="nav-links">
         <a href="/">Home</a>
         <a href="/product">Products</a>
@@ -434,64 +487,74 @@
     </div>
   </nav>
 
-  <!-- MOBILE BOTTOM NAV (Home centered) -->
   <div class="mobile-bottom-nav">
-    <a href="/product">
-      <span class="nav-icon">📦</span>
-      <span class="nav-label">Products</span>
-    </a>
-    <a href="/" class="nav-home">
-      <span class="nav-icon">🏠</span>
-      <span class="nav-label">Home</span>
-    </a>
-    <a href="/cart">
-      <span class="nav-icon">🛒</span>
-      <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
-    </a>
+    <a href="/product"><span class="nav-icon">📦</span><span class="nav-label">Products</span></a>
+    <a href="/" class="nav-home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+    <a href="/cart"><span class="nav-icon">🛒</span><span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span></a>
   </div>
 
-  <!-- hero empty (no text) -->
   <header class="hero"></header>
 
   <main class="container">
     <h2 class="section-title">🛍️ Our products</h2>
 
+    <!-- SEARCH BAR -->
+    <div class="search-wrapper">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search products... (e.g. red chilly hot donut)" autocomplete="off">
+        <button id="searchBtn">🔍 Search</button>
+      </div>
+      <div class="search-stats" id="searchStats"></div>
+    </div>
+
     <div id="loadingState" class="loading-container">
       <div class="spinner-large"></div>
-      <p style="color: #3d5a4b; font-size: 0.9rem;">Loading products…</p>
+      <p style="color:#3d5a4b;font-size:0.9rem;">Loading products…</p>
     </div>
-    <div id="errorState" class="error-container" style="display: none;">
-      <h3 style="font-size: 1rem;">😕 Something went wrong</h3>
+
+    <div id="errorState" class="error-container" style="display:none;">
+      <h3 style="font-size:1rem;">😕 Something went wrong</h3>
       <div id="errorDetails" class="error-details"></div>
       <button class="retry-btn" onclick="location.reload()">Retry</button>
     </div>
-    <div id="emptyState" class="empty-state" style="display: none;">
+
+    <div id="emptyState" class="empty-state" style="display:none;">
       <div class="emoji">📦</div>
-      <h3 style="font-size: 1rem;">No products</h3>
-      <p style="font-size: 0.85rem;">Check back later.</p>
+      <h3 style="font-size:1rem;">No products</h3>
+      <p style="font-size:0.85rem;">Check back later.</p>
     </div>
-    <div id="productsGrid" class="products-grid" style="display: none;"></div>
+
+    <div id="noResults" class="no-results" style="display:none;">
+      <div class="emoji">🔍</div>
+      <h3>No results found</h3>
+      <p style="font-size:0.85rem;">Try different keywords or browse our catalog.</p>
+    </div>
+
+    <div id="productsGrid" class="products-grid" style="display:none;"></div>
   </main>
 
-  <!-- footer minimal (no text) -->
   <footer class="footer"></footer>
 
   <script>
     (function() {
       'use strict';
 
-      // ----- config via /api/config -----
       let supabaseUrl = null;
       let supabaseAnonKey = null;
       const TABLE_NAME = 'product';
+      let allProducts = []; // cache for search
 
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
       const errorDetails = document.getElementById('errorDetails');
       const emptyState = document.getElementById('emptyState');
+      const noResults = document.getElementById('noResults');
       const productsGrid = document.getElementById('productsGrid');
-      const cartCountSpan = document.getElementById('cartCount');
-      const mobileCartCountSpan = document.getElementById('mobileCartCount');
+      const cartCountEl = document.getElementById('cartCount');
+      const mobileCartCountEl = document.getElementById('mobileCartCount');
+      const searchInput = document.getElementById('searchInput');
+      const searchBtn = document.getElementById('searchBtn');
+      const searchStats = document.getElementById('searchStats');
 
       function showDetailedError(msg) {
         errorDetails.textContent = msg;
@@ -543,11 +606,58 @@
           if (missing.length) {
             throw new Error(`Missing columns: ${missing.join(', ')}\nAvailable: ${Object.keys(first).join(', ')}\nExpected: title, description, price, image_url`);
           }
+
+          allProducts = products;
           renderProducts(products);
           showState('products');
+          searchStats.textContent = `${products.length} products loaded`;
         } catch (e) {
           showDetailedError(e.message);
         }
+      }
+
+      // ----- SEARCH (keyword matching with ranking) -----
+      function performSearch(query) {
+        if (!query.trim()) {
+          renderProducts(allProducts);
+          searchStats.textContent = `${allProducts.length} products`;
+          noResults.style.display = 'none';
+          return;
+        }
+
+        const keywords = query.toLowerCase().trim().split(/\s+/).filter(w => w.length > 0);
+        if (keywords.length === 0) {
+          renderProducts(allProducts);
+          searchStats.textContent = `${allProducts.length} products`;
+          return;
+        }
+
+        const scored = allProducts.map(product => {
+          const title = (product.title || '').toLowerCase();
+          const desc = (product.description || '').toLowerCase();
+          let score = 0;
+          for (const kw of keywords) {
+            // title matches get higher weight
+            if (title.includes(kw)) score += 3;
+            if (desc.includes(kw)) score += 1;
+          }
+          return { ...product, score };
+        });
+
+        const filtered = scored.filter(p => p.score > 0);
+        const sorted = filtered.sort((a, b) => b.score - a.score);
+
+        if (sorted.length === 0) {
+          productsGrid.innerHTML = '';
+          productsGrid.style.display = 'none';
+          noResults.style.display = 'block';
+          searchStats.textContent = `No results for "${query}"`;
+          return;
+        }
+
+        noResults.style.display = 'none';
+        renderProducts(sorted);
+        searchStats.textContent = `${sorted.length} result${sorted.length > 1 ? 's' : ''} for "${query}"`;
       }
 
       function renderProducts(products) {
@@ -555,12 +665,12 @@
         products.forEach(p => {
           productsGrid.appendChild(createCard(p));
         });
+        productsGrid.style.display = 'grid';
       }
 
       function createCard(product) {
         const card = document.createElement('div');
         card.className = 'product-card';
-        // 4:5 image frame with object-fit: contain
         const imgHtml = product.image_url 
           ? `<div class="product-image-frame"><img src="${escapeHtml(product.image_url)}" alt="${escapeHtml(product.title)}" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'"></div>`
           : `<div class="product-image-frame"><div class="product-image-placeholder">🥬</div></div>`;
@@ -588,14 +698,15 @@
         loadingState.style.display = 'none';
         errorState.style.display = 'none';
         emptyState.style.display = 'none';
+        noResults.style.display = 'none';
         productsGrid.style.display = 'none';
         if (state === 'loading') loadingState.style.display = 'block';
         else if (state === 'error') errorState.style.display = 'block';
         else if (state === 'empty') emptyState.style.display = 'block';
-        else if (state === 'products') productsGrid.style.display = 'grid';
+        else if (state === 'products') { /* grid visible */ }
       }
 
-      // ----- cart (localStorage) -----
+      // ----- cart -----
       window.addToCart = function(id, title, price, imageUrl) {
         let cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
         const existing = cart.find(item => item.id === id);
@@ -608,9 +719,28 @@
       function updateCartCount() {
         const cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
         const total = cart.reduce((sum, i) => sum + i.quantity, 0);
-        if (cartCountSpan) cartCountSpan.textContent = total;
-        if (mobileCartCountSpan) mobileCartCountSpan.textContent = total;
+        if (cartCountEl) cartCountEl.textContent = total;
+        if (mobileCartCountEl) mobileCartCountEl.textContent = total;
       }
+
+      // ----- search events -----
+      searchBtn.addEventListener('click', () => {
+        performSearch(searchInput.value);
+      });
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          performSearch(searchInput.value);
+        }
+      });
+      // realtime search (optional, debounced)
+      let debounceTimer;
+      searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          performSearch(searchInput.value);
+        }, 400);
+      });
 
       async function init() {
         updateCartCount();
