@@ -3,157 +3,175 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Batisha online · Fresh Grocery</title>
+  <title>Batisha online · fresh grocery</title>
   <style>
-    /* ----- reset & base ----- */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #f8fafc;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      color: #0b2c1f;
-      min-height: 100vh;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* ----- navbar (clean, white) ----- */
+    body {
+      background: #ffffff;
+      font-family: 'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
+      color: #1f2a3a;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ----- professional navbar (clean, border, subtle) ----- */
     .navbar {
-      background: white;
-      border-bottom: 1px solid #e9edf2;
-      padding: 0.8rem 2rem;
+      background: #ffffff;
+      border-bottom: 1px solid #eef2f6;
+      padding: 0.9rem 2.4rem;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.02);
     }
     .nav-container {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 0.8rem 1.5rem;
+      gap: 0.5rem 2rem;
     }
 
-    /* ----- LOGO (coded bag icon + Batisha online) ----- */
+    /* ----- LOGO (bag icon + Batisha online) ----- */
     .logo {
       display: flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 0.7rem;
       text-decoration: none;
-      color: #0b2c1f;
+      color: #1a2a2a;
     }
     .logo-icon {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(145deg, #2b7fff, #6c4cff);
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(145deg, #2563eb, #7c3aed);
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 12px rgba(43, 127, 255, 0.2);
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
       transition: 0.2s;
-      position: relative;
     }
     .logo-icon svg {
       width: 28px;
       height: 28px;
       fill: white;
-      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.06));
+      display: block;
     }
     .logo-text {
       font-size: 1.5rem;
       font-weight: 700;
-      letter-spacing: -0.4px;
-      background: linear-gradient(135deg, #1e3c2c, #1f6e3a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      letter-spacing: -0.3px;
+      color: #1f2a3a;
     }
-    .logo-text small {
+    .logo-text span {
       font-weight: 400;
-      font-size: 0.85rem;
-      -webkit-text-fill-color: #5b6f5b;
-      background: none;
-      color: #4d6b4d;
+      color: #4b6b5e;
+      font-size: 0.9rem;
+      margin-left: 0.2rem;
     }
 
-    /* ----- nav links ----- */
+    /* ----- nav links (clean, modern) ----- */
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 2rem;
+      gap: 2.2rem;
     }
     .nav-links a {
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 0.95rem;
-      color: #1f2e3f;
+      color: #2f3e4e;
       transition: 0.15s;
       letter-spacing: -0.2px;
+      position: relative;
     }
-    .nav-links a:hover { color: #0f7a3a; }
-    .nav-links a.active { color: #0f7a3a; }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #1f8b4c;
+      transition: 0.2s;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a:hover { color: #0f6e3a; }
 
-    /* ----- cart button (clean) ----- */
-    .cart-btn {
-      background: #f0f5fa;
-      color: #1a2e3f;
-      padding: 0.5rem 1.2rem 0.5rem 1rem;
+    /* ----- cart as pill (elegant) ----- */
+    .cart-pill {
+      background: #f0f5fc;
+      padding: 0.4rem 1.2rem 0.4rem 1rem;
       border-radius: 40px;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 0.9rem;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      border: none;
+      gap: 0.3rem;
+      border: 1px solid #dde5ed;
+      transition: 0.15s;
       cursor: pointer;
-      transition: 0.2s;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      color: #1f2a3a;
     }
-    .cart-btn:hover {
-      background: #e2edf9;
-      transform: scale(1.02);
+    .cart-pill:hover {
+      background: #e4edf7;
+      border-color: #b8cee0;
     }
-    .cart-btn span { background: #1f8b4c; color: white; border-radius: 40px; padding: 0.1rem 0.55rem; font-size: 0.8rem; margin-left: 0.2rem; }
+    .cart-pill span {
+      background: #1f8b4c;
+      color: white;
+      border-radius: 40px;
+      padding: 0.05rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.2rem;
+    }
 
-    /* ----- hero minimal (softer) ----- */
+    /* ----- hero (professional, clean) ----- */
     .hero {
-      background: linear-gradient(145deg, #e9f3eb, #d6e8db);
-      padding: 2.8rem 2rem 2.2rem;
-      margin-bottom: 2rem;
+      background: #f8fbf9;
+      padding: 3.2rem 2rem 2.8rem;
       text-align: center;
-      border-bottom: 1px solid #cfdfd3;
+      border-bottom: 1px solid #e4ece8;
     }
     .hero h1 {
-      font-size: 2.4rem;
-      font-weight: 700;
-      color: #113c22;
+      font-size: 2.6rem;
+      font-weight: 650;
+      color: #173e2a;
       letter-spacing: -0.8px;
     }
     .hero p {
-      color: #2c4f37;
-      font-size: 1.05rem;
-      max-width: 550px;
-      margin: 0.4rem auto 0;
-      opacity: 0.8;
+      color: #3d5a4b;
+      font-size: 1.1rem;
+      max-width: 580px;
+      margin: 0.3rem auto 0;
+      font-weight: 400;
+      opacity: 0.85;
     }
 
-    /* ----- container & product grid (professional / compact) ----- */
+    /* ----- container & grid (professional spacing) ----- */
     .container {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 0 2rem 3rem;
     }
     .section-title {
-      font-size: 1.7rem;
-      font-weight: 650;
-      color: #1a3b27;
-      margin-bottom: 1.8rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #1a3428;
+      margin: 2rem 0 1.8rem;
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      border-left: 5px solid #2a8f5a;
-      padding-left: 1rem;
+      border-left: 5px solid #1f8b4c;
+      padding-left: 1.2rem;
     }
 
     .products-grid {
@@ -162,37 +180,38 @@
       gap: 1.6rem;
     }
 
-    /* ----- product card (clean, smaller, daraz/amazon style) ----- */
+    /* ----- product card (daraz/amazon style, modern) ----- */
     .product-card {
       background: white;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-      transition: 0.2s ease;
       border: 1px solid #eef2f6;
+      transition: 0.2s ease;
       display: flex;
       flex-direction: column;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
     }
     .product-card:hover {
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-      border-color: #c8dcd0;
+      border-color: #c8d8d0;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+      transform: translateY(-3px);
     }
 
     .product-image {
       width: 100%;
       height: 170px;
       object-fit: cover;
-      background: #f3f8f4;
+      background: #f3f8f5;
       display: block;
     }
     .product-image-placeholder {
       width: 100%;
       height: 170px;
-      background: linear-gradient(145deg, #e5f0e8, #d1e3d8);
+      background: #eaf1ec;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.6rem;
+      font-size: 2.8rem;
       color: #2d7a4b;
     }
 
@@ -217,11 +236,11 @@
       color: #5f6f6a;
       font-size: 0.75rem;
       line-height: 1.4;
-      margin-top: 0.1rem;
       display: -webkit-box;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      margin-top: 0.1rem;
     }
     .product-footer {
       display: flex;
@@ -229,12 +248,13 @@
       justify-content: space-between;
       margin-top: 0.6rem;
       padding-top: 0.5rem;
-      border-top: 1px solid #ebf0ed;
+      border-top: 1px solid #edf2ef;
     }
     .product-price {
       font-weight: 700;
       font-size: 1.2rem;
       color: #0f6e3a;
+      letter-spacing: -0.2px;
     }
     .product-price::before { content: '₹'; }
 
@@ -242,43 +262,49 @@
       background: #1f8b4c;
       color: white;
       border: none;
-      padding: 0.35rem 1rem;
-      border-radius: 30px;
-      font-weight: 600;
+      padding: 0.3rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 500;
       font-size: 0.75rem;
       cursor: pointer;
       transition: 0.15s;
-      letter-spacing: 0.2px;
       display: flex;
       align-items: center;
       gap: 0.2rem;
+      letter-spacing: 0.2px;
     }
     .add-to-cart-btn:hover {
       background: #0f6e3a;
-      transform: scale(1.02);
-      box-shadow: 0 4px 10px rgba(22, 163, 74, 0.2);
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
     }
 
-    /* ----- loading, error, empty (unchanged core) ----- */
+    /* ----- loading / error / empty (unchanged core) ----- */
     .loading-container { text-align: center; padding: 3rem 2rem; }
-    .spinner-large { width: 44px; height: 44px; border: 4px solid #dcfce7; border-top-color: #1f8b4c; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 1rem; }
+    .spinner-large { width: 44px; height: 44px; border: 4px solid #e2ebe6; border-top-color: #1f8b4c; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 1rem; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .error-container { text-align: center; padding: 2rem; background: #fef2f2; border-radius: 1rem; border: 1px solid #fecaca; margin: 2rem 0; }
     .error-details { background: white; padding: 0.8rem; border-radius: 0.6rem; margin: 0.8rem 0; font-family: monospace; font-size: 0.7rem; color: #b91c1c; white-space: pre-wrap; word-break: break-all; }
-    .retry-btn { background: #dc2626; color: white; border: none; padding: 0.5rem 2rem; border-radius: 2rem; font-weight: 600; cursor: pointer; }
+    .retry-btn { background: #dc2626; color: white; border: none; padding: 0.5rem 2rem; border-radius: 2rem; font-weight: 500; cursor: pointer; }
     .empty-state { text-align: center; padding: 3rem; color: #4b5f53; }
     .empty-state .emoji { font-size: 3.5rem; margin-bottom: 0.5rem; }
 
     /* footer */
-    .footer { background: #173e27; color: #dcebdf; text-align: center; padding: 1.8rem; margin-top: 3.5rem; border-top: 1px solid #2b5e3c; }
-    .footer p { opacity: 0.8; font-size: 0.9rem; }
+    .footer {
+      background: #1a2e23;
+      color: #d6e5db;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3.5rem;
+      border-top: 1px solid #2c4f39;
+    }
+    .footer p { opacity: 0.75; font-size: 0.9rem; }
 
     /* responsive */
-    @media (max-width: 680px) {
+    @media (max-width: 700px) {
       .nav-container { flex-direction: column; align-items: stretch; text-align: center; }
-      .nav-links { justify-content: center; gap: 1.2rem; flex-wrap: wrap; }
-      .hero h1 { font-size: 1.8rem; }
-      .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+      .nav-links { justify-content: center; gap: 1.4rem; flex-wrap: wrap; }
+      .hero h1 { font-size: 2rem; }
+      .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.2rem; }
     }
     @media (max-width: 480px) {
       .navbar { padding: 0.6rem 1rem; }
@@ -286,65 +312,66 @@
       .products-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
       .product-image { height: 130px; }
       .product-image-placeholder { height: 130px; }
+      .hero h1 { font-size: 1.6rem; }
     }
   </style>
 </head>
 <body>
   <nav class="navbar">
     <div class="nav-container">
-      <!-- LOGO: coded bag icon + Batisha online -->
+      <!-- LOGO: bag icon + Batisha online (professional) -->
       <a href="/" class="logo">
         <div class="logo-icon">
           <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 10v-2a6 6 0 0 1 12 0v2h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2h4zm2 0h8v-2a4 4 0 0 0-8 0v2zm-2 2v2h2v-2h-2zm4 0v2h4v-2h-4zm8 0v2h2v-2h-2zM8 14v2h2v-2H8zm16 0v2h2v-2h-2zM8 18v8h16v-8H8z"/>
           </svg>
         </div>
-        <span class="logo-text">Batisha online <small>grocer</small></span>
+        <span class="logo-text">Batisha <span>online</span></span>
       </a>
 
       <div class="nav-links">
         <a href="/">Home</a>
         <a href="/product">Products</a>
-        <a href="/cart" class="cart-btn">🛒 Cart <span id="cartCount">0</span></a>
+        <a href="/cart" class="cart-pill">🛒 Cart <span id="cartCount">0</span></a>
       </div>
     </div>
   </nav>
 
   <header class="hero">
-    <h1>Fresh Groceries, Delivered</h1>
-    <p>From farm to table — quality you can trust, every day.</p>
+    <h1>Fresh groceries, delivered</h1>
+    <p>Quality produce from farm to table — thoughtfully sourced, every day.</p>
   </header>
 
   <main class="container">
-    <h2 class="section-title">🛍️ Our Products</h2>
+    <h2 class="section-title">🛍️ Our products</h2>
 
     <div id="loadingState" class="loading-container">
       <div class="spinner-large"></div>
-      <p style="color: #4d6b4d;">Loading fresh products...</p>
+      <p style="color: #3d5a4b;">Loading fresh products...</p>
     </div>
     <div id="errorState" class="error-container" style="display: none;">
-      <h3>😕 Oops! Something went wrong</h3>
+      <h3>😕 Something went wrong</h3>
       <div id="errorDetails" class="error-details"></div>
-      <button class="retry-btn" onclick="location.reload()">🔄 Retry</button>
+      <button class="retry-btn" onclick="location.reload()">Retry</button>
     </div>
     <div id="emptyState" class="empty-state" style="display: none;">
       <div class="emoji">📦</div>
-      <h3>No products available</h3>
-      <p>Check back soon for fresh groceries!</p>
+      <h3>No products yet</h3>
+      <p>We’ll be back soon with fresh groceries.</p>
     </div>
     <div id="productsGrid" class="products-grid" style="display: none;"></div>
   </main>
 
   <footer class="footer">
     <p>© 2026 Batisha online · fresh grocery</p>
-    <p style="opacity: 0.7; margin-top: 0.3rem;">📞 support@batisha.online</p>
+    <p style="opacity: 0.65; margin-top: 0.3rem;">support@batisha.online</p>
   </footer>
 
   <script>
     (function() {
       'use strict';
 
-      // ----- CONFIG (via /api/config) -----
+      // ----- config via /api/config -----
       let supabaseUrl = null;
       let supabaseAnonKey = null;
       const TABLE_NAME = 'product';
@@ -457,7 +484,7 @@
         else if (state === 'products') productsGrid.style.display = 'grid';
       }
 
-      // ----- cart logic (localStorage) -----
+      // ----- cart (localStorage) -----
       window.addToCart = function(id, title, price, imageUrl) {
         let cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
         const existing = cart.find(item => item.id === id);
