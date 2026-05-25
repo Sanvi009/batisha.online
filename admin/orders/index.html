@@ -202,6 +202,23 @@
       opacity: 0.8;
     }
 
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+      border: 1px solid #dc2626;
+    }
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+    .btn-secondary {
+      background: #f3f6f8;
+      color: #1f2a3a;
+      border: 1px solid #e4eaf0;
+    }
+    .btn-secondary:hover {
+      background: #e8edf2;
+    }
+
     /* ----- STATS CARDS (clean, white) ----- */
     .stats-row {
       display: grid;
@@ -306,7 +323,7 @@
       border: 1px solid #fecaca;
     }
 
-    /* ----- MODAL (clean, white) ----- */
+    /* ----- ORDER DETAIL MODAL (clean, white) ----- */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -403,6 +420,29 @@
       justify-content: flex-end;
       margin-top: 1.5rem;
       flex-wrap: wrap;
+    }
+
+    /* ----- CONFIRM DELETE MODAL (dedicated) ----- */
+    .confirm-modal .modal-box {
+      max-width: 420px;
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+    .confirm-modal .modal-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+    .confirm-modal .modal-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.3rem;
+    }
+    .confirm-modal .modal-sub {
+      color: #4b5f53;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .confirm-modal .modal-actions {
+      justify-content: center;
     }
 
     /* ----- LOADING / EMPTY / ERROR ----- */
@@ -574,6 +614,19 @@
     </div>
   </div>
 
+  <!-- Confirm Delete Modal -->
+  <div id="confirmDeleteModal" class="modal-overlay confirm-modal" style="display: none;">
+    <div class="modal-box">
+      <div class="modal-icon">⚠️</div>
+      <h3 class="modal-title">Delete Order?</h3>
+      <p class="modal-sub" id="confirmDeleteText">This action cannot be undone. All order data will be permanently removed.</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">🗑️ Delete</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="toast" class="toast"></div>
 
@@ -631,8 +684,13 @@
       const modalActions = document.getElementById('modalActions');
       const modalOrderTitle = document.getElementById('modalOrderTitle');
       const modalCloseBtn = document.getElementById('modalCloseBtn');
+      const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+      const confirmDeleteText = document.getElementById('confirmDeleteText');
+      const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+      const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
 
       let allOrders = [];
+      let pendingDeleteId = null;
 
       // --------------------------------------------------------------
       // TOAST
@@ -742,7 +800,7 @@
             <td>
               <button class="btn btn-view" onclick="window.viewOrder(${order.id})">👁️ View</button>
               ${order.status === 'pending' ? `<button class="btn btn-deliver" onclick="window.markDelivered(${order.id})">✅ Deliver</button>` : ''}
-              <button class="btn btn-delete-order" onclick="window.deleteOrder(${order.id})">🗑️ Delete</button>
+              <button class="btn btn-delete-order" onclick="window.confirmDeleteOrder(${order.id})">🗑️ Delete</button>
             </td>
           `;
           tableBody.appendChild(row);
@@ -857,7 +915,7 @@
           `;
         }
         modalActions.innerHTML += `
-          <button class="btn btn-delete-order" onclick="window.deleteOrderFromModal(${orderId})">🗑️ Delete Order</button>
+          <button class="btn btn-delete-order" onclick="window.confirmDeleteOrderFromModal(${orderId})">🗑️ Delete Order</button>
         `;
 
         orderDetailModal.style.display = 'flex';
@@ -911,23 +969,57 @@
       }
 
       // --------------------------------------------------------------
-      // DELETE ORDER (with cascade)
+      // CONFIRM DELETE MODAL
       // --------------------------------------------------------------
-      window.deleteOrder = async function(orderId) {
-        if (!confirm(`⚠️ Are you sure you want to permanently delete order #${orderId}? This action cannot be undone.`)) return;
-        await performDeleteOrder(orderId);
+      function showConfirmDeleteModal(orderId, source = 'table') {
+        pendingDeleteId = orderId;
+        const order = allOrders.find(o => o.id === orderId);
+        confirmDeleteText.textContent = order 
+          ? `Are you sure you want to delete order #${orderId} from ${escapeHtml(order.customer_name)}? This action cannot be undone.`
+          : `Are you sure you want to delete order #${orderId}? This action cannot be undone.`;
+        confirmDeleteModal.style.display = 'flex';
+        // store source to close appropriate modal later
+        confirmDeleteModal.dataset.source = source;
+      }
+
+      window.confirmDeleteOrder = function(orderId) {
+        showConfirmDeleteModal(orderId, 'table');
       };
 
-      window.deleteOrderFromModal = async function(orderId) {
-        if (!confirm(`⚠️ Are you sure you want to permanently delete order #${orderId}? This action cannot be undone.`)) return;
-        await performDeleteOrder(orderId);
-        orderDetailModal.style.display = 'none';
+      window.confirmDeleteOrderFromModal = function(orderId) {
+        showConfirmDeleteModal(orderId, 'detail');
       };
+
+      // Confirm delete button
+      confirmDeleteBtn.addEventListener('click', async function() {
+        if (pendingDeleteId === null) return;
+        const id = pendingDeleteId;
+        const source = confirmDeleteModal.dataset.source || 'table';
+        confirmDeleteModal.style.display = 'none';
+        await performDeleteOrder(id);
+        if (source === 'detail') {
+          orderDetailModal.style.display = 'none';
+        }
+        pendingDeleteId = null;
+      });
+
+      // Cancel delete button
+      cancelDeleteBtn.addEventListener('click', function() {
+        confirmDeleteModal.style.display = 'none';
+        pendingDeleteId = null;
+      });
+
+      // Close confirm modal on overlay click
+      confirmDeleteModal.addEventListener('click', (e) => {
+        if (e.target === confirmDeleteModal) {
+          confirmDeleteModal.style.display = 'none';
+          pendingDeleteId = null;
+        }
+      });
 
       async function performDeleteOrder(orderId) {
         try {
-          // Delete order_items first (cascade would handle if foreign key with ON DELETE CASCADE)
-          // We delete explicitly for safety
+          // Delete order_items first
           const deleteItemsResponse = await fetch(
             `${supabaseUrl}/rest/v1/order_items?order_id=eq.${orderId}`,
             {
