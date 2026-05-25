@@ -978,7 +978,6 @@
           ? `Are you sure you want to delete order #${orderId} from ${escapeHtml(order.customer_name)}? This action cannot be undone.`
           : `Are you sure you want to delete order #${orderId}? This action cannot be undone.`;
         confirmDeleteModal.style.display = 'flex';
-        // store source to close appropriate modal later
         confirmDeleteModal.dataset.source = source;
       }
 
@@ -1017,24 +1016,12 @@
         }
       });
 
+      // --------------------------------------------------------------
+      // ✅ DELETION – SIMPLIFIED (CASCADE handles order_items)
+      // --------------------------------------------------------------
       async function performDeleteOrder(orderId) {
         try {
-          // Delete order_items first
-          const deleteItemsResponse = await fetch(
-            `${supabaseUrl}/rest/v1/order_items?order_id=eq.${orderId}`,
-            {
-              method: 'DELETE',
-              headers: {
-                'apikey': supabaseAnonKey,
-                'Authorization': `Bearer ${supabaseAnonKey}`,
-                'Content-Type': 'application/json',
-              },
-            }
-          );
-
-          if (!deleteItemsResponse.ok) throw new Error('Failed to delete order items');
-
-          // Delete the order itself
+          // Delete the order — CASCADE will automatically delete order_items
           const deleteOrderResponse = await fetch(
             `${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`,
             {
@@ -1047,7 +1034,10 @@
             }
           );
 
-          if (!deleteOrderResponse.ok) throw new Error('Failed to delete order');
+          if (!deleteOrderResponse.ok) {
+            const errorText = await deleteOrderResponse.text();
+            throw new Error(`Failed to delete order: ${errorText}`);
+          }
 
           showToast(`🗑️ Order #${orderId} deleted successfully!`);
           fetchOrders();
