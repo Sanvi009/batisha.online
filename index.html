@@ -259,7 +259,7 @@
       color: #0f6e3a;
       letter-spacing: -0.2px;
     }
-    .product-price::before { content: '৳'; }
+    .product-price::before { content: '₹'; }
 
     /* ----- bigger, more professional add-to-cart button ----- */
     .add-to-cart-btn {
@@ -736,6 +736,7 @@
       let currentTranslateX = 0, currentTranslateY = 0;
       let isDocked = false;      // hidden on right edge with arrow
       let isHidden = false;      // fully hidden (not used here, but kept)
+      let tapHandled = false;    // prevent double action
       const WA_NUMBER = '8801877289927';
       const WA_LINK = `https://wa.me/${WA_NUMBER}`;
 
@@ -799,15 +800,6 @@
         }
       }
 
-      // toggle dock/undock
-      function toggleDock() {
-        if (isDocked) {
-          undock();
-        } else {
-          dockToEdge();
-        }
-      }
-
       // ----- drag events (touch + mouse) with smooth motion -----
       function onDragStart(e) {
         if (isDocked) return;
@@ -816,10 +808,9 @@
         startY = ev.clientY;
         initialRect = waFloat.getBoundingClientRect();
         isDragging = false;
+        tapHandled = false;
         // remove transition while dragging for instant response
         waFloat.classList.add('dragging');
-        // small threshold to differentiate tap vs drag
-        window._dragStartTime = Date.now();
       }
 
       function onDragMove(e) {
@@ -844,8 +835,10 @@
         if (isDocked) return;
         waFloat.classList.remove('dragging');
         if (!isDragging) {
-          // it's a tap — open WhatsApp
-          window.open(WA_LINK, '_blank');
+          // it's a tap — open WhatsApp (only if not docked)
+          if (!isDocked) {
+            window.open(WA_LINK, '_blank');
+          }
           return;
         }
         isDragging = false;
@@ -864,7 +857,6 @@
         }
         // keep new position (apply transform)
         waFloat.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
-        // store position (no need to adjust right/bottom)
       }
 
       // attach events
@@ -900,14 +892,14 @@
         waFloat.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
       });
 
-      // click on docked arrow -> undock + open WA
+      // click on docked arrow -> undock (do NOT open WA)
       waFloat.addEventListener('click', function(e) {
         if (isDocked) {
           undock();
-          window.open(WA_LINK, '_blank');
           return;
         }
-        // if not dragging, the tap is handled in dragEnd
+        // if not dragging and not docked, the tap is handled in dragEnd (open WA)
+        // but we must avoid double opening: dragEnd already opens if not dragging
       });
 
       // set initial position
