@@ -259,7 +259,7 @@
       color: #0f6e3a;
       letter-spacing: -0.2px;
     }
-    .product-price::before { content: '₹'; }
+    .product-price::before { content: '৳'; }  /* Taka symbol */
 
     /* ----- bigger, more professional add-to-cart button ----- */
     .add-to-cart-btn {
@@ -653,6 +653,17 @@
           if (missing.length) {
             throw new Error(`Missing columns: ${missing.join(', ')}\nAvailable: ${Object.keys(first).join(', ')}\nExpected: title, description, price, image_url`);
           }
+
+          // ---- SORT: highest id first (newest items first) ----
+          products.sort((a, b) => {
+            const idA = parseInt(a.id, 10);
+            const idB = parseInt(b.id, 10);
+            // if id is not a number, fallback to 0
+            const numA = isNaN(idA) ? 0 : idA;
+            const numB = isNaN(idB) ? 0 : idB;
+            return numB - numA; // descending: bigger id first
+          });
+
           renderProducts(products);
           showState('products');
         } catch (e) {
