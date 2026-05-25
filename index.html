@@ -411,7 +411,7 @@
       .mobile-bottom-nav .nav-home { max-width: 90px; }
     }
 
-    /* ---------- FLOATING WHATSAPP BUTTON (draggable, swipe to hide) ---------- */
+    /* ---------- FLOATING WHATSAPP BUTTON - PROFESSIONAL & SMOOTH ---------- */
     #whatsappFloat {
       position: fixed;
       bottom: 90px;
@@ -421,63 +421,80 @@
       height: 60px;
       border-radius: 50%;
       background: #25D366;
-      box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: box-shadow 0.2s, opacity 0.2s, transform 0.2s;
       touch-action: none;
       user-select: none;
       will-change: transform;
       border: none;
       padding: 0;
       line-height: 1;
+      /* smooth transitions for dock/undock */
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                  opacity 0.3s ease,
+                  box-shadow 0.3s ease,
+                  border-radius 0.3s ease,
+                  width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  height 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  right 0.3s ease,
+                  left 0.3s ease;
+      /* hardware acceleration */
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
     #whatsappFloat svg {
       width: 34px;
       height: 34px;
       fill: white;
       display: block;
+      transition: transform 0.3s ease;
     }
     #whatsappFloat:hover {
-      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+      box-shadow: 0 8px 28px rgba(37, 211, 102, 0.4);
     }
-    /* hidden state (docked) */
+    /* dragging state: no transition, only transform */
+    #whatsappFloat.dragging {
+      transition: none !important;
+    }
+    /* docked state (hidden on edge with arrow) */
+    #whatsappFloat.docked {
+      opacity: 1;
+      pointer-events: auto;
+      width: 44px;
+      height: 44px;
+      border-radius: 30px 0 0 30px;
+      background: #25D366;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      right: 0px;
+      transform: translate(0, 0) !important;
+    }
+    #whatsappFloat.docked svg {
+      display: none;
+    }
+    #whatsappFloat.docked .arrow-indicator {
+      display: block;
+      font-size: 22px;
+      color: white;
+      font-weight: 300;
+      line-height: 1;
+      transform: translateX(2px);
+    }
+    /* fully hidden (invisible, but clickable via arrow? no, we hide) */
     #whatsappFloat.hidden {
       opacity: 0;
       pointer-events: none;
       transform: scale(0.7);
-    }
-    #whatsappFloat.docked {
-      opacity: 1;
-      pointer-events: auto;
-      transform: scale(0.8);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      border-radius: 30px;
       width: 44px;
       height: 44px;
-      background: #25D366;
+      border-radius: 30px;
     }
-    #whatsappFloat.docked svg {
-      width: 24px;
-      height: 24px;
-    }
-    /* dock indicator arrow */
     #whatsappFloat .arrow-indicator {
       display: none;
-      font-size: 20px;
-      color: white;
-      font-weight: 300;
-      line-height: 1;
     }
-    #whatsappFloat.docked .arrow-indicator {
-      display: block;
-    }
-    #whatsappFloat.docked svg {
-      display: none;
-    }
-    /* small screen adjustment */
+    /* adjust for mobile */
     @media (max-width: 700px) {
       #whatsappFloat {
         bottom: 85px;
@@ -560,7 +577,7 @@
   <!-- footer minimal (no text) -->
   <footer class="footer"></footer>
 
-  <!-- FLOATING WHATSAPP BUTTON (draggable, swipe hide, tap to chat) -->
+  <!-- FLOATING WHATSAPP BUTTON – SMOOTH & PROFESSIONAL -->
   <div id="whatsappFloat">
     <!-- WhatsApp SVG -->
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -712,44 +729,49 @@
 
       window.addEventListener('DOMContentLoaded', init);
 
-      // ---------- FLOATING WHATSAPP DRAG + SWIPE HIDE + TAP TO CHAT ----------
+      // ---------- FLOATING WHATSAPP – PROFESSIONAL DRAG + DOCK ----------
       const waFloat = document.getElementById('whatsappFloat');
       let isDragging = false;
-      let startX, startY, origX, origY;
-      let currentX = 0, currentY = 0;
-      let isDocked = false;      // hidden but visible as arrow on edge
-      let isHidden = false;      // fully hidden (arrow state)
-      let touchStartTime = 0;
-      let lastTap = 0;
-
-      // WA number (international format)
+      let startX, startY, initialRect;
+      let currentTranslateX = 0, currentTranslateY = 0;
+      let isDocked = false;      // hidden on right edge with arrow
+      let isHidden = false;      // fully hidden (not used here, but kept)
       const WA_NUMBER = '8801877289927';
       const WA_LINK = `https://wa.me/${WA_NUMBER}`;
 
-      // reset position to bottom right (default)
+      // reset to default position (bottom right)
       function setDefaultPosition() {
         waFloat.style.right = '20px';
         waFloat.style.bottom = '90px';
         waFloat.style.left = 'auto';
         waFloat.style.top = 'auto';
-        waFloat.style.transform = 'translate(0,0)';
-        currentX = 0; currentY = 0;
+        waFloat.style.transform = 'translate(0, 0)';
+        currentTranslateX = 0;
+        currentTranslateY = 0;
+        if (isDocked) {
+          isDocked = false;
+          waFloat.classList.remove('docked');
+          waFloat.classList.remove('hidden');
+          waFloat.style.width = '60px';
+          waFloat.style.height = '60px';
+          waFloat.style.borderRadius = '50%';
+          waFloat.style.right = '20px';
+        }
       }
 
-      // dock to right edge (hide)
+      // dock to right edge (smooth)
       function dockToEdge() {
         if (!isDocked) {
           isDocked = true;
-          isHidden = false;
           waFloat.classList.add('docked');
           waFloat.classList.remove('hidden');
-          // keep same vertical position but snap to right edge
+          waFloat.style.transform = 'translate(0, 0)';
           waFloat.style.right = '0px';
           waFloat.style.left = 'auto';
-          waFloat.style.transform = 'translate(0,0)';
-          waFloat.style.borderRadius = '30px 0 0 30px';
           waFloat.style.width = '44px';
           waFloat.style.height = '44px';
+          waFloat.style.borderRadius = '30px 0 0 30px';
+          // ensure arrow is visible
         }
       }
 
@@ -757,98 +779,92 @@
       function undock() {
         if (isDocked) {
           isDocked = false;
-          isHidden = false;
           waFloat.classList.remove('docked');
           waFloat.classList.remove('hidden');
-          waFloat.style.right = '20px';
-          waFloat.style.borderRadius = '50%';
           waFloat.style.width = '60px';
           waFloat.style.height = '60px';
-          waFloat.style.transform = 'translate(0,0)';
-          // reset arrow
+          waFloat.style.borderRadius = '50%';
+          waFloat.style.right = '20px';
+          waFloat.style.transform = 'translate(0, 0)';
         }
         if (isHidden) {
           isHidden = false;
           waFloat.classList.remove('hidden');
           waFloat.classList.remove('docked');
-          waFloat.style.right = '20px';
-          waFloat.style.borderRadius = '50%';
           waFloat.style.width = '60px';
           waFloat.style.height = '60px';
-          waFloat.style.transform = 'translate(0,0)';
+          waFloat.style.borderRadius = '50%';
+          waFloat.style.right = '20px';
+          waFloat.style.transform = 'translate(0, 0)';
         }
-        // ensure arrow hidden
       }
 
-      // toggle between docked and full
+      // toggle dock/undock
       function toggleDock() {
-        if (isDocked || isHidden) {
+        if (isDocked) {
           undock();
         } else {
           dockToEdge();
         }
       }
 
-      // ----- drag events (touch & mouse) -----
+      // ----- drag events (touch + mouse) with smooth motion -----
       function onDragStart(e) {
-        if (isDocked || isHidden) return;
+        if (isDocked) return;
         const ev = e.touches ? e.touches[0] : e;
         startX = ev.clientX;
         startY = ev.clientY;
-        const rect = waFloat.getBoundingClientRect();
-        origX = rect.left;
-        origY = rect.top;
+        initialRect = waFloat.getBoundingClientRect();
         isDragging = false;
+        // remove transition while dragging for instant response
+        waFloat.classList.add('dragging');
         // small threshold to differentiate tap vs drag
-        touchStartTime = Date.now();
+        window._dragStartTime = Date.now();
       }
 
       function onDragMove(e) {
-        if (isDocked || isHidden) return;
+        if (isDocked) return;
         const ev = e.touches ? e.touches[0] : e;
         const dx = ev.clientX - startX;
         const dy = ev.clientY - startY;
         if (!isDragging) {
-          if (Math.abs(dx) + Math.abs(dy) > 10) isDragging = true;
-          else return;
+          if (Math.abs(dx) + Math.abs(dy) > 8) {
+            isDragging = true;
+          } else {
+            return;
+          }
         }
         e.preventDefault();
-        // move using transform
-        currentX = dx;
-        currentY = dy;
+        currentTranslateX = dx;
+        currentTranslateY = dy;
         waFloat.style.transform = `translate(${dx}px, ${dy}px)`;
       }
 
       function onDragEnd(e) {
-        if (isDocked || isHidden) return;
+        if (isDocked) return;
+        waFloat.classList.remove('dragging');
         if (!isDragging) {
           // it's a tap — open WhatsApp
           window.open(WA_LINK, '_blank');
           return;
         }
         isDragging = false;
-        // detect horizontal swipe: if moved more than 80px to the right -> dock
+        // detect horizontal swipe: if moved > 50px to the right -> dock
+        const finalDx = currentTranslateX;
+        if (finalDx > 50) {
+          dockToEdge();
+          return;
+        }
+        // also if button is near right edge
         const rect = waFloat.getBoundingClientRect();
-        // get final position relative to viewport
-        const finalX = rect.left + currentX;
-        // if user swiped right (toward edge) beyond threshold -> dock
         const viewportWidth = window.innerWidth;
-        if (currentX > 60) { // swipe right
+        if (rect.left + rect.width > viewportWidth - 10) {
           dockToEdge();
           return;
         }
-        // also if the button is near right edge, snap to dock?
-        if (finalX + rect.width > viewportWidth - 20) {
-          dockToEdge();
-          return;
-        }
-        // else keep new position (translate)
-        // keep within bounds (optional)
-        waFloat.style.transform = `translate(${currentX}px, ${currentY}px)`;
-        // adjust right/bottom to avoid overflow (simple)
-        const newLeft = origX + currentX;
-        const newTop = origY + currentY;
-        // if near edges, dock? we only dock on explicit swipe right
+        // keep new position (apply transform)
+        waFloat.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
+        // store position (no need to adjust right/bottom)
       }
 
       // attach events
@@ -857,56 +873,51 @@
       waFloat.addEventListener('touchend', onDragEnd);
       waFloat.addEventListener('mousedown', onDragStart);
       window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
+        if (!isDragging || isDocked) return;
         const ev = e;
         const dx = ev.clientX - startX;
         const dy = ev.clientY - startY;
         if (!isDragging) return;
-        currentX = dx;
-        currentY = dy;
+        currentTranslateX = dx;
+        currentTranslateY = dy;
         waFloat.style.transform = `translate(${dx}px, ${dy}px)`;
       });
       window.addEventListener('mouseup', (e) => {
-        if (!isDragging) return;
+        if (!isDragging || isDocked) return;
+        waFloat.classList.remove('dragging');
         isDragging = false;
-        // treat as drag end
+        const finalDx = currentTranslateX;
+        if (finalDx > 50) {
+          dockToEdge();
+          return;
+        }
         const rect = waFloat.getBoundingClientRect();
         const viewportWidth = window.innerWidth;
-        if (currentX > 60) {
+        if (rect.left + rect.width > viewportWidth - 10) {
           dockToEdge();
-        } else if (rect.left + rect.width > viewportWidth - 20) {
-          dockToEdge();
-        } else {
-          waFloat.style.transform = `translate(${currentX}px, ${currentY}px)`;
+          return;
         }
+        waFloat.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
       });
 
-      // click on arrow (docked) to undock
+      // click on docked arrow -> undock + open WA
       waFloat.addEventListener('click', function(e) {
-        if (isDocked || isHidden) {
-          // tap on docked icon -> undock + open WA? we open WA on tap on arrow too (user expects)
-          // but also undock? we'll open WA and undock
+        if (isDocked) {
           undock();
           window.open(WA_LINK, '_blank');
           return;
         }
-        // if not dragging, already handled in dragEnd
+        // if not dragging, the tap is handled in dragEnd
       });
 
-      // additional: long press / double tap? not needed
-      // ensure default position
+      // set initial position
       setDefaultPosition();
 
-      // prevent WA icon from being hidden by bottom nav (on mobile)
-      // adjust bottom margin if needed
+      // adjust for mobile bottom nav
       if (window.innerWidth <= 700) {
         waFloat.style.bottom = '85px';
       }
 
-      // also if user swipes left? we keep as is.
-
-      // expose undock for any reason
-      window.undockWA = undock;
     })();
   </script>
 </body>
