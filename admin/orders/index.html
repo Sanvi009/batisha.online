@@ -22,7 +22,7 @@
     }
 
     body {
-      background: #fcfcfc;
+      background: #f5f8f7;
       min-height: 100vh;
       font-family: 'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
       color: #1e2b3a;
@@ -190,6 +190,18 @@
       background: #fee2e2;
     }
 
+    .btn-delete-order {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.75rem;
+    }
+    .btn-delete-order:hover {
+      background: #fee2e2;
+      opacity: 0.8;
+    }
+
     /* ----- STATS CARDS (clean, white) ----- */
     .stats-row {
       display: grid;
@@ -234,7 +246,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 800px;
+      min-width: 900px;
     }
     thead {
       background: #f8fbf9;
@@ -390,6 +402,7 @@
       gap: 0.8rem;
       justify-content: flex-end;
       margin-top: 1.5rem;
+      flex-wrap: wrap;
     }
 
     /* ----- LOADING / EMPTY / ERROR ----- */
@@ -507,7 +520,7 @@
         <div class="stat-label">Delivered</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number green" id="statRevenue">₹0</div>
+        <div class="stat-number green" id="statRevenue">৳0</div>
         <div class="stat-label">Total Revenue</div>
       </div>
     </div>
@@ -723,12 +736,13 @@
             <td>${escapeHtml(order.customer_name)}</td>
             <td>${escapeHtml(order.customer_phone)}</td>
             <td>—</td>
-            <td><strong>₹${parseFloat(order.total_price).toFixed(2)}</strong></td>
+            <td><strong>৳${parseFloat(order.total_price).toFixed(2)}</strong></td>
             <td><span class="status-badge status-${order.status}">${order.status}</span></td>
             <td>${date}</td>
             <td>
               <button class="btn btn-view" onclick="window.viewOrder(${order.id})">👁️ View</button>
               ${order.status === 'pending' ? `<button class="btn btn-deliver" onclick="window.markDelivered(${order.id})">✅ Deliver</button>` : ''}
+              <button class="btn btn-delete-order" onclick="window.deleteOrder(${order.id})">🗑️ Delete</button>
             </td>
           `;
           tableBody.appendChild(row);
@@ -741,10 +755,10 @@
       async function updateItemCounts(orders) {
         for (const order of orders) {
           const items = await fetchOrderItems(order.id);
-          const row = document.querySelector(`tr[data-id]`) || 
-                      Array.from(tableBody.children).find((r, i) => orders[i]?.id === order.id);
+          const row = Array.from(tableBody.children).find((r, i) => orders[i]?.id === order.id);
+          if (!row) continue;
           
-          const itemsCell = document.querySelector(`tr:nth-child(${orders.indexOf(order) + 1}) td:nth-child(4)`);
+          const itemsCell = row.querySelector('td:nth-child(4)');
           if (itemsCell) {
             const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
             itemsCell.textContent = `${totalItems} item${totalItems !== 1 ? 's' : ''}`;
@@ -763,7 +777,7 @@
         const revenue = orders
           .filter(o => o.status !== 'cancelled')
           .reduce((sum, o) => sum + parseFloat(o.total_price), 0);
-        document.getElementById('statRevenue').textContent = `₹${revenue.toFixed(2)}`;
+        document.getElementById('statRevenue').textContent = `৳${revenue.toFixed(2)}`;
       }
 
       // --------------------------------------------------------------
@@ -803,7 +817,7 @@
           </div>
           <div class="info-row">
             <span class="info-label">Total</span>
-            <span class="info-value" style="color: #0f6e3a; font-size: 1.1rem;">₹${parseFloat(order.total_price).toFixed(2)}</span>
+            <span class="info-value" style="color: #0f6e3a; font-size: 1.1rem;">৳${parseFloat(order.total_price).toFixed(2)}</span>
           </div>
 
           <h4 style="color: #1a3428; margin-top: 1.5rem; margin-bottom: 0.8rem;">📦 Order Items</h4>
@@ -825,9 +839,9 @@
                       ${escapeHtml(item.product_title)}
                     </div>
                   </td>
-                  <td>₹${parseFloat(item.product_price).toFixed(2)}</td>
+                  <td>৳${parseFloat(item.product_price).toFixed(2)}</td>
                   <td>×${item.quantity}</td>
-                  <td><strong>₹${(item.product_price * item.quantity).toFixed(2)}</strong></td>
+                  <td><strong>৳${(item.product_price * item.quantity).toFixed(2)}</strong></td>
                 </tr>
               `).join('')}
             </tbody>
@@ -842,6 +856,9 @@
             <button class="btn btn-cancel-order" onclick="window.cancelOrder(${orderId})">❌ Cancel Order</button>
           `;
         }
+        modalActions.innerHTML += `
+          <button class="btn btn-delete-order" onclick="window.deleteOrderFromModal(${orderId})">🗑️ Delete Order</button>
+        `;
 
         orderDetailModal.style.display = 'flex';
       };
@@ -890,6 +907,61 @@
           fetchOrders();
         } catch {
           showToast('Failed to update status', 'error');
+        }
+      }
+
+      // --------------------------------------------------------------
+      // DELETE ORDER (with cascade)
+      // --------------------------------------------------------------
+      window.deleteOrder = async function(orderId) {
+        if (!confirm(`⚠️ Are you sure you want to permanently delete order #${orderId}? This action cannot be undone.`)) return;
+        await performDeleteOrder(orderId);
+      };
+
+      window.deleteOrderFromModal = async function(orderId) {
+        if (!confirm(`⚠️ Are you sure you want to permanently delete order #${orderId}? This action cannot be undone.`)) return;
+        await performDeleteOrder(orderId);
+        orderDetailModal.style.display = 'none';
+      };
+
+      async function performDeleteOrder(orderId) {
+        try {
+          // Delete order_items first (cascade would handle if foreign key with ON DELETE CASCADE)
+          // We delete explicitly for safety
+          const deleteItemsResponse = await fetch(
+            `${supabaseUrl}/rest/v1/order_items?order_id=eq.${orderId}`,
+            {
+              method: 'DELETE',
+              headers: {
+                'apikey': supabaseAnonKey,
+                'Authorization': `Bearer ${supabaseAnonKey}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          if (!deleteItemsResponse.ok) throw new Error('Failed to delete order items');
+
+          // Delete the order itself
+          const deleteOrderResponse = await fetch(
+            `${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`,
+            {
+              method: 'DELETE',
+              headers: {
+                'apikey': supabaseAnonKey,
+                'Authorization': `Bearer ${supabaseAnonKey}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          if (!deleteOrderResponse.ok) throw new Error('Failed to delete order');
+
+          showToast(`🗑️ Order #${orderId} deleted successfully!`);
+          fetchOrders();
+        } catch (error) {
+          console.error('Delete error:', error);
+          showToast('Failed to delete order. Please try again.', 'error');
         }
       }
 
