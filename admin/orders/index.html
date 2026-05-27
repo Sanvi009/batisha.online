@@ -969,6 +969,45 @@
       }
 
       // --------------------------------------------------------------
+      // ✅ DELETION – FIXED WITH PROPER ERROR HANDLING
+      // --------------------------------------------------------------
+      async function performDeleteOrder(orderId) {
+        try {
+          // Delete the order — CASCADE will automatically delete order_items
+          const deleteOrderResponse = await fetch(
+            `${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`,
+            {
+              method: 'DELETE',
+              headers: {
+                'apikey': supabaseAnonKey,
+                'Authorization': `Bearer ${supabaseAnonKey}`,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          if (!deleteOrderResponse.ok) {
+            let errorMsg = 'Failed to delete order';
+            try {
+              const errorData = await deleteOrderResponse.json();
+              if (errorData.error) errorMsg = errorData.error.message || errorMsg;
+            } catch {
+              const errorText = await deleteOrderResponse.text();
+              if (errorText) errorMsg = errorText;
+            }
+            throw new Error(errorMsg);
+          }
+
+          showToast(`🗑️ Order #${orderId} deleted successfully!`);
+          await fetchOrders();
+          
+        } catch (error) {
+          console.error('Delete error:', error);
+          showToast(`Failed to delete order: ${error.message}`, 'error');
+        }
+      }
+
+      // --------------------------------------------------------------
       // CONFIRM DELETE MODAL
       // --------------------------------------------------------------
       function showConfirmDeleteModal(orderId, source = 'table') {
@@ -1015,37 +1054,6 @@
           pendingDeleteId = null;
         }
       });
-
-      // --------------------------------------------------------------
-      // ✅ DELETION – SIMPLIFIED (CASCADE handles order_items)
-      // --------------------------------------------------------------
-      async function performDeleteOrder(orderId) {
-        try {
-          // Delete the order — CASCADE will automatically delete order_items
-          const deleteOrderResponse = await fetch(
-            `${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`,
-            {
-              method: 'DELETE',
-              headers: {
-                'apikey': supabaseAnonKey,
-                'Authorization': `Bearer ${supabaseAnonKey}`,
-                'Content-Type': 'application/json',
-              },
-            }
-          );
-
-          if (!deleteOrderResponse.ok) {
-            const errorText = await deleteOrderResponse.text();
-            throw new Error(`Failed to delete order: ${errorText}`);
-          }
-
-          showToast(`🗑️ Order #${orderId} deleted successfully!`);
-          fetchOrders();
-        } catch (error) {
-          console.error('Delete error:', error);
-          showToast('Failed to delete order. Please try again.', 'error');
-        }
-      }
 
       // --------------------------------------------------------------
       // MODAL CLOSE
