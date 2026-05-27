@@ -484,6 +484,50 @@
       to { transform: translateX(0); opacity: 1; }
     }
 
+    /* ----- DEBUG ERROR DISPLAY ----- */
+    #debugErrorContainer {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: #991b1b;
+      max-width: 100%;
+      overflow: auto;
+    }
+    #debugErrorContainer.show {
+      display: block;
+    }
+    #debugErrorContainer h4 {
+      margin-bottom: 0.5rem;
+      color: #991b1b;
+    }
+    #debugErrorContainer pre {
+      background: #fff5f5;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow: auto;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+      border: 1px solid #fde8e8;
+      margin-top: 0.5rem;
+    }
+    .debug-close-btn {
+      background: none;
+      border: none;
+      color: #991b1b;
+      font-size: 1.2rem;
+      cursor: pointer;
+      float: right;
+      padding: 0.2rem 0.5rem;
+    }
+    .debug-close-btn:hover {
+      background: #fee2e2;
+      border-radius: 4px;
+    }
+
     /* ----- MOBILE ----- */
     @media (max-width: 768px) {
       .dashboard-header {
@@ -545,6 +589,13 @@
 
   <!-- ----- MAIN CONTENT ----- -->
   <main class="main-container">
+    <!-- Debug Error Display -->
+    <div id="debugErrorContainer">
+      <button class="debug-close-btn" onclick="document.getElementById('debugErrorContainer').classList.remove('show')">✕</button>
+      <h4>❌ Delete Error Details</h4>
+      <div id="debugErrorContent"></div>
+    </div>
+
     <!-- Stats -->
     <div class="stats-row">
       <div class="stat-card">
@@ -688,6 +739,8 @@
       const confirmDeleteText = document.getElementById('confirmDeleteText');
       const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
       const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+      const debugErrorContainer = document.getElementById('debugErrorContainer');
+      const debugErrorContent = document.getElementById('debugErrorContent');
 
       let allOrders = [];
       let pendingDeleteId = null;
@@ -700,6 +753,17 @@
         toast.className = `toast ${type}`;
         toast.style.display = 'block';
         setTimeout(() => { toast.style.display = 'none'; }, 3000);
+      }
+
+      // --------------------------------------------------------------
+      // DEBUG ERROR DISPLAY
+      // --------------------------------------------------------------
+      function showDebugError(title, details) {
+        debugErrorContent.innerHTML = `
+          <p><strong>${title}</strong></p>
+          <pre>${escapeHtml(JSON.stringify(details, null, 2))}</pre>
+        `;
+        debugErrorContainer.classList.add('show');
       }
 
       // --------------------------------------------------------------
@@ -969,14 +1033,41 @@
       }
 
       // --------------------------------------------------------------
-      // ✅ DELETION – FIXED WITH PROPER DATABASE DELETION
+      // ✅ DELETION – WITH FULL DEBUGGING
       // --------------------------------------------------------------
       async function performDeleteOrder(orderId) {
         try {
-          console.log(`Attempting to delete order #${orderId} from database...`);
+          // Clear previous debug errors
+          debugErrorContainer.classList.remove('show');
           
-          // Delete the order — CASCADE will automatically delete order_items
-          const deleteOrderResponse = await fetch(
+          // Step 1: Check if order exists
+          const checkResponse = await fetch(
+            `${supabaseUrl}/rest/v1/orders?id=eq.${orderId}&select=id,customer_name`,
+            {
+              headers: {
+                'apikey': supabaseAnonKey,
+                'Authorization': `Bearer ${supabaseAnonKey}`,
+              },
+            }
+          );
+
+          if (!checkResponse.ok) {
+            throw new Error(`Failed to check order: ${checkResponse.status}`);
+          }
+
+          const existingOrders = await checkResponse.json();
+          
+          if (!existingOrders || existingOrders.length === 0) {
+            showDebugError('Order Not Found', {
+              orderId: orderId,
+              message: 'This order does not exist in the database',
+              suggestion: 'The order may have already been deleted'
+            });
+            throw new Error(`Order #${orderId} not found in database`);
+          }
+
+          // Step 2: Try to delete
+          const deleteResponse = await fetch(
             `${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`,
             {
               method: 'DELETE',
@@ -988,29 +1079,55 @@
             }
           );
 
-          console.log('Delete response status:', deleteOrderResponse.status);
-          console.log('Delete response ok:', deleteOrderResponse.ok);
-
-          // Strictly check if deletion was successful
-          if (!deleteOrderResponse.ok) {
-            let errorMsg = `Failed to delete order (HTTP ${deleteOrderResponse.status})`;
-            try {
-              const errorData = await deleteOrderResponse.json();
-              console.log('Error response data:', errorData);
-              if (errorData.error) errorMsg = errorData.error.message || errorMsg;
-              if (errorData.message) errorMsg = errorData.message;
-            } catch {
-              const errorText = await deleteOrderResponse.text();
-              console.log('Error response text:', errorText);
-              if (errorText) errorMsg = errorText;
+          // Step 3: Get full response details
+          let responseBody = '';
+          let responseJson = null;
+          
+          try {
+            responseBody = await deleteResponse.text();
+            if (responseBody) {
+              try {
+                responseJson = JSON.parse(responseBody);
+              } catch {
+                // Not JSON, keep as text
+              }
             }
+          } catch (e) {
+            responseBody = 'Could not read response body';
+          }
+
+          // Step 4: Check if deletion was successful
+          if (!deleteResponse.ok) {
+            const errorDetails = {
+              orderId: orderId,
+              status: deleteResponse.status,
+              statusText: deleteResponse.statusText,
+              ok: deleteResponse.ok,
+              responseBody: responseBody,
+              responseJson: responseJson,
+              supabaseUrl: supabaseUrl,
+              headers: {
+                apikey: supabaseAnonKey ? '✓ Present' : '✗ Missing',
+                authorization: 'Bearer ✓ Present'
+              }
+            };
+
+            showDebugError('Delete Failed', errorDetails);
+            
+            let errorMsg = `Delete failed (HTTP ${deleteResponse.status})`;
+            if (responseJson && responseJson.error) {
+              errorMsg += `: ${responseJson.error.message || responseJson.error}`;
+            } else if (responseJson && responseJson.message) {
+              errorMsg += `: ${responseJson.message}`;
+            } else if (responseBody && responseBody.length < 200) {
+              errorMsg += `: ${responseBody}`;
+            }
+            
             throw new Error(errorMsg);
           }
 
-          // ✅ Only proceed if Supabase confirms deletion
+          // Step 5: Success!
           showToast(`🗑️ Order #${orderId} deleted successfully!`);
-          
-          // Refresh from database to get clean state
           await fetchOrders();
           
         } catch (error) {
