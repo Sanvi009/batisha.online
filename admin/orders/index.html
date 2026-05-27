@@ -969,10 +969,12 @@
       }
 
       // --------------------------------------------------------------
-      // ✅ DELETION – FIXED WITH PROPER ERROR HANDLING
+      // ✅ DELETION – FIXED WITH PROPER DATABASE DELETION
       // --------------------------------------------------------------
       async function performDeleteOrder(orderId) {
         try {
+          console.log(`Attempting to delete order #${orderId} from database...`);
+          
           // Delete the order — CASCADE will automatically delete order_items
           const deleteOrderResponse = await fetch(
             `${supabaseUrl}/rest/v1/orders?id=eq.${orderId}`,
@@ -986,24 +988,34 @@
             }
           );
 
+          console.log('Delete response status:', deleteOrderResponse.status);
+          console.log('Delete response ok:', deleteOrderResponse.ok);
+
+          // Strictly check if deletion was successful
           if (!deleteOrderResponse.ok) {
-            let errorMsg = 'Failed to delete order';
+            let errorMsg = `Failed to delete order (HTTP ${deleteOrderResponse.status})`;
             try {
               const errorData = await deleteOrderResponse.json();
+              console.log('Error response data:', errorData);
               if (errorData.error) errorMsg = errorData.error.message || errorMsg;
+              if (errorData.message) errorMsg = errorData.message;
             } catch {
               const errorText = await deleteOrderResponse.text();
+              console.log('Error response text:', errorText);
               if (errorText) errorMsg = errorText;
             }
             throw new Error(errorMsg);
           }
 
+          // ✅ Only proceed if Supabase confirms deletion
           showToast(`🗑️ Order #${orderId} deleted successfully!`);
+          
+          // Refresh from database to get clean state
           await fetchOrders();
           
         } catch (error) {
           console.error('Delete error:', error);
-          showToast(`Failed to delete order: ${error.message}`, 'error');
+          showToast(`❌ ${error.message}`, 'error');
         }
       }
 
