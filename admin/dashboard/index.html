@@ -183,7 +183,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ----- ADD PRODUCT FORM (mobile-friendly) ----- */
+    /* ----- ADD PRODUCT FORM (fixed height, no shift) ----- */
     .form-container {
       background: #ffffff;
       border: 1px solid #e8edf2;
@@ -193,12 +193,15 @@
       display: none;
       box-shadow: 0 1px 2px rgba(0,0,0,0.02);
       width: 100%;
+      /* Prevent layout shift */
+      min-height: 0;
+      overflow: hidden;
     }
     .form-container.active {
       display: block;
       animation: slideDown 0.25s ease;
     }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 
     .form-title {
       font-size: 1.1rem;
@@ -396,6 +399,9 @@
     .btn-edit:hover { background: #e4edf7; }
     .btn-delete { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
     .btn-delete:hover { background: #fee2e2; }
+    .btn-save { background: #1f8b4c; color: white; }
+    .btn-save:hover { background: #0f6e3a; }
+    .btn-secondary { background: #f3f6f8; color: #1a1f36; border: 1px solid #e4eaf0; }
 
     /* ----- DESKTOP TABLE ----- */
     .table-container {
@@ -617,7 +623,7 @@
           <div class="file-upload-wrapper">
             <label class="file-upload-label" for="productImage">
               📁 Choose Image
-              <input type="file" id="productImage" accept="image/*" capture="environment">
+              <input type="file" id="productImage" accept="image/*">
             </label>
             <span id="fileName" style="color:#6b7a86;font-size:0.75rem;margin-left:0.3rem;"></span>
           </div>
