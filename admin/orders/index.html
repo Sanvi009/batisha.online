@@ -84,7 +84,6 @@
       flex-shrink: 0;
     }
     .nav-link {
-      display: none;
       text-decoration: none;
       color: #4b5f6b;
       font-weight: 500;
@@ -92,6 +91,7 @@
       padding: 0.3rem 0.8rem;
       border-radius: 6px;
       transition: 0.15s;
+      white-space: nowrap;
     }
     .nav-link:hover { background: #f0f3f7; color: #1a1f36; }
     .nav-link.active { color: #1f8b4c; background: #f0f8f2; }
@@ -488,7 +488,6 @@
     }
 
     @media (min-width: 768px) {
-      .nav-link { display: inline-block; }
       .order-list { display: none !important; }
       .table-container { display: block !important; }
       .header-left { gap: 1rem; }
@@ -538,8 +537,8 @@
         <span class="page-title">📦 Orders</span>
       </div>
       <div class="header-actions">
-        <a href="/admin/dashboard" class="nav-link">Products</a>
-        <a href="/admin/orders" class="nav-link active">Orders</a>
+        <a href="/admin/dashboard" class="nav-link">📊 Products</a>
+        <a href="/admin/orders" class="nav-link active">📦 Orders</a>
         <button class="btn-logout" id="logoutButton">Logout</button>
       </div>
     </div>
