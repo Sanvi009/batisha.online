@@ -9,75 +9,86 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: #f5f7fa;
-      font-family: 'Inter', -apple-system, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
       color: #1a1f36;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       padding-bottom: 80px;
+      overflow-x: hidden;
+      width: 100%;
     }
 
-    /* ----- HEADER (professional, clean) ----- */
+    /* ----- HEADER ----- */
     .header {
       background: #ffffff;
       border-bottom: 1px solid #e8edf2;
-      padding: 0.8rem 1.2rem;
+      padding: 0.7rem 1rem;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      width: 100%;
     }
     .header-inner {
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.8rem;
+      gap: 0.5rem;
+      width: 100%;
     }
     .header-left {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.6rem;
+      flex-shrink: 0;
     }
     .logo {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       text-decoration: none;
       color: #1a1f36;
+      flex-shrink: 0;
     }
     .logo-icon {
-      width: 38px;
-      height: 38px;
+      width: 34px;
+      height: 34px;
       background: linear-gradient(145deg, #1e6b3e, #2b7a4a);
-      border-radius: 10px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 8px rgba(30, 107, 62, 0.15);
+      flex-shrink: 0;
     }
-    .logo-icon svg { width: 22px; height: 22px; fill: white; }
+    .logo-icon svg { width: 20px; height: 20px; fill: white; }
     .logo-text {
-      font-size: 1.2rem;
+      font-size: 1.05rem;
       font-weight: 700;
       letter-spacing: -0.3px;
+      white-space: nowrap;
     }
-    .logo-text span { font-weight: 400; color: #4b6b5e; font-size: 0.7rem; }
+    .logo-text span { font-weight: 400; color: #4b6b5e; font-size: 0.65rem; }
     .page-title {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       color: #1a1f36;
+      white-space: nowrap;
     }
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.4rem;
+      flex-shrink: 0;
     }
     .nav-link {
+      display: none;
       text-decoration: none;
       color: #4b5f6b;
       font-weight: 500;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       padding: 0.3rem 0.8rem;
       border-radius: 6px;
       transition: 0.15s;
@@ -88,71 +99,82 @@
       background: #fef2f2;
       color: #991b1b;
       border: none;
-      padding: 0.3rem 1rem;
+      padding: 0.25rem 0.8rem;
       border-radius: 30px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 600;
       cursor: pointer;
       transition: 0.15s;
+      white-space: nowrap;
     }
     .btn-logout:hover { background: #fee2e2; }
 
-    /* ----- STATS BAR (clean, compact) ----- */
+    /* ----- STATS BAR ----- */
     .stats-bar {
       background: #ffffff;
       border-bottom: 1px solid #e8edf2;
-      padding: 0.6rem 1.2rem;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      padding: 0.5rem 1rem;
+      width: 100%;
+      overflow: hidden;
     }
     .stats-inner {
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
-      gap: 1.5rem;
+      gap: 0.8rem;
       align-items: center;
-      min-width: max-content;
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
     }
+    .stats-inner::-webkit-scrollbar { display: none; }
     .stat-item {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
+      gap: 0.3rem;
+      font-size: 0.7rem;
       color: #4b5f6b;
+      flex-shrink: 0;
+      white-space: nowrap;
     }
     .stat-item .num {
       font-weight: 700;
       color: #1a1f36;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
     }
     .stat-item .num.green { color: #1f8b4c; }
-    .stat-item .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.3px; }
-    .stat-divider { width: 1px; height: 24px; background: #e8edf2; }
+    .stat-item .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2px; }
+    .stat-divider { width: 1px; height: 20px; background: #e8edf2; flex-shrink: 0; }
 
-    /* ----- MAIN CONTENT ----- */
+    /* ----- MAIN ----- */
     .main {
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 1.2rem;
+      padding: 1rem;
+      width: 100%;
     }
 
-    /* ----- LOADING / ERROR / EMPTY ----- */
+    /* ----- STATE CONTAINERS ----- */
     .state-container {
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 4rem 1.5rem;
+      padding: 3rem 1rem;
       background: #ffffff;
-      border-radius: 16px;
+      border-radius: 12px;
       border: 1px solid #e8edf2;
       text-align: center;
+      width: 100%;
     }
-    .state-container .icon { font-size: 3rem; margin-bottom: 0.5rem; }
-    .state-container h3 { font-size: 1.1rem; color: #1a1f36; }
-    .state-container p { color: #6b7a86; font-size: 0.85rem; margin-top: 0.2rem; }
+    .state-container .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .state-container h3 { font-size: 1rem; color: #1a1f36; }
+    .state-container p { color: #6b7a86; font-size: 0.8rem; margin-top: 0.2rem; }
     .spinner {
-      width: 32px; height: 32px;
+      width: 30px; height: 30px;
       border: 3px solid #e2ebe6;
       border-top-color: #1f8b4c;
       border-radius: 50%;
@@ -161,26 +183,23 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ----- ORDER LIST (mobile-first, card style) ----- */
+    /* ----- MOBILE ORDER CARDS ----- */
     .order-list {
-      display: flex;
+      display: none;
       flex-direction: column;
-      gap: 0.8rem;
+      gap: 0.7rem;
+      width: 100%;
     }
-
     .order-card {
       background: #ffffff;
-      border-radius: 14px;
+      border-radius: 12px;
       border: 1px solid #e8edf2;
-      padding: 1rem;
+      padding: 0.8rem;
       transition: 0.15s;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+      width: 100%;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
-    .order-card:hover {
-      border-color: #c8d8d0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-    }
-
+    .order-card:active { transform: scale(0.99); }
     .order-card-header {
       display: flex;
       justify-content: space-between;
@@ -190,17 +209,18 @@
     .order-id {
       font-weight: 700;
       color: #1a1f36;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
-    .order-id span { color: #6b7a86; font-weight: 400; }
+    .order-id span { color: #6b7a86; font-weight: 400; font-size: 0.75rem; }
     .order-status {
-      padding: 0.15rem 0.7rem;
+      padding: 0.1rem 0.6rem;
       border-radius: 20px;
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.2px;
       white-space: nowrap;
+      flex-shrink: 0;
     }
     .status-pending { background: #fefce8; color: #a16207; border: 1px solid #fde68a; }
     .status-confirmed { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
@@ -208,48 +228,46 @@
     .status-cancelled { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 
     .order-card-body {
-      margin-top: 0.6rem;
+      margin-top: 0.4rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.3rem 0.8rem;
+      gap: 0.2rem 0.6rem;
     }
     .order-card-body .detail {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: #4b5f6b;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-    .order-card-body .detail strong {
-      color: #1a1f36;
-      font-weight: 600;
-    }
-    .order-card-body .detail .value {
-      color: #1a1f36;
-    }
+    .order-card-body .detail strong { color: #1a1f36; font-weight: 600; }
+    .order-card-body .detail .value { color: #1a1f36; overflow: hidden; text-overflow: ellipsis; }
 
     .order-card-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 0.8rem;
-      padding-top: 0.6rem;
+      margin-top: 0.6rem;
+      padding-top: 0.5rem;
       border-top: 1px solid #f0f3f7;
-      flex-wrap: wrap;
       gap: 0.4rem;
+      flex-wrap: wrap;
     }
     .order-total {
       font-weight: 700;
       color: #1f8b4c;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
     }
     .order-total::before { content: '৳'; }
     .order-actions {
       display: flex;
-      gap: 0.3rem;
+      gap: 0.2rem;
       flex-wrap: wrap;
     }
     .btn-sm {
-      padding: 0.25rem 0.7rem;
+      padding: 0.2rem 0.6rem;
       border-radius: 30px;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       font-weight: 600;
       border: none;
       cursor: pointer;
@@ -263,118 +281,156 @@
     .btn-delete { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
     .btn-delete:hover { background: #fee2e2; }
 
-    /* ----- ORDER DETAIL MODAL (professional, slide-up on mobile) ----- */
+    /* ----- DESKTOP TABLE ----- */
+    .table-container {
+      display: none;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e8edf2;
+      overflow: hidden;
+      width: 100%;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .table-wrapper {
+      overflow-x: auto;
+      width: 100%;
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+    thead {
+      background: #f8fbf9;
+      border-bottom: 1px solid #e8edf2;
+    }
+    th {
+      padding: 0.7rem 0.8rem;
+      text-align: left;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #4b5f6b;
+      font-weight: 600;
+    }
+    td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid #f0f3f7;
+      font-size: 0.8rem;
+      color: #1a1f36;
+      vertical-align: middle;
+    }
+    tbody tr:hover { background: #f8fbf9; }
+    tbody tr:last-child td { border-bottom: none; }
+    .actions-cell { display: flex; gap: 0.2rem; flex-wrap: wrap; }
+
+    /* ----- MODAL (bottom sheet) ----- */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: flex;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
       align-items: flex-end;
       justify-content: center;
       z-index: 2000;
       animation: fadeIn 0.2s ease;
     }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
     .modal-box {
       background: #ffffff;
-      border-radius: 20px 20px 0 0;
-      padding: 1.5rem 1.2rem 1.8rem;
+      border-radius: 16px 16px 0 0;
+      padding: 1.2rem 1rem 1.5rem;
       max-width: 600px;
       width: 100%;
-      max-height: 90vh;
+      max-height: 85vh;
       overflow-y: auto;
       animation: slideUp 0.3s ease;
-      box-shadow: 0 -8px 30px rgba(0,0,0,0.08);
     }
-    @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
+    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     .modal-handle {
-      width: 40px;
-      height: 4px;
+      width: 36px;
+      height: 3px;
       background: #dde5ed;
-      border-radius: 4px;
-      margin: 0 auto 1.2rem;
+      border-radius: 3px;
+      margin: 0 auto 0.8rem;
     }
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
     }
-    .modal-title { font-size: 1.1rem; font-weight: 700; color: #1a1f36; }
+    .modal-title { font-size: 1rem; font-weight: 700; color: #1a1f36; }
     .modal-close {
       background: none;
       border: none;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       color: #6b7a86;
       cursor: pointer;
       padding: 0.2rem;
     }
     .modal-close:hover { color: #991b1b; }
-
     .modal-info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.3rem 0.8rem;
-      margin-bottom: 1rem;
+      gap: 0.2rem 0.6rem;
+      margin-bottom: 0.8rem;
     }
-    .modal-info-grid .row { font-size: 0.8rem; }
-    .modal-info-grid .label { color: #6b7a86; }
+    .modal-info-grid .row { font-size: 0.75rem; }
+    .modal-info-grid .label { color: #6b7a86; display: block; font-size: 0.65rem; }
     .modal-info-grid .value { font-weight: 600; color: #1a1f36; }
-
     .modal-items-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 0.8rem 0;
-      font-size: 0.8rem;
+      margin: 0.6rem 0;
+      font-size: 0.75rem;
     }
     .modal-items-table th {
       text-align: left;
-      padding: 0.4rem 0.2rem;
+      padding: 0.3rem 0.2rem;
       color: #6b7a86;
       font-weight: 600;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.2px;
       border-bottom: 1px solid #f0f3f7;
     }
     .modal-items-table td {
-      padding: 0.4rem 0.2rem;
+      padding: 0.3rem 0.2rem;
       border-bottom: 1px solid #f0f3f7;
     }
     .modal-items-table tr:last-child td { border-bottom: none; }
     .modal-items-table .product-name {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.3rem;
     }
     .modal-items-table .product-name img {
-      width: 28px; height: 28px;
-      border-radius: 6px;
+      width: 24px; height: 24px;
+      border-radius: 4px;
       object-fit: contain;
       background: #f8fbf9;
       border: 1px solid #e8edf2;
     }
-
     .modal-actions {
       display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
+      gap: 0.4rem;
+      margin-top: 0.8rem;
       flex-wrap: wrap;
     }
     .modal-actions .btn {
-      padding: 0.4rem 1rem;
+      padding: 0.35rem 0.9rem;
       border-radius: 30px;
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       border: none;
       cursor: pointer;
       transition: 0.15s;
       flex: 1;
-      min-width: 80px;
+      min-width: 70px;
       text-align: center;
     }
     .btn-deliver-modal { background: #f0fdf4; color: #0f6e3a; border: 1px solid #bbf7d0; }
@@ -386,116 +442,85 @@
 
     /* ----- CONFIRM DELETE MODAL ----- */
     .confirm-modal .modal-box {
-      max-width: 400px;
+      max-width: 380px;
       text-align: center;
-      border-radius: 20px;
+      border-radius: 16px;
       animation: scaleIn 0.2s ease;
     }
     @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .confirm-modal .modal-icon { font-size: 3rem; margin-bottom: 0.3rem; }
-    .confirm-modal .modal-title { font-size: 1.1rem; margin-bottom: 0.2rem; }
-    .confirm-modal .modal-sub { color: #6b7a86; font-size: 0.85rem; margin-bottom: 1.2rem; }
+    .confirm-modal .modal-icon { font-size: 2.5rem; margin-bottom: 0.3rem; }
+    .confirm-modal .modal-title { font-size: 1rem; margin-bottom: 0.2rem; }
+    .confirm-modal .modal-sub { color: #6b7a86; font-size: 0.8rem; margin-bottom: 1rem; }
     .confirm-modal .modal-actions { justify-content: center; }
-    .confirm-modal .modal-actions .btn {
-      flex: none;
-      min-width: 100px;
-      padding: 0.5rem 1.2rem;
-    }
+    .confirm-modal .modal-actions .btn { flex: none; min-width: 80px; padding: 0.4rem 1rem; }
     .btn-danger { background: #dc2626; color: white; }
     .btn-danger:hover { background: #b91c1c; }
     .btn-secondary { background: #f3f6f8; color: #1f2a3a; border: 1px solid #e4eaf0; }
     .btn-secondary:hover { background: #e8edf2; }
 
-    /* ----- TOAST (professional, bottom) ----- */
+    /* ----- TOAST ----- */
     .toast {
       position: fixed;
-      bottom: 1.5rem;
+      bottom: 1.2rem;
       left: 50%;
       transform: translateX(-50%);
-      padding: 0.5rem 1.2rem;
+      padding: 0.4rem 1rem;
       border-radius: 30px;
       font-weight: 500;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       z-index: 3000;
       display: none;
       color: white;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
       animation: toastIn 0.3s ease;
       white-space: nowrap;
     }
-    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(15px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
     .toast.success { background: #1f8b4c; }
     .toast.error { background: #dc2626; }
 
-    /* ----- DESKTOP: table view instead of cards ----- */
-    @media (min-width: 768px) {
-      .order-list {
-        display: none;
-      }
-      .table-container {
-        display: block !important;
-        background: #ffffff;
-        border-radius: 16px;
-        border: 1px solid #e8edf2;
-        overflow-x: auto;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.02);
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 800px;
-      }
-      thead {
-        background: #f8fbf9;
-        border-bottom: 1px solid #e8edf2;
-      }
-      th {
-        padding: 0.8rem 1rem;
-        text-align: left;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-        color: #4b5f6b;
-        font-weight: 600;
-      }
-      td {
-        padding: 0.7rem 1rem;
-        border-bottom: 1px solid #f0f3f7;
-        font-size: 0.85rem;
-        color: #1a1f36;
-        vertical-align: middle;
-      }
-      tbody tr:hover { background: #f8fbf9; }
-      tbody tr:last-child td { border-bottom: none; }
-      .actions-cell { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    /* ----- RESPONSIVE BREAKPOINTS ----- */
+    @media (min-width: 640px) {
+      .header { padding: 0.7rem 1.5rem; }
+      .stats-bar { padding: 0.5rem 1.5rem; }
+      .main { padding: 1.5rem; }
+      .order-card { padding: 1rem; }
     }
 
-    /* ----- MOBILE: cards, no table ----- */
+    @media (min-width: 768px) {
+      .nav-link { display: inline-block; }
+      .order-list { display: none !important; }
+      .table-container { display: block !important; }
+      .header-left { gap: 1rem; }
+      .logo-text { font-size: 1.1rem; }
+    }
+
     @media (max-width: 767px) {
-      .table-container {
-        display: none !important;
-      }
-      .order-list {
-        display: flex !important;
-      }
-      .order-card-body {
-        grid-template-columns: 1fr 1fr;
-      }
-      .stats-bar { padding: 0.4rem 0.8rem; }
-      .stats-inner { gap: 1rem; }
-      .stat-item { font-size: 0.7rem; }
+      .order-list { display: flex !important; }
+      .table-container { display: none !important; }
       .header { padding: 0.5rem 0.8rem; }
-      .logo-text { font-size: 1rem; }
-      .page-title { font-size: 0.9rem; }
+      .stats-bar { padding: 0.4rem 0.8rem; }
+      .stats-inner { gap: 0.6rem; }
+      .stat-item { font-size: 0.6rem; }
+      .stat-item .num { font-size: 0.75rem; }
+      .main { padding: 0.8rem; }
+      .page-title { font-size: 0.85rem; }
+      .logo-text { font-size: 0.9rem; }
+      .logo-icon { width: 30px; height: 30px; }
+      .logo-icon svg { width: 18px; height: 18px; }
       .modal-box { padding: 1rem 0.8rem 1.2rem; }
       .modal-info-grid { grid-template-columns: 1fr; }
-      .toast { font-size: 0.75rem; padding: 0.4rem 1rem; bottom: 1rem; }
+      .toast { font-size: 0.7rem; padding: 0.3rem 0.8rem; bottom: 1rem; }
+      .order-card-body { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 480px) {
       .order-card-body { grid-template-columns: 1fr; }
-      .order-card { padding: 0.8rem; }
-      .order-actions .btn-sm { font-size: 0.6rem; padding: 0.2rem 0.6rem; }
+      .order-card { padding: 0.7rem; }
+      .order-card-body .detail { font-size: 0.65rem; }
+      .order-actions .btn-sm { font-size: 0.55rem; padding: 0.15rem 0.5rem; }
+      .order-status { font-size: 0.5rem; padding: 0.05rem 0.5rem; }
+      .order-total { font-size: 0.75rem; }
     }
   </style>
 </head>
@@ -539,25 +564,27 @@
     <div id="loadingState" class="state-container"><div class="spinner"></div><h3>Loading orders...</h3></div>
     
     <!-- Error -->
-    <div id="errorState" class="state-container" style="display:none;"><div class="icon">❌</div><h3>Failed to load orders</h3><p>Please try again</p><button class="btn-sm btn-view" onclick="location.reload()" style="margin-top:0.8rem;font-size:0.8rem;">Retry</button></div>
+    <div id="errorState" class="state-container"><div class="icon">❌</div><h3>Failed to load orders</h3><p>Please try again</p><button class="btn-sm btn-view" onclick="location.reload()" style="margin-top:0.6rem;font-size:0.75rem;">Retry</button></div>
     
     <!-- Empty -->
-    <div id="emptyState" class="state-container" style="display:none;"><div class="icon">📦</div><h3>No orders yet</h3><p>Orders will appear here when customers place them</p></div>
+    <div id="emptyState" class="state-container"><div class="icon">📦</div><h3>No orders yet</h3><p>Orders will appear here when customers place them</p></div>
 
     <!-- MOBILE: Card List -->
-    <div id="orderList" class="order-list" style="display:none;"></div>
+    <div id="orderList" class="order-list"></div>
 
     <!-- DESKTOP: Table -->
-    <div id="tableContainer" class="table-container" style="display:none;">
-      <table>
-        <thead><tr><th>Order</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
-        <tbody id="tableBody"></tbody>
-      </table>
+    <div id="tableContainer" class="table-container">
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Order</th><th>Customer</th><th>Phone</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
     </div>
   </main>
 
   <!-- ORDER DETAIL MODAL -->
-  <div id="orderDetailModal" class="modal-overlay" style="display:none;">
+  <div id="orderDetailModal" class="modal-overlay">
     <div class="modal-box">
       <div class="modal-handle"></div>
       <div class="modal-header">
@@ -570,7 +597,7 @@
   </div>
 
   <!-- CONFIRM DELETE MODAL -->
-  <div id="confirmDeleteModal" class="modal-overlay confirm-modal" style="display:none;">
+  <div id="confirmDeleteModal" class="modal-overlay confirm-modal">
     <div class="modal-box">
       <div class="modal-icon">⚠️</div>
       <h3 class="modal-title">Delete Order?</h3>
@@ -774,7 +801,7 @@
             <div class="row"><span class="label">Status</span><div class="value"><span class="order-status status-${order.status}">${order.status}</span></div></div>
             <div class="row"><span class="label">Total</span><div class="value" style="color:#1f8b4c;font-weight:700;">৳${parseFloat(order.total_price).toFixed(2)}</div></div>
           </div>
-          <h4 style="font-size:0.85rem;color:#1a1f36;margin:0.8rem 0 0.4rem;">Items</h4>
+          <h4 style="font-size:0.8rem;color:#1a1f36;margin:0.6rem 0 0.3rem;">Items</h4>
           <table class="modal-items-table">
             <thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Subtotal</th></tr></thead>
             <tbody>
