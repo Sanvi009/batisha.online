@@ -12,23 +12,25 @@
     }
 
     body {
-      background: #fcfcfc;
-      font-family: 'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
-      color: #1e2b3a;
-      line-height: 1.4;
+      background: #f8faf8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a2a3a;
+      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
-      padding-bottom: 70px;
+      padding-bottom: 80px;
     }
 
-    /* ----- navbar (clean, crisp) ----- */
+    /* ----- NAVBAR ----- */
     .navbar {
       background: #ffffff;
-      border-bottom: 1px solid #eaeef3;
-      padding: 0.7rem 2rem;
+      border-bottom: 1px solid #e8edf2;
+      padding: 0.8rem 1.2rem;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.92);
     }
     .nav-container {
       max-width: 1400px;
@@ -36,91 +38,69 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.4rem 1.8rem;
     }
 
-    /* ----- LOGO (bag icon + Batisha online) - LEFT aligned ----- */
     .logo {
       display: flex;
       align-items: center;
       gap: 0.6rem;
       text-decoration: none;
-      color: #1f2a3a;
-      justify-content: flex-start;
+      color: #1a2a3a;
     }
     .logo-icon {
-      width: 42px;
-      height: 42px;
-      background: linear-gradient(145deg, #1e6b3e, #2b7a4a);
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(145deg, #1e6b3e, #2b8a4a);
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(30, 107, 62, 0.12);
-      transition: 0.2s;
+      box-shadow: 0 4px 12px rgba(30, 107, 62, 0.15);
     }
     .logo-icon svg {
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       fill: white;
-      display: block;
     }
     .logo-text {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 700;
-      letter-spacing: -0.3px;
-      color: #1f2a3a;
+      letter-spacing: -0.5px;
     }
     .logo-text span {
       font-weight: 400;
       color: #4b6b5e;
-      font-size: 0.8rem;
-      margin-left: 0.1rem;
+      font-size: 0.75rem;
     }
 
-    /* ----- nav links (desktop) ----- */
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 1.8rem;
+      gap: 1.5rem;
     }
     .nav-links a {
       text-decoration: none;
       font-weight: 500;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #2f3e4e;
-      transition: 0.15s;
-      letter-spacing: -0.2px;
-      position: relative;
-    }
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -3px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: #1f8b4c;
       transition: 0.2s;
     }
-    .nav-links a:hover::after { width: 100%; }
-    .nav-links a:hover { color: #0f6e3a; }
+    .nav-links a:hover {
+      color: #1f8b4c;
+    }
 
-    /* ----- cart pill (minimal) ----- */
     .cart-pill {
       background: #f0f5fc;
-      padding: 0.3rem 1.1rem 0.3rem 0.9rem;
+      padding: 0.3rem 1rem 0.3rem 0.8rem;
       border-radius: 40px;
       font-weight: 500;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.4rem;
       border: 1px solid #dde5ed;
-      transition: 0.15s;
-      cursor: pointer;
-      color: #1f2a3a;
+      transition: 0.2s;
+      color: #1a2a3a;
     }
     .cart-pill:hover {
       background: #e4edf7;
@@ -131,66 +111,91 @@
       color: white;
       border-radius: 40px;
       padding: 0.02rem 0.6rem;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 600;
-      margin-left: 0.2rem;
     }
 
-    /* ----- hero minimal (no text) ----- */
+    /* ----- HERO ----- */
     .hero {
-      background: #f8fbf9;
-      padding: 0.5rem 1.5rem;
-      border-bottom: 1px solid #e4ece8;
-      min-height: 12px;
+      background: linear-gradient(135deg, #f0f9f2 0%, #e8f5ec 100%);
+      padding: 2rem 1.2rem 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid #dce8e2;
     }
-    .hero h1, .hero p { display: none; }
+    .hero h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1a3428;
+      margin-bottom: 0.3rem;
+    }
+    .hero p {
+      color: #4b6b5e;
+      font-size: 0.95rem;
+      max-width: 400px;
+      margin: 0 auto;
+    }
 
-    /* ----- container & grid (compact) ----- */
+    /* ----- MAIN ----- */
     .container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0.8rem 2rem 2rem;
+      padding: 1.2rem 1.2rem 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
     }
     .section-title {
-      font-size: 1.4rem;
-      font-weight: 600;
+      font-size: 1.3rem;
+      font-weight: 700;
       color: #1a3428;
-      margin: 0.8rem 0 1.2rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      border-left: 4px solid #1f8b4c;
-      padding-left: 1rem;
+    }
+    .section-title .badge {
+      font-size: 0.7rem;
+      background: #eaf1ec;
+      color: #1a3428;
+      padding: 0.05rem 0.6rem;
+      border-radius: 40px;
+      font-weight: 600;
+    }
+    .view-all {
+      font-size: 0.8rem;
+      color: #1f8b4c;
+      text-decoration: none;
+      font-weight: 500;
     }
 
+    /* ----- PRODUCT GRID ----- */
     .products-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 1.2rem;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
     }
 
-    /* ----- product card (4:5 image frame, no distortion) ----- */
     .product-card {
       background: white;
-      border-radius: 10px;
+      border-radius: 16px;
       overflow: hidden;
       border: 1px solid #eef2f6;
-      transition: 0.15s ease;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      transition: 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      position: relative;
     }
     .product-card:hover {
-      border-color: #c8d8d0;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.04);
-      transform: translateY(-2px);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
     }
 
-    /* 4:5 aspect ratio frame – image fits without distortion */
     .product-image-frame {
       position: relative;
       width: 100%;
-      padding-bottom: 125%; /* 4:5 ratio (height = width * 1.25) */
+      padding-bottom: 100%;
       background: #f3f8f5;
       overflow: hidden;
     }
@@ -200,9 +205,11 @@
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: contain; /* full image visible, no crop */
-      background: #f3f8f5;
-      display: block;
+      object-fit: contain;
+      transition: 0.3s;
+    }
+    .product-card:hover .product-image-frame img {
+      transform: scale(1.05);
     }
     .product-image-placeholder {
       position: absolute;
@@ -213,115 +220,187 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.8rem;
+      font-size: 3rem;
       color: #2d7a4b;
-      background: #eaf1ec;
     }
 
     .product-info {
-      padding: 0.6rem 0.8rem 0.8rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.1rem;
+      padding: 0.7rem 0.8rem 0.9rem;
     }
     .product-title {
       font-size: 0.8rem;
       font-weight: 600;
       color: #1e2e2a;
-      line-height: 1.3;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
     .product-description {
       color: #5f6f6a;
       font-size: 0.65rem;
-      line-height: 1.3;
       display: -webkit-box;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      margin-top: 0.05rem;
+      margin: 0.1rem 0 0.3rem;
     }
     .product-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 0.4rem;
-      padding-top: 0.3rem;
+      padding-top: 0.4rem;
       border-top: 1px solid #edf2ef;
     }
     .product-price {
       font-weight: 700;
       font-size: 1rem;
       color: #0f6e3a;
-      letter-spacing: -0.2px;
     }
-    .product-price::before { content: '৳'; }  /* Taka symbol */
+    .product-price::before {
+      content: '৳';
+    }
 
-    /* ----- bigger, more professional add-to-cart button ----- */
     .add-to-cart-btn {
       background: #1f8b4c;
       color: white;
       border: none;
-      padding: 0.4rem 1.2rem;
+      padding: 0.3rem 1rem;
       border-radius: 30px;
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       cursor: pointer;
-      transition: 0.15s;
+      transition: 0.2s;
       display: flex;
       align-items: center;
       gap: 0.2rem;
-      letter-spacing: 0.2px;
-      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.15);
     }
     .add-to-cart-btn:hover {
       background: #0f6e3a;
-      transform: scale(1.03);
-      box-shadow: 0 6px 14px rgba(22, 163, 74, 0.25);
+      transform: scale(1.05);
+    }
+    .add-to-cart-btn:active {
+      transform: scale(0.95);
     }
 
-    /* ----- loading / error / empty ----- */
-    .loading-container { text-align: center; padding: 2rem; }
-    .spinner-large { width: 40px; height: 40px; border: 3px solid #e2ebe6; border-top-color: #1f8b4c; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 0.8rem; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .error-container { text-align: center; padding: 1.5rem; background: #fef2f2; border-radius: 1rem; border: 1px solid #fecaca; margin: 1.5rem 0; }
-    .error-details { background: white; padding: 0.6rem; border-radius: 0.5rem; margin: 0.6rem 0; font-family: monospace; font-size: 0.65rem; color: #b91c1c; white-space: pre-wrap; word-break: break-all; }
-    .retry-btn { background: #dc2626; color: white; border: none; padding: 0.4rem 1.8rem; border-radius: 2rem; font-weight: 500; cursor: pointer; }
-    .empty-state { text-align: center; padding: 2.5rem; color: #4b5f53; }
-    .empty-state .emoji { font-size: 3rem; margin-bottom: 0.3rem; }
-
-    /* ----- footer minimal (no text) ----- */
-    .footer {
-      background: #f8fbf9;
-      border-top: 1px solid #e4ece8;
-      padding: 0.8rem;
-      margin-top: 2.5rem;
-      text-align: center;
-      height: 20px;
+    /* ----- TOAST NOTIFICATION ----- */
+    .toast-container {
+      position: fixed;
+      top: 80px;
+      right: 16px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 360px;
+      width: 100%;
+      pointer-events: none;
     }
-    .footer p { display: none; }
 
-    /* ===== MOBILE BOTTOM NAV (professional, home centered) ===== */
+    .toast {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 12px 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      border: 1px solid #e8edf2;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: auto;
+      transform-origin: right;
+    }
+
+    .toast.removing {
+      animation: slideOutRight 0.3s ease forwards;
+    }
+
+    .toast-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #f0f9f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .toast-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .toast-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #1a2a3a;
+    }
+    .toast-message {
+      font-size: 0.75rem;
+      color: #4b6b5e;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 4px;
+      transition: 0.2s;
+    }
+    .toast-close:hover {
+      color: #1a2a3a;
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(80px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+    }
+
+    @keyframes slideOutRight {
+      from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(80px) scale(0.9);
+      }
+    }
+
+    /* ----- MOBILE NAV ----- */
     .mobile-bottom-nav {
       display: none;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 768px) {
       body {
-        padding-bottom: 75px;
+        padding-bottom: 70px;
       }
       .nav-links {
         display: none;
       }
       .navbar {
-        padding: 0.5rem 1rem;
+        padding: 0.6rem 1rem;
       }
-      .nav-container {
-        justify-content: flex-start; /* logo stays left */
+      .logo-text {
+        font-size: 1.1rem;
+      }
+      .logo-icon {
+        width: 34px;
+        height: 34px;
+      }
+      .logo-icon svg {
+        width: 20px;
+        height: 20px;
       }
 
       .mobile-bottom-nav {
@@ -331,27 +410,26 @@
         left: 0;
         width: 100%;
         background: rgba(255, 255, 255, 0.96);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         border-top: 1px solid #e4eaf0;
         box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
         justify-content: space-around;
         align-items: center;
-        padding: 0.45rem 0 0.6rem;
+        padding: 0.4rem 0 0.6rem;
         z-index: 200;
       }
-
       .mobile-bottom-nav a {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-decoration: none;
         color: #2f3e4e;
-        font-size: 0.6rem;
+        font-size: 0.55rem;
         font-weight: 500;
         gap: 0.1rem;
         padding: 0.2rem 0.4rem;
-        transition: 0.1s;
+        transition: 0.2s;
         flex: 1;
         max-width: 90px;
         border-radius: 40px;
@@ -361,64 +439,86 @@
         background: #f0f8f2;
       }
       .mobile-bottom-nav a .nav-icon {
-        font-size: 1.4rem;
-        line-height: 1;
-      }
-      .mobile-bottom-nav a .nav-label {
-        font-size: 0.55rem;
-        opacity: 0.7;
-        letter-spacing: 0.2px;
+        font-size: 1.3rem;
       }
       .mobile-bottom-nav .nav-home {
         background: #f0f8f2;
         border-radius: 40px;
-        padding: 0.3rem 0.6rem;
+        padding: 0.2rem 0.6rem;
         margin: 0 0.2rem;
         flex: 1.2;
         max-width: 110px;
       }
       .mobile-bottom-nav .nav-home .nav-icon {
-        font-size: 1.6rem;
-      }
-      .mobile-bottom-nav .nav-home .nav-label {
-        font-weight: 600;
-        opacity: 0.9;
+        font-size: 1.5rem;
       }
       .mobile-bottom-nav .cart-badge {
         background: #1f8b4c;
         color: white;
         border-radius: 40px;
         padding: 0.02rem 0.5rem;
-        font-size: 0.5rem;
+        font-size: 0.45rem;
         font-weight: 600;
         margin-left: 0.1rem;
         display: inline-block;
       }
 
+      .hero h1 {
+        font-size: 1.4rem;
+      }
+      .hero p {
+        font-size: 0.85rem;
+      }
       .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 0.8rem;
       }
-      .container { padding: 0 1rem 1.5rem; }
+      .container {
+        padding: 1rem;
+      }
+      .toast-container {
+        top: 70px;
+        right: 12px;
+        max-width: 320px;
+      }
+      .toast {
+        padding: 10px 14px;
+      }
+      .toast-title {
+        font-size: 0.8rem;
+      }
     }
 
     @media (max-width: 480px) {
-      .products-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
-      .product-title { font-size: 0.7rem; }
-      .product-price { font-size: 0.9rem; }
-      .add-to-cart-btn { font-size: 0.7rem; padding: 0.3rem 1rem; }
-      .mobile-bottom-nav a { max-width: 70px; }
-      .mobile-bottom-nav .nav-home { max-width: 90px; }
+      .products-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+      }
+      .product-title {
+        font-size: 0.7rem;
+      }
+      .product-price {
+        font-size: 0.85rem;
+      }
+      .add-to-cart-btn {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.8rem;
+      }
+      .toast-container {
+        top: 60px;
+        right: 8px;
+        max-width: 280px;
+      }
     }
 
-    /* ---------- FLOATING WHATSAPP BUTTON - PROFESSIONAL & SMOOTH ---------- */
+    /* ----- WHATSAPP ----- */
     #whatsappFloat {
       position: fixed;
-      bottom: 90px;
-      right: 20px;
-      z-index: 9999;
-      width: 60px;
-      height: 60px;
+      bottom: 80px;
+      right: 16px;
+      z-index: 9998;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       background: #25D366;
       box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
@@ -426,89 +526,28 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      touch-action: none;
-      user-select: none;
-      will-change: transform;
+      transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       border: none;
-      padding: 0;
-      line-height: 1;
-      /* smooth transitions for dock/undock */
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                  opacity 0.3s ease,
-                  box-shadow 0.3s ease,
-                  border-radius 0.3s ease,
-                  width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  height 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  right 0.3s ease,
-                  left 0.3s ease;
-      /* hardware acceleration */
-      transform: translateZ(0);
-      backface-visibility: hidden;
     }
     #whatsappFloat svg {
-      width: 34px;
-      height: 34px;
+      width: 30px;
+      height: 30px;
       fill: white;
-      display: block;
-      transition: transform 0.3s ease;
     }
     #whatsappFloat:hover {
+      transform: scale(1.08);
       box-shadow: 0 8px 28px rgba(37, 211, 102, 0.4);
     }
-    /* dragging state: no transition, only transform */
-    #whatsappFloat.dragging {
-      transition: none !important;
-    }
-    /* docked state (hidden on edge with arrow) */
-    #whatsappFloat.docked {
-      opacity: 1;
-      pointer-events: auto;
-      width: 44px;
-      height: 44px;
-      border-radius: 30px 0 0 30px;
-      background: #25D366;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
-      right: 0px;
-      transform: translate(0, 0) !important;
-    }
-    #whatsappFloat.docked svg {
-      display: none;
-    }
-    #whatsappFloat.docked .arrow-indicator {
-      display: block;
-      font-size: 22px;
-      color: white;
-      font-weight: 300;
-      line-height: 1;
-      transform: translateX(2px);
-    }
-    /* fully hidden (invisible, but clickable via arrow? no, we hide) */
-    #whatsappFloat.hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.7);
-      width: 44px;
-      height: 44px;
-      border-radius: 30px;
-    }
-    #whatsappFloat .arrow-indicator {
-      display: none;
-    }
-    /* adjust for mobile */
-    @media (max-width: 700px) {
+    @media (max-width: 768px) {
       #whatsappFloat {
-        bottom: 85px;
-        right: 15px;
-        width: 56px;
-        height: 56px;
+        bottom: 75px;
+        right: 12px;
+        width: 50px;
+        height: 50px;
       }
       #whatsappFloat svg {
-        width: 30px;
-        height: 30px;
-      }
-      #whatsappFloat.docked {
-        width: 40px;
-        height: 40px;
+        width: 26px;
+        height: 26px;
       }
     }
   </style>
@@ -516,28 +555,22 @@
 <body>
   <nav class="navbar">
     <div class="nav-container">
-      <!-- LOGO left aligned -->
       <a href="/" class="logo">
         <div class="logo-icon">
-          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 10v-2a6 6 0 0 1 12 0v2h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2h4zm2 0h8v-2a4 4 0 0 0-8 0v2zm-2 2v2h2v-2h-2zm4 0v2h4v-2h-4zm8 0v2h2v-2h-2zM8 14v2h2v-2H8zm16 0v2h2v-2h-2zM8 18v8h16v-8H8z"/>
-          </svg>
+          <svg viewBox="0 0 32 32"><path d="M10 10v-2a6 6 0 0 1 12 0v2h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2h4zm2 0h8v-2a4 4 0 0 0-8 0v2zm-2 2v2h2v-2h-2zm4 0v2h4v-2h-4zm8 0v2h2v-2h-2zM8 14v2h2v-2H8zm16 0v2h2v-2h-2zM8 18v8h16v-8H8z"/></svg>
         </div>
         <span class="logo-text">Batisha <span>online</span></span>
       </a>
-
-      <!-- DESKTOP NAV LINKS -->
       <div class="nav-links">
         <a href="/">Home</a>
-        <a href="/product">Products</a>
-        <a href="/cart" class="cart-pill">🛒 Cart <span id="cartCount">0</span></a>
+        <a href="/product/">Products</a>
+        <a href="/cart/" class="cart-pill">🛒 Cart <span id="cartCount">0</span></a>
       </div>
     </div>
   </nav>
 
-  <!-- MOBILE BOTTOM NAV (Home centered) -->
   <div class="mobile-bottom-nav">
-    <a href="/product">
+    <a href="/product/">
       <span class="nav-icon">📦</span>
       <span class="nav-label">Products</span>
     </a>
@@ -545,157 +578,146 @@
       <span class="nav-icon">🏠</span>
       <span class="nav-label">Home</span>
     </a>
-    <a href="/cart">
+    <a href="/cart/">
       <span class="nav-icon">🛒</span>
       <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
     </a>
   </div>
 
-  <!-- hero empty (no text) -->
-  <header class="hero"></header>
+  <header class="hero">
+    <h1>🌿 Fresh Groceries, Delivered</h1>
+    <p>Shop the best quality fruits, vegetables & everyday essentials</p>
+  </header>
 
   <main class="container">
-    <h2 class="section-title">🛍️ Our products</h2>
+    <div class="section-header">
+      <h2 class="section-title">🛍️ Fresh Picks <span class="badge">new</span></h2>
+      <a href="/product/" class="view-all">View all →</a>
+    </div>
 
-    <div id="loadingState" class="loading-container">
-      <div class="spinner-large"></div>
-      <p style="color: #3d5a4b; font-size: 0.9rem;">Loading products…</p>
+    <div id="loadingState" style="text-align:center;padding:2rem;">
+      <div style="width:32px;height:32px;border:3px solid #e2ebe6;border-top-color:#1f8b4c;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto;"></div>
+      <p style="color:#4b6b5e;font-size:0.85rem;margin-top:0.5rem;">Loading fresh picks…</p>
     </div>
-    <div id="errorState" class="error-container" style="display: none;">
-      <h3 style="font-size: 1rem;">😕 Something went wrong</h3>
-      <div id="errorDetails" class="error-details"></div>
-      <button class="retry-btn" onclick="location.reload()">Retry</button>
+    <div id="errorState" style="display:none;text-align:center;padding:2rem;color:#991b1b;">
+      <p>😕 Failed to load products. <button onclick="location.reload()" style="background:#1f8b4c;color:white;border:none;padding:0.2rem 0.8rem;border-radius:40px;font-weight:600;cursor:pointer;">Retry</button></p>
     </div>
-    <div id="emptyState" class="empty-state" style="display: none;">
-      <div class="emoji">📦</div>
-      <h3 style="font-size: 1rem;">No products</h3>
-      <p style="font-size: 0.85rem;">Check back later.</p>
-    </div>
-    <div id="productsGrid" class="products-grid" style="display: none;"></div>
+    <div id="productsGrid" class="products-grid" style="display:none;"></div>
   </main>
 
-  <!-- footer minimal (no text) -->
-  <footer class="footer"></footer>
+  <div class="toast-container" id="toastContainer"></div>
 
-  <!-- FLOATING WHATSAPP BUTTON – SMOOTH & PROFESSIONAL -->
   <div id="whatsappFloat">
-    <!-- WhatsApp SVG -->
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12.031 2C6.5 2 2 6.5 2 12.031c0 2.172.68 4.188 1.84 5.844L2.02 21.98l4.203-1.82c1.58 1.014 3.462 1.604 5.524 1.604C17.5 21.98 22 17.5 22 12.031 22 6.5 17.5 2 12.031 2zm.02 18c-1.543 0-3.012-.484-4.223-1.383l-.312-.195-2.68 1.18 1.18-2.68-.195-.312A7.905 7.905 0 014 12.031C4 7.59 7.59 4 12.031 4c4.442 0 8.031 3.59 8.031 8.031 0 4.442-3.59 8.031-8.031 8.031zm4.731-5.48c-.293-.148-1.73-.852-2-1.004-.27-.152-.465-.23-.672.148s-.774.852-.945 1.027c-.172.176-.32.195-.61.047-.293-.148-1.242-.46-2.367-1.457-.875-.776-1.465-1.723-1.645-2.016-.176-.293-.02-.453.129-.598.133-.133.293-.336.43-.504.137-.168.183-.281.273-.477.09-.195.047-.363-.023-.5-.07-.137-.617-1.5-.844-2.043-.23-.547-.465-.469-.672-.48-.172-.008-.37-.008-.566-.008-.195 0-.512.074-.781.363-.27.289-1.023 1-1.023 2.445 0 1.445 1.047 2.84 1.195 3.035.148.195 2.043 3.125 4.953 4.383.699.3 1.242.48 1.664.617.695.227 1.328.195 1.828.117.562-.086 1.727-.707 1.977-1.387.25-.68.25-1.258.172-1.383-.074-.125-.27-.195-.562-.34z"/>
-    </svg>
-    <span class="arrow-indicator">◀</span>
+    <svg viewBox="0 0 24 24"><path d="M12.031 2C6.5 2 2 6.5 2 12.031c0 2.172.68 4.188 1.84 5.844L2.02 21.98l4.203-1.82c1.58 1.014 3.462 1.604 5.524 1.604C17.5 21.98 22 17.5 22 12.031 22 6.5 17.5 2 12.031 2zm.02 18c-1.543 0-3.012-.484-4.223-1.383l-.312-.195-2.68 1.18 1.18-2.68-.195-.312A7.905 7.905 0 014 12.031C4 7.59 7.59 4 12.031 4c4.442 0 8.031 3.59 8.031 8.031 0 4.442-3.59 8.031-8.031 8.031zm4.731-5.48c-.293-.148-1.73-.852-2-1.004-.27-.152-.465-.23-.672.148s-.774.852-.945 1.027c-.172.176-.32.195-.61.047-.293-.148-1.242-.46-2.367-1.457-.875-.776-1.465-1.723-1.645-2.016-.176-.293-.02-.453.129-.598.133-.133.293-.336.43-.504.137-.168.183-.281.273-.477.09-.195.047-.363-.023-.5-.07-.137-.617-1.5-.844-2.043-.23-.547-.465-.469-.672-.48-.172-.008-.37-.008-.566-.008-.195 0-.512.074-.781.363-.27.289-1.023 1-1.023 2.445 0 1.445 1.047 2.84 1.195 3.035.148.195 2.043 3.125 4.953 4.383.699.3 1.242.48 1.664.617.695.227 1.328.195 1.828.117.562-.086 1.727-.707 1.977-1.387.25-.68.25-1.258.172-1.383-.074-.125-.27-.195-.562-.34z"/></svg>
   </div>
 
   <script>
     (function() {
       'use strict';
 
-      // ----- config via /api/config -----
+      const TABLE_NAME = 'product';
       let supabaseUrl = null;
       let supabaseAnonKey = null;
-      const TABLE_NAME = 'product';
 
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
-      const errorDetails = document.getElementById('errorDetails');
-      const emptyState = document.getElementById('emptyState');
       const productsGrid = document.getElementById('productsGrid');
       const cartCountSpan = document.getElementById('cartCount');
       const mobileCartCountSpan = document.getElementById('mobileCartCount');
+      const toastContainer = document.getElementById('toastContainer');
 
-      function showDetailedError(msg) {
-        errorDetails.textContent = msg;
-        showState('error');
+      // ----- TOAST SYSTEM -----
+      function showToast(title, message, icon = '✅') {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `
+          <div class="toast-icon">${icon}</div>
+          <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+          </div>
+          <button class="toast-close">✕</button>
+        `;
+        toastContainer.appendChild(toast);
+
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.addEventListener('click', () => removeToast(toast));
+
+        setTimeout(() => removeToast(toast), 3500);
       }
 
+      function removeToast(toast) {
+        if (toast.classList.contains('removing')) return;
+        toast.classList.add('removing');
+        setTimeout(() => {
+          if (toast.parentElement) toast.remove();
+        }, 300);
+      }
+
+      // ----- CONFIG -----
       async function fetchConfig() {
         try {
           const resp = await fetch('/api/config');
-          if (!resp.ok) {
-            const txt = await resp.text();
-            throw new Error(`Config API ${resp.status}\n${txt}`);
-          }
+          if (!resp.ok) throw new Error('Config failed');
           const cfg = await resp.json();
-          if (!cfg.supabaseUrl || !cfg.supabaseAnonKey) throw new Error('Missing Supabase config');
           supabaseUrl = cfg.supabaseUrl;
           supabaseAnonKey = cfg.supabaseAnonKey;
           return true;
-        } catch (e) {
-          showDetailedError(e.message);
+        } catch {
           return false;
         }
       }
 
+      // ----- PRODUCTS -----
       async function fetchProducts() {
         try {
-          showState('loading');
-          const url = `${supabaseUrl}/rest/v1/${TABLE_NAME}?select=*`;
+          loadingState.style.display = 'block';
+          errorState.style.display = 'none';
+          productsGrid.style.display = 'none';
+
+          const url = `${supabaseUrl}/rest/v1/${TABLE_NAME}?select=*&order=id.desc`;
           const response = await fetch(url, {
             headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
           });
-          const raw = await response.text();
-          if (!response.ok) {
-            throw new Error(`Supabase API ${response.status}\n${raw}\n\nCheck table '${TABLE_NAME}' exists & RLS`);
-          }
-          let products;
-          try { products = JSON.parse(raw); } catch (e) {
-            throw new Error(`Invalid JSON\n${raw}\nCheck table name or RLS.`);
-          }
+          if (!response.ok) throw new Error('Fetch failed');
+          const products = await response.json();
+
+          loadingState.style.display = 'none';
           if (!products || products.length === 0) {
-            showDetailedError(`API success but 0 rows.\nTable '${TABLE_NAME}' exists but empty.\nAdd products via Supabase dashboard.`);
+            productsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#4b6b5e;">📦 No products available yet</div>';
+            productsGrid.style.display = 'grid';
             return;
           }
-          const first = products[0];
-          const missing = [];
-          if (!('title' in first)) missing.push('title');
-          if (!('description' in first)) missing.push('description');
-          if (!('price' in first)) missing.push('price');
-          if (missing.length) {
-            throw new Error(`Missing columns: ${missing.join(', ')}\nAvailable: ${Object.keys(first).join(', ')}\nExpected: title, description, price, image_url`);
-          }
-
-          // ---- SORT: highest id first (newest items first) ----
-          products.sort((a, b) => {
-            const idA = parseInt(a.id, 10);
-            const idB = parseInt(b.id, 10);
-            // if id is not a number, fallback to 0
-            const numA = isNaN(idA) ? 0 : idA;
-            const numB = isNaN(idB) ? 0 : idB;
-            return numB - numA; // descending: bigger id first
-          });
 
           renderProducts(products);
-          showState('products');
-        } catch (e) {
-          showDetailedError(e.message);
+          productsGrid.style.display = 'grid';
+        } catch {
+          loadingState.style.display = 'none';
+          errorState.style.display = 'block';
         }
       }
 
       function renderProducts(products) {
         productsGrid.innerHTML = '';
-        products.forEach(p => {
-          productsGrid.appendChild(createCard(p));
-        });
-      }
-
-      function createCard(product) {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        const imgHtml = product.image_url 
-          ? `<div class="product-image-frame"><img src="${escapeHtml(product.image_url)}" alt="${escapeHtml(product.title)}" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'"></div>`
-          : `<div class="product-image-frame"><div class="product-image-placeholder">🥬</div></div>`;
-        card.innerHTML = `
-          ${imgHtml}
-          <div class="product-info">
-            <h3 class="product-title">${escapeHtml(product.title || 'No title')}</h3>
-            <p class="product-description">${escapeHtml(product.description || '')}</p>
-            <div class="product-footer">
-              <span class="product-price">${parseFloat(product.price || 0).toFixed(2)}</span>
-              <button class="add-to-cart-btn" onclick="window.addToCart(${product.id}, '${escapeHtml(product.title || 'Product')}', ${product.price || 0}, '${escapeHtml(product.image_url || '')}')">🛒 Add</button>
+        products.slice(0, 8).forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          const imgHtml = p.image_url
+            ? `<div class="product-image-frame"><img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'"></div>`
+            : `<div class="product-image-frame"><div class="product-image-placeholder">🥬</div></div>`;
+          card.innerHTML = `
+            ${imgHtml}
+            <div class="product-info">
+              <h3 class="product-title">${escapeHtml(p.title || 'No title')}</h3>
+              <p class="product-description">${escapeHtml(p.description || '')}</p>
+              <div class="product-footer">
+                <span class="product-price">${parseFloat(p.price || 0).toFixed(2)}</span>
+                <button class="add-to-cart-btn" onclick="window.addToCart(${p.id}, '${escapeHtml(p.title || 'Product')}', ${p.price || 0}, '${escapeHtml(p.image_url || '')}')">🛒 Add</button>
+              </div>
             </div>
-          </div>
-        `;
-        return card;
+          `;
+          productsGrid.appendChild(card);
+        });
       }
 
       function escapeHtml(str) {
@@ -704,23 +726,17 @@
         return d.innerHTML;
       }
 
-      function showState(state) {
-        loadingState.style.display = 'none';
-        errorState.style.display = 'none';
-        emptyState.style.display = 'none';
-        productsGrid.style.display = 'none';
-        if (state === 'loading') loadingState.style.display = 'block';
-        else if (state === 'error') errorState.style.display = 'block';
-        else if (state === 'empty') emptyState.style.display = 'block';
-        else if (state === 'products') productsGrid.style.display = 'grid';
-      }
-
-      // ----- cart (localStorage) -----
+      // ----- CART -----
       window.addToCart = function(id, title, price, imageUrl) {
         let cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
         const existing = cart.find(item => item.id === id);
-        if (existing) { existing.quantity += 1; } 
-        else { cart.push({ id, title, price, imageUrl, quantity: 1 }); }
+        if (existing) {
+          existing.quantity += 1;
+          showToast('Updated in cart', `${title} (×${existing.quantity})`, '🔄');
+        } else {
+          cart.push({ id, title, price, imageUrl, quantity: 1 });
+          showToast('Added to cart', title, '✅');
+        }
         localStorage.setItem('grocery_cart', JSON.stringify(cart));
         updateCartCount();
       };
@@ -732,6 +748,7 @@
         if (mobileCartCountSpan) mobileCartCountSpan.textContent = total;
       }
 
+      // ----- INIT -----
       async function init() {
         updateCartCount();
         const ok = await fetchConfig();
@@ -739,188 +756,17 @@
       }
 
       window.addEventListener('DOMContentLoaded', init);
+      window.addEventListener('storage', updateCartCount);
 
-      // ---------- FLOATING WHATSAPP – PROFESSIONAL DRAG + DOCK ----------
-      const waFloat = document.getElementById('whatsappFloat');
-      let isDragging = false;
-      let startX, startY, initialRect;
-      let currentTranslateX = 0, currentTranslateY = 0;
-      let isDocked = false;      // hidden on right edge with arrow
-      let isHidden = false;      // fully hidden (not used here, but kept)
-      let tapHandled = false;    // prevent double action
-      const WA_NUMBER = '8801877289927';
-      const WA_LINK = `https://wa.me/${WA_NUMBER}`;
-
-      // reset to default position (bottom right)
-      function setDefaultPosition() {
-        waFloat.style.right = '20px';
-        waFloat.style.bottom = '90px';
-        waFloat.style.left = 'auto';
-        waFloat.style.top = 'auto';
-        waFloat.style.transform = 'translate(0, 0)';
-        currentTranslateX = 0;
-        currentTranslateY = 0;
-        if (isDocked) {
-          isDocked = false;
-          waFloat.classList.remove('docked');
-          waFloat.classList.remove('hidden');
-          waFloat.style.width = '60px';
-          waFloat.style.height = '60px';
-          waFloat.style.borderRadius = '50%';
-          waFloat.style.right = '20px';
-        }
-      }
-
-      // dock to right edge (smooth)
-      function dockToEdge() {
-        if (!isDocked) {
-          isDocked = true;
-          waFloat.classList.add('docked');
-          waFloat.classList.remove('hidden');
-          waFloat.style.transform = 'translate(0, 0)';
-          waFloat.style.right = '0px';
-          waFloat.style.left = 'auto';
-          waFloat.style.width = '44px';
-          waFloat.style.height = '44px';
-          waFloat.style.borderRadius = '30px 0 0 30px';
-          // ensure arrow is visible
-        }
-      }
-
-      // undock (show full button)
-      function undock() {
-        if (isDocked) {
-          isDocked = false;
-          waFloat.classList.remove('docked');
-          waFloat.classList.remove('hidden');
-          waFloat.style.width = '60px';
-          waFloat.style.height = '60px';
-          waFloat.style.borderRadius = '50%';
-          waFloat.style.right = '20px';
-          waFloat.style.transform = 'translate(0, 0)';
-        }
-        if (isHidden) {
-          isHidden = false;
-          waFloat.classList.remove('hidden');
-          waFloat.classList.remove('docked');
-          waFloat.style.width = '60px';
-          waFloat.style.height = '60px';
-          waFloat.style.borderRadius = '50%';
-          waFloat.style.right = '20px';
-          waFloat.style.transform = 'translate(0, 0)';
-        }
-      }
-
-      // ----- drag events (touch + mouse) with smooth motion -----
-      function onDragStart(e) {
-        if (isDocked) return;
-        const ev = e.touches ? e.touches[0] : e;
-        startX = ev.clientX;
-        startY = ev.clientY;
-        initialRect = waFloat.getBoundingClientRect();
-        isDragging = false;
-        tapHandled = false;
-        // remove transition while dragging for instant response
-        waFloat.classList.add('dragging');
-      }
-
-      function onDragMove(e) {
-        if (isDocked) return;
-        const ev = e.touches ? e.touches[0] : e;
-        const dx = ev.clientX - startX;
-        const dy = ev.clientY - startY;
-        if (!isDragging) {
-          if (Math.abs(dx) + Math.abs(dy) > 8) {
-            isDragging = true;
-          } else {
-            return;
-          }
-        }
-        e.preventDefault();
-        currentTranslateX = dx;
-        currentTranslateY = dy;
-        waFloat.style.transform = `translate(${dx}px, ${dy}px)`;
-      }
-
-      function onDragEnd(e) {
-        if (isDocked) return;
-        waFloat.classList.remove('dragging');
-        if (!isDragging) {
-          // it's a tap — open WhatsApp (only if not docked)
-          if (!isDocked) {
-            window.open(WA_LINK, '_blank');
-          }
-          return;
-        }
-        isDragging = false;
-        // detect horizontal swipe: if moved > 50px to the right -> dock
-        const finalDx = currentTranslateX;
-        if (finalDx > 50) {
-          dockToEdge();
-          return;
-        }
-        // also if button is near right edge
-        const rect = waFloat.getBoundingClientRect();
-        const viewportWidth = window.innerWidth;
-        if (rect.left + rect.width > viewportWidth - 10) {
-          dockToEdge();
-          return;
-        }
-        // keep new position (apply transform)
-        waFloat.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
-      }
-
-      // attach events
-      waFloat.addEventListener('touchstart', onDragStart);
-      waFloat.addEventListener('touchmove', onDragMove);
-      waFloat.addEventListener('touchend', onDragEnd);
-      waFloat.addEventListener('mousedown', onDragStart);
-      window.addEventListener('mousemove', (e) => {
-        if (!isDragging || isDocked) return;
-        const ev = e;
-        const dx = ev.clientX - startX;
-        const dy = ev.clientY - startY;
-        if (!isDragging) return;
-        currentTranslateX = dx;
-        currentTranslateY = dy;
-        waFloat.style.transform = `translate(${dx}px, ${dy}px)`;
-      });
-      window.addEventListener('mouseup', (e) => {
-        if (!isDragging || isDocked) return;
-        waFloat.classList.remove('dragging');
-        isDragging = false;
-        const finalDx = currentTranslateX;
-        if (finalDx > 50) {
-          dockToEdge();
-          return;
-        }
-        const rect = waFloat.getBoundingClientRect();
-        const viewportWidth = window.innerWidth;
-        if (rect.left + rect.width > viewportWidth - 10) {
-          dockToEdge();
-          return;
-        }
-        waFloat.style.transform = `translate(${currentTranslateX}px, ${currentTranslateY}px)`;
+      // ----- WHATSAPP (simplified) -----
+      document.getElementById('whatsappFloat').addEventListener('click', function() {
+        window.open('https://wa.me/8801877289927', '_blank');
       });
 
-      // click on docked arrow -> undock (do NOT open WA)
-      waFloat.addEventListener('click', function(e) {
-        if (isDocked) {
-          undock();
-          return;
-        }
-        // if not dragging and not docked, the tap is handled in dragEnd (open WA)
-        // but we must avoid double opening: dragEnd already opens if not dragging
-      });
-
-      // set initial position
-      setDefaultPosition();
-
-      // adjust for mobile bottom nav
-      if (window.innerWidth <= 700) {
-        waFloat.style.bottom = '85px';
-      }
-
+      // Spinner animation
+      const style = document.createElement('style');
+      style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
+      document.head.appendChild(style);
     })();
   </script>
 </body>
