@@ -5,21 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>Dashboard · Batisha admin</title>
   <style>
-    /* ----- RESET & BASE ----- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: #f5f7fa;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       color: #1a1f36;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       padding-bottom: 80px;
       overflow-x: hidden;
       width: 100%;
     }
 
-    /* ----- HEADER ----- */
     .header {
       background: #ffffff;
       border-bottom: 1px solid #e8edf2;
@@ -109,7 +106,6 @@
     }
     .btn-logout:hover { background: #fee2e2; }
 
-    /* ----- STATS BAR ----- */
     .stats-bar {
       background: #ffffff;
       border-bottom: 1px solid #e8edf2;
@@ -148,8 +144,9 @@
     .stat-item .num.green { color: #1f8b4c; }
     .stat-item .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2px; }
     .stat-divider { width: 1px; height: 20px; background: #e8edf2; flex-shrink: 0; }
+    .stat-item .num.orange { color: #f59e0b; }
+    .stat-item .num.purple { color: #8b5cf6; }
 
-    /* ----- MAIN ----- */
     .main {
       max-width: 1200px;
       margin: 0 auto;
@@ -157,7 +154,6 @@
       width: 100%;
     }
 
-    /* ----- STATE CONTAINERS ----- */
     .state-container {
       display: none;
       flex-direction: column;
@@ -183,7 +179,6 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ----- ADD PRODUCT FORM (fixed height, no shift) ----- */
     .form-container {
       background: #ffffff;
       border: 1px solid #e8edf2;
@@ -193,7 +188,6 @@
       display: none;
       box-shadow: 0 1px 2px rgba(0,0,0,0.02);
       width: 100%;
-      /* Prevent layout shift */
       min-height: 0;
       overflow: hidden;
     }
@@ -251,6 +245,14 @@
     textarea.form-input {
       resize: vertical;
       min-height: 60px;
+    }
+    select.form-input {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7a86' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.8rem center;
+      padding-right: 2.5rem;
     }
     .file-upload-wrapper {
       position: relative;
@@ -315,7 +317,6 @@
     }
     .btn-cancel-form:hover { background: #e8edf2; }
 
-    /* ----- PRODUCT CARDS (mobile-first) ----- */
     .product-list {
       display: none;
       flex-direction: column;
@@ -380,6 +381,16 @@
       font-size: 0.85rem;
     }
     .product-card-price::before { content: '৳'; }
+    .product-card-category {
+      font-size: 0.6rem;
+      background: #f0f5fc;
+      color: #1e3a5f;
+      padding: 0.1rem 0.5rem;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 0.1rem;
+      border: 1px solid #dde5ed;
+    }
     .product-card-actions {
       display: flex;
       gap: 0.2rem;
@@ -403,7 +414,6 @@
     .btn-save:hover { background: #0f6e3a; }
     .btn-secondary { background: #f3f6f8; color: #1a1f36; border: 1px solid #e4eaf0; }
 
-    /* ----- DESKTOP TABLE ----- */
     .table-container {
       display: none;
       background: #ffffff;
@@ -421,7 +431,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 700px;
+      min-width: 800px;
     }
     thead {
       background: #f8fbf9;
@@ -465,8 +475,23 @@
       font-size: 1rem;
       border: 1px solid #e8edf2;
     }
+    .category-badge {
+      font-size: 0.65rem;
+      background: #f0f5fc;
+      color: #1e3a5f;
+      padding: 0.1rem 0.6rem;
+      border-radius: 12px;
+      display: inline-block;
+      border: 1px solid #dde5ed;
+    }
+    .category-badge.electronics { background: #e8f0fe; color: #1a5a8c; border-color: #b8d4f0; }
+    .category-badge.grocery { background: #f0f8f2; color: #1f8b4c; border-color: #c8e0d0; }
+    .category-badge.medicine { background: #fef3f0; color: #b4533a; border-color: #f5c8c0; }
+    .category-badge.vegetables { background: #f0fdf4; color: #0f6e3a; border-color: #bbf7d0; }
+    .category-badge.fruits { background: #fefce8; color: #a16207; border-color: #fde68a; }
+    .category-badge.bakery { background: #fef2e8; color: #b45a1a; border-color: #f5d0b8; }
+    .category-badge.others { background: #f3f4f6; color: #4b5563; border-color: #d1d5db; }
 
-    /* ----- CONFIRM DELETE MODAL ----- */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -495,10 +520,9 @@
     .modal-actions { display: flex; gap: 0.6rem; justify-content: center; }
     .btn-danger { background: #dc2626; color: white; padding: 0.4rem 1rem; border-radius: 30px; font-weight: 600; font-size: 0.75rem; border: none; cursor: pointer; }
     .btn-danger:hover { background: #b91c1c; }
-    .btn-secondary { background: #f3f6f8; color: #1a1f36; border: 1px solid #e4eaf0; padding: 0.4rem 1rem; border-radius: 30px; font-weight: 600; font-size: 0.75rem; border: none; cursor: pointer; }
+    .btn-secondary { background: #f3f6f8; color: #1a1f36; border: 1px solid #e4eaf0; padding: 0.4rem 1rem; border-radius: 30px; font-weight: 600; font-size: 0.75rem; cursor: pointer; }
     .btn-secondary:hover { background: #e8edf2; }
 
-    /* ----- TOAST ----- */
     .toast {
       position: fixed;
       bottom: 1.2rem;
@@ -519,7 +543,30 @@
     .toast.success { background: #1f8b4c; }
     .toast.error { background: #dc2626; }
 
-    /* ----- RESPONSIVE BREAKPOINTS ----- */
+    .category-filter {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .filter-btn {
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      border: 1px solid #e8edf2;
+      background: white;
+      color: #4b5f6b;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .filter-btn:hover { background: #f0f3f7; }
+    .filter-btn.active {
+      background: #1f8b4c;
+      color: white;
+      border-color: #1f8b4c;
+    }
+
     @media (min-width: 640px) {
       .header { padding: 0.7rem 1.5rem; }
       .stats-bar { padding: 0.5rem 1.5rem; }
@@ -566,7 +613,6 @@
   </style>
 </head>
 <body>
-  <!-- HEADER -->
   <header class="header">
     <div class="header-inner">
       <div class="header-left">
@@ -586,23 +632,21 @@
     </div>
   </header>
 
-  <!-- STATS BAR -->
   <div class="stats-bar">
     <div class="stats-inner">
       <div class="stat-item"><span class="num" id="statTotal">0</span><span class="label">Total</span></div>
       <div class="stat-divider"></div>
       <div class="stat-item"><span class="num green" id="statActive">0</span><span class="label">Active</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="num purple" id="statCategories">0</span><span class="label">Categories</span></div>
     </div>
   </div>
 
-  <!-- MAIN -->
   <main class="main">
-    <!-- Add Product Button -->
     <div style="margin-bottom:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
       <button class="btn-submit" id="toggleFormBtn" style="flex:none;padding:0.5rem 1.2rem;">➕ Add Product</button>
     </div>
 
-    <!-- Add Product Form -->
     <div id="addProductForm" class="form-container">
       <h2 class="form-title">📦 Add New Product</h2>
       <form id="productForm" class="form-grid">
@@ -613,6 +657,19 @@
         <div class="form-group">
           <label for="productPrice">Price (৳) *</label>
           <input type="number" id="productPrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="productCategory">Category *</label>
+          <select id="productCategory" class="form-input" required>
+            <option value="">Select category</option>
+            <option value="electronics">Electronics</option>
+            <option value="grocery">Grocery</option>
+            <option value="medicine">Medicine</option>
+            <option value="vegetables">Vegetables</option>
+            <option value="fruits">Fruits</option>
+            <option value="bakery">Bakery Items</option>
+            <option value="others">Others</option>
+          </select>
         </div>
         <div class="form-group" style="grid-column:1/-1;">
           <label for="productDescription">Description</label>
@@ -636,30 +693,35 @@
       </form>
     </div>
 
-    <!-- Loading -->
+    <div class="category-filter" id="categoryFilter">
+      <button class="filter-btn active" data-category="all">All</button>
+      <button class="filter-btn" data-category="electronics">Electronics</button>
+      <button class="filter-btn" data-category="grocery">Grocery</button>
+      <button class="filter-btn" data-category="medicine">Medicine</button>
+      <button class="filter-btn" data-category="vegetables">Vegetables</button>
+      <button class="filter-btn" data-category="fruits">Fruits</button>
+      <button class="filter-btn" data-category="bakery">Bakery</button>
+      <button class="filter-btn" data-category="others">Others</button>
+    </div>
+
     <div id="loadingState" class="state-container"><div class="spinner"></div><h3>Loading products...</h3></div>
     
-    <!-- Error -->
     <div id="errorState" class="state-container"><div class="icon">❌</div><h3>Failed to load products</h3><p>Please try again</p><button class="btn-sm btn-edit" onclick="location.reload()" style="margin-top:0.6rem;font-size:0.75rem;">Retry</button></div>
     
-    <!-- Empty -->
     <div id="emptyState" class="state-container"><div class="icon">📦</div><h3>No products yet</h3><p>Add your first product to get started</p></div>
 
-    <!-- MOBILE: Product Cards -->
     <div id="productList" class="product-list"></div>
 
-    <!-- DESKTOP: Table -->
     <div id="tableContainer" class="table-container">
       <div class="table-wrapper">
         <table>
-          <thead><tr><th>ID</th><th>Image</th><th>Title</th><th>Description</th><th>Price</th><th>Actions</th></tr></thead>
+          <thead><tr><th>ID</th><th>Image</th><th>Title</th><th>Category</th><th>Description</th><th>Price</th><th>Actions</th></tr></thead>
           <tbody id="tableBody"></tbody>
         </table>
       </div>
     </div>
   </main>
 
-  <!-- DELETE CONFIRM MODAL -->
   <div id="deleteModal" class="modal-overlay">
     <div class="modal-box">
       <div class="modal-icon">⚠️</div>
@@ -672,14 +734,12 @@
     </div>
   </div>
 
-  <!-- TOAST -->
   <div id="toast" class="toast"></div>
 
   <script>
     (function() {
       'use strict';
 
-      // Session protection
       const SESSION_KEY = 'grocery_admin_session';
       const LOGIN_PATH = '/admin';
       function hasValidSession() {
@@ -695,7 +755,6 @@
       if (!hasValidSession()) { window.location.replace(LOGIN_PATH); throw new Error('Unauthorized'); }
       document.documentElement.classList.add('auth-verified');
 
-      // Config
       let supabaseUrl = null, supabaseAnonKey = null;
       const TABLE_NAME = 'product';
       const BUCKET_NAME = 'product';
@@ -719,6 +778,7 @@
       const deleteMessage = document.getElementById('deleteMessage');
       const modalCancelBtn = document.getElementById('modalCancelBtn');
       const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+      const categoryFilter = document.getElementById('categoryFilter');
 
       let editingRowId = null;
       let allProducts = [];
@@ -726,6 +786,7 @@
       let deleteTargetId = null;
       let deleteTargetTitle = null;
       let deleteTargetImageUrl = null;
+      let currentCategoryFilter = 'all';
 
       function showToast(msg, type = 'success') {
         toast.textContent = msg;
@@ -735,6 +796,32 @@
       }
 
       function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+
+      function getCategoryLabel(category) {
+        const labels = {
+          'electronics': 'Electronics',
+          'grocery': 'Grocery',
+          'medicine': 'Medicine',
+          'vegetables': 'Vegetables',
+          'fruits': 'Fruits',
+          'bakery': 'Bakery Items',
+          'others': 'Others'
+        };
+        return labels[category] || category || 'Uncategorized';
+      }
+
+      function getCategoryClass(category) {
+        const classes = {
+          'electronics': 'electronics',
+          'grocery': 'grocery',
+          'medicine': 'medicine',
+          'vegetables': 'vegetables',
+          'fruits': 'fruits',
+          'bakery': 'bakery',
+          'others': 'others'
+        };
+        return classes[category] || 'others';
+      }
 
       function extractFilePathFromUrl(imageUrl) {
         if (!imageUrl) return null;
@@ -783,14 +870,28 @@
           const products = await response.json();
           allProducts = products;
           if (!products || products.length === 0) { showState('empty'); updateStats([]); return; }
-          renderProducts(products);
+          applyFilter(currentCategoryFilter);
           updateStats(products);
           showState('table');
         } catch { showState('error'); }
       }
 
+      function applyFilter(category) {
+        currentCategoryFilter = category;
+        const filtered = category === 'all' 
+          ? allProducts 
+          : allProducts.filter(p => p.category === category);
+        renderProducts(filtered);
+        updateFilterButtons();
+      }
+
+      function updateFilterButtons() {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.category === currentCategoryFilter);
+        });
+      }
+
       function renderProducts(products) {
-        // Mobile cards
         productList.innerHTML = '';
         products.forEach(product => {
           const card = document.createElement('div');
@@ -804,6 +905,7 @@
             <div class="product-card-info">
               <div class="product-card-title">${escapeHtml(product.title || '—')}</div>
               <div class="product-card-desc">${escapeHtml(product.description || '')}</div>
+              <div class="product-card-category">${getCategoryLabel(product.category)}</div>
               <div class="product-card-price">${parseFloat(product.price || 0).toFixed(2)}</div>
             </div>
             <div class="product-card-actions">
@@ -814,7 +916,6 @@
           productList.appendChild(card);
         });
 
-        // Desktop table
         tableBody.innerHTML = '';
         products.forEach(product => {
           const row = document.createElement('tr');
@@ -823,6 +924,7 @@
             <td>#${product.id}</td>
             <td>${product.image_url ? `<img src="${escapeHtml(product.image_url)}" class="product-thumb" onerror="this.parentElement.innerHTML='<div class=\\'no-image\\'>🥬</div>'">` : '<div class="no-image">🥬</div>'}</td>
             <td class="cell-title">${escapeHtml(product.title || '—')}</td>
+            <td><span class="category-badge ${getCategoryClass(product.category)}">${getCategoryLabel(product.category)}</span></td>
             <td class="cell-description">${escapeHtml(product.description || '—')}</td>
             <td class="cell-price">৳${parseFloat(product.price || 0).toFixed(2)}</td>
             <td class="actions-cell">
@@ -837,6 +939,8 @@
       function updateStats(products) {
         document.getElementById('statTotal').textContent = products.length;
         document.getElementById('statActive').textContent = products.filter(p => p.price > 0).length;
+        const categories = new Set(products.map(p => p.category).filter(Boolean));
+        document.getElementById('statCategories').textContent = categories.size;
       }
 
       function showState(state) {
@@ -909,8 +1013,12 @@
         e.preventDefault();
         const title = document.getElementById('productTitle').value.trim();
         const price = parseFloat(document.getElementById('productPrice').value) || 0;
+        const category = document.getElementById('productCategory').value;
         const description = document.getElementById('productDescription').value.trim();
+        
         if (!title) { showToast('Title is required!', 'error'); return; }
+        if (!category) { showToast('Category is required!', 'error'); return; }
+        
         submitBtn.disabled = true;
         submitBtn.textContent = '⏳ Saving...';
         try {
@@ -921,7 +1029,7 @@
           const response = await fetch(`${supabaseUrl}/rest/v1/${TABLE_NAME}`, {
             method: 'POST',
             headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-            body: JSON.stringify({ title, price, description, image_url: imageUrl }),
+            body: JSON.stringify({ title, price, category, description, image_url: imageUrl }),
           });
           if (!response.ok) throw new Error('Insert failed');
           showToast('✅ Product added!');
@@ -950,6 +1058,16 @@
         row.querySelector('.cell-title').innerHTML = `<input type="text" class="editable-input edit-title" value="${escapeHtml(product.title || '')}">`;
         row.querySelector('.cell-description').innerHTML = `<input type="text" class="editable-input edit-description" value="${escapeHtml(product.description || '')}">`;
         row.querySelector('.cell-price').innerHTML = `<input type="number" class="editable-input edit-price" value="${product.price || 0}" step="0.01">`;
+        
+        const categoryCell = row.querySelector('td:nth-child(4)');
+        const categories = ['electronics', 'grocery', 'medicine', 'vegetables', 'fruits', 'bakery', 'others'];
+        let selectHtml = `<select class="editable-input edit-category form-input" style="padding:0.2rem 0.4rem;font-size:0.7rem;">`;
+        categories.forEach(cat => {
+          selectHtml += `<option value="${cat}" ${product.category === cat ? 'selected' : ''}>${getCategoryLabel(cat)}</option>`;
+        });
+        selectHtml += `</select>`;
+        categoryCell.innerHTML = selectHtml;
+        
         row.querySelector('.actions-cell').innerHTML = `
           <button class="btn-sm btn-save" onclick="window.saveEdit(${productId})">💾</button>
           <button class="btn-sm btn-secondary" onclick="window.cancelEdit(${productId})">✖</button>
@@ -965,6 +1083,7 @@
         row.querySelector('.cell-title').innerHTML = escapeHtml(product.title || '—');
         row.querySelector('.cell-description').innerHTML = escapeHtml(product.description || '—');
         row.querySelector('.cell-price').innerHTML = `৳${parseFloat(product.price || 0).toFixed(2)}`;
+        row.querySelector('td:nth-child(4)').innerHTML = `<span class="category-badge ${getCategoryClass(product.category)}">${getCategoryLabel(product.category)}</span>`;
         row.querySelector('.actions-cell').innerHTML = `
           <button class="btn-sm btn-edit" onclick="window.startEdit(${productId})">✏️</button>
           <button class="btn-sm btn-delete" onclick="window.confirmDelete(${productId}, '${escapeHtml(product.title || 'this product')}', '${escapeHtml(product.image_url || '')}')">🗑️</button>
@@ -977,11 +1096,18 @@
         const titleInput = row.querySelector('.edit-title');
         const descriptionInput = row.querySelector('.edit-description');
         const priceInput = row.querySelector('.edit-price');
-        if (!titleInput || !priceInput) return;
+        const categoryInput = row.querySelector('.edit-category');
+        
+        if (!titleInput || !priceInput || !categoryInput) return;
+        
         const updatedTitle = titleInput.value.trim();
         const updatedDescription = descriptionInput ? descriptionInput.value.trim() : '';
         const updatedPrice = parseFloat(priceInput.value) || 0;
+        const updatedCategory = categoryInput.value;
+        
         if (!updatedTitle) { showToast('Title is required!', 'error'); return; }
+        if (!updatedCategory) { showToast('Category is required!', 'error'); return; }
+        
         const saveBtn = row.querySelector('.btn-save');
         saveBtn.textContent = '⏳';
         saveBtn.disabled = true;
@@ -989,7 +1115,7 @@
           const response = await fetch(`${supabaseUrl}/rest/v1/${TABLE_NAME}?id=eq.${productId}`, {
             method: 'PATCH',
             headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-            body: JSON.stringify({ title: updatedTitle, description: updatedDescription, price: updatedPrice }),
+            body: JSON.stringify({ title: updatedTitle, description: updatedDescription, price: updatedPrice, category: updatedCategory }),
           });
           if (!response.ok) throw new Error('Update failed');
           const productIndex = allProducts.findIndex(p => p.id === productId);
@@ -997,11 +1123,13 @@
             allProducts[productIndex].title = updatedTitle;
             allProducts[productIndex].description = updatedDescription;
             allProducts[productIndex].price = updatedPrice;
+            allProducts[productIndex].category = updatedCategory;
           }
           editingRowId = null;
           row.querySelector('.cell-title').innerHTML = escapeHtml(updatedTitle);
           row.querySelector('.cell-description').innerHTML = escapeHtml(updatedDescription);
           row.querySelector('.cell-price').innerHTML = `৳${updatedPrice.toFixed(2)}`;
+          row.querySelector('td:nth-child(4)').innerHTML = `<span class="category-badge ${getCategoryClass(updatedCategory)}">${getCategoryLabel(updatedCategory)}</span>`;
           row.querySelector('.actions-cell').innerHTML = `
             <button class="btn-sm btn-edit" onclick="window.startEdit(${productId})">✏️</button>
             <button class="btn-sm btn-delete" onclick="window.confirmDelete(${productId}, '${escapeHtml(updatedTitle)}', '${escapeHtml(allProducts[productIndex]?.image_url || '')}')">🗑️</button>
@@ -1044,7 +1172,7 @@
           if (row) { row.style.opacity = '0'; setTimeout(() => row.remove(), 300); }
           showToast(`🗑️ "${deleteTargetTitle}" deleted!`);
           if (allProducts.length === 0) showState('empty');
-          else renderProducts(allProducts);
+          else applyFilter(currentCategoryFilter);
         } catch (error) { showToast('Failed to delete: ' + error.message, 'error'); }
         hideDeleteModal();
         modalConfirmBtn.disabled = false;
@@ -1054,6 +1182,14 @@
       window.confirmDelete = function(productId, productTitle, imageUrl) {
         showDeleteModal(productId, productTitle, imageUrl);
       };
+
+      // Category filter
+      categoryFilter.addEventListener('click', (e) => {
+        const btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+        const category = btn.dataset.category;
+        applyFilter(category);
+      });
 
       function handleLogout() { localStorage.removeItem(SESSION_KEY); window.location.replace(LOGIN_PATH); }
       document.getElementById('logoutButton').addEventListener('click', handleLogout);
