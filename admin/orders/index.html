@@ -5,21 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>Orders · Batisha admin</title>
   <style>
-    /* ----- RESET & BASE ----- */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: #f5f7fa;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       color: #1a1f36;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       padding-bottom: 80px;
       overflow-x: hidden;
       width: 100%;
     }
 
-    /* ----- HEADER ----- */
     .header {
       background: #ffffff;
       border-bottom: 1px solid #e8edf2;
@@ -109,7 +106,6 @@
     }
     .btn-logout:hover { background: #fee2e2; }
 
-    /* ----- STATS BAR ----- */
     .stats-bar {
       background: #ffffff;
       border-bottom: 1px solid #e8edf2;
@@ -149,7 +145,6 @@
     .stat-item .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2px; }
     .stat-divider { width: 1px; height: 20px; background: #e8edf2; flex-shrink: 0; }
 
-    /* ----- MAIN ----- */
     .main {
       max-width: 1200px;
       margin: 0 auto;
@@ -157,7 +152,6 @@
       width: 100%;
     }
 
-    /* ----- STATE CONTAINERS ----- */
     .state-container {
       display: none;
       flex-direction: column;
@@ -183,7 +177,6 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ----- MOBILE ORDER CARDS ----- */
     .order-list {
       display: none;
       flex-direction: column;
@@ -281,7 +274,6 @@
     .btn-delete { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
     .btn-delete:hover { background: #fee2e2; }
 
-    /* ----- DESKTOP TABLE ----- */
     .table-container {
       display: none;
       background: #ffffff;
@@ -325,7 +317,6 @@
     tbody tr:last-child td { border-bottom: none; }
     .actions-cell { display: flex; gap: 0.2rem; flex-wrap: wrap; }
 
-    /* ----- MODAL (bottom sheet) ----- */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -440,7 +431,6 @@
     .btn-delete-modal { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
     .btn-delete-modal:hover { background: #fee2e2; }
 
-    /* ----- CONFIRM DELETE MODAL ----- */
     .confirm-modal .modal-box {
       max-width: 380px;
       text-align: center;
@@ -458,7 +448,6 @@
     .btn-secondary { background: #f3f6f8; color: #1f2a3a; border: 1px solid #e4eaf0; }
     .btn-secondary:hover { background: #e8edf2; }
 
-    /* ----- TOAST ----- */
     .toast {
       position: fixed;
       bottom: 1.2rem;
@@ -479,7 +468,6 @@
     .toast.success { background: #1f8b4c; }
     .toast.error { background: #dc2626; }
 
-    /* ----- RESPONSIVE BREAKPOINTS ----- */
     @media (min-width: 640px) {
       .header { padding: 0.7rem 1.5rem; }
       .stats-bar { padding: 0.5rem 1.5rem; }
@@ -524,7 +512,6 @@
   </style>
 </head>
 <body>
-  <!-- HEADER -->
   <header class="header">
     <div class="header-inner">
       <div class="header-left">
@@ -544,7 +531,6 @@
     </div>
   </header>
 
-  <!-- STATS BAR -->
   <div class="stats-bar">
     <div class="stats-inner">
       <div class="stat-item"><span class="num" id="statTotal">0</span><span class="label">Total</span></div>
@@ -557,21 +543,15 @@
     </div>
   </div>
 
-  <!-- MAIN -->
   <main class="main">
-    <!-- Loading -->
     <div id="loadingState" class="state-container"><div class="spinner"></div><h3>Loading orders...</h3></div>
     
-    <!-- Error -->
     <div id="errorState" class="state-container"><div class="icon">❌</div><h3>Failed to load orders</h3><p>Please try again</p><button class="btn-sm btn-view" onclick="location.reload()" style="margin-top:0.6rem;font-size:0.75rem;">Retry</button></div>
     
-    <!-- Empty -->
     <div id="emptyState" class="state-container"><div class="icon">📦</div><h3>No orders yet</h3><p>Orders will appear here when customers place them</p></div>
 
-    <!-- MOBILE: Card List -->
     <div id="orderList" class="order-list"></div>
 
-    <!-- DESKTOP: Table -->
     <div id="tableContainer" class="table-container">
       <div class="table-wrapper">
         <table>
@@ -582,7 +562,6 @@
     </div>
   </main>
 
-  <!-- ORDER DETAIL MODAL -->
   <div id="orderDetailModal" class="modal-overlay">
     <div class="modal-box">
       <div class="modal-handle"></div>
@@ -595,7 +574,6 @@
     </div>
   </div>
 
-  <!-- CONFIRM DELETE MODAL -->
   <div id="confirmDeleteModal" class="modal-overlay confirm-modal">
     <div class="modal-box">
       <div class="modal-icon">⚠️</div>
@@ -608,14 +586,12 @@
     </div>
   </div>
 
-  <!-- TOAST -->
   <div id="toast" class="toast"></div>
 
   <script>
     (function() {
       'use strict';
 
-      // Session protection
       const SESSION_KEY = 'grocery_admin_session';
       const LOGIN_PATH = '/admin';
       function hasValidSession() {
@@ -631,7 +607,6 @@
       if (!hasValidSession()) { window.location.replace(LOGIN_PATH); throw new Error('Unauthorized'); }
       document.documentElement.classList.add('auth-verified');
 
-      // Config
       let supabaseUrl = null, supabaseAnonKey = null;
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
@@ -699,7 +674,6 @@
       }
 
       function renderOrders(orders) {
-        // Mobile cards
         orderList.innerHTML = '';
         orders.forEach(order => {
           const date = new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -725,7 +699,6 @@
             </div>
           `;
           orderList.appendChild(card);
-          // Update items count
           fetchOrderItems(order.id).then(items => {
             const total = items.reduce((s,i) => s + i.quantity, 0);
             const itemsCell = card.querySelector('.order-card-body .detail:nth-child(2) .value');
@@ -733,7 +706,6 @@
           });
         });
 
-        // Desktop table
         tableBody.innerHTML = '';
         orders.forEach(order => {
           const date = new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -753,7 +725,6 @@
             </td>
           `;
           tableBody.appendChild(row);
-          // Update items count
           fetchOrderItems(order.id).then(items => {
             const total = items.reduce((s,i) => s + i.quantity, 0);
             const itemsCell = row.querySelector('td:nth-child(4)');
