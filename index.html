@@ -276,56 +276,38 @@
       transform: scale(0.95);
     }
 
-    /* ----- SIMPLE POPUP (Transparent black) ----- */
+    /* ----- SIMPLE FLOATING POPUP (Small, no overlay) ----- */
     .simple-popup {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      animation: popupFade 0.2s ease;
-    }
-    .simple-popup.active {
-      display: flex;
-    }
-
-    @keyframes popupFade {
-      from {
-        opacity: 0;
-        transform: scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    .simple-popup-box {
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
       background: rgba(0, 0, 0, 0.85);
       color: white;
-      padding: 1.5rem 2.5rem;
-      border-radius: 12px;
-      text-align: center;
-      font-size: 1.1rem;
+      padding: 0.8rem 1.8rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
       font-weight: 500;
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      max-width: 320px;
-      width: 90%;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 9999;
+      max-width: 90%;
+      text-align: center;
+      white-space: nowrap;
     }
-    .simple-popup-box .icon {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
+    .simple-popup.active {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
     }
-    .simple-popup-box .text {
+    .simple-popup .icon {
+      display: inline-block;
+      margin-right: 0.5rem;
       font-size: 1rem;
-      line-height: 1.4;
     }
 
     /* ----- TOAST (for errors) ----- */
@@ -415,7 +397,7 @@
       }
     }
 
-    /* ----- MOBILE NAV (Professional) ----- */
+    /* ----- MOBILE NAV (Professional SVG Icons) ----- */
     .mobile-bottom-nav {
       display: none;
     }
@@ -473,6 +455,19 @@
         color: #1f8b4c;
         background: #f0f8f2;
       }
+      .mobile-bottom-nav a .nav-icon {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.1rem;
+      }
+      .mobile-bottom-nav a .nav-icon svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
       .mobile-bottom-nav a .nav-label {
         font-size: 0.6rem;
         font-weight: 600;
@@ -509,13 +504,10 @@
         font-size: 1.1rem;
       }
 
-      .simple-popup-box {
-        padding: 1.2rem 2rem;
-        font-size: 1rem;
-        max-width: 280px;
-      }
-      .simple-popup-box .text {
-        font-size: 0.9rem;
+      .simple-popup {
+        bottom: 80px;
+        padding: 0.6rem 1.4rem;
+        font-size: 0.8rem;
       }
 
       .toast-container {
@@ -557,6 +549,11 @@
       .mobile-bottom-nav .nav-home {
         max-width: 100px;
       }
+      .simple-popup {
+        bottom: 70px;
+        padding: 0.5rem 1.2rem;
+        font-size: 0.75rem;
+      }
     }
   </style>
 </head>
@@ -577,12 +574,21 @@
 
   <div class="mobile-bottom-nav">
     <a href="/product/">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4 8 4 8-4zm0 0v10l-8 4-8-4V7l8 4 8-4z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
       <span class="nav-label">Products</span>
     </a>
     <a href="/" class="nav-home">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
       <span class="nav-label">Home</span>
     </a>
     <a href="/cart/">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="20" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
       <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
     </a>
   </div>
@@ -598,12 +604,9 @@
     <div id="categoryContainer"></div>
   </main>
 
-  <!-- SIMPLE POPUP (Transparent black) -->
+  <!-- SIMPLE FLOATING POPUP (Small, no overlay) -->
   <div id="simplePopup" class="simple-popup">
-    <div class="simple-popup-box">
-      <div class="icon">✓</div>
-      <div class="text">Added to cart successfully</div>
-    </div>
+    <span class="icon">✓</span> Added to cart
   </div>
 
   <div class="toast-container" id="toastContainer"></div>
@@ -763,9 +766,8 @@
         return d.innerHTML;
       }
 
-      // ----- SIMPLE POPUP -----
+      // ----- SIMPLE POPUP (Small floating) -----
       function showSimplePopup() {
-        // Clear any existing timeout
         if (popupTimeout) {
           clearTimeout(popupTimeout);
           popupTimeout = null;
@@ -773,7 +775,6 @@
         
         simplePopup.classList.add('active');
         
-        // Auto-hide after 1.2 seconds
         popupTimeout = setTimeout(() => {
           simplePopup.classList.remove('active');
           popupTimeout = null;
@@ -793,7 +794,6 @@
         localStorage.setItem('grocery_cart', JSON.stringify(cart));
         updateCartCount();
         
-        // Show simple popup
         showSimplePopup();
       };
 
