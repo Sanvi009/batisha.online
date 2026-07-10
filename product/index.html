@@ -20,7 +20,7 @@
       padding-bottom: 80px;
     }
 
-    /* ----- NAVBAR (same as home) ----- */
+    /* ----- NAVBAR ----- */
     .navbar {
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(12px);
@@ -280,9 +280,6 @@
       font-size: 0.7rem;
       cursor: pointer;
       transition: 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.2rem;
     }
     .add-to-cart-btn:hover {
       background: #0f6e3a;
@@ -292,12 +289,46 @@
       transform: scale(0.95);
     }
 
+    /* ----- SIMPLE FLOATING POPUP (Small, no overlay) ----- */
+    .simple-popup {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 9999;
+      max-width: 90%;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .simple-popup.active {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+    .simple-popup .icon {
+      display: inline-block;
+      margin-right: 0.5rem;
+      font-size: 1rem;
+    }
+
     /* ----- TOAST ----- */
     .toast-container {
       position: fixed;
       top: 80px;
       right: 16px;
-      z-index: 9999;
+      z-index: 9998;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -327,7 +358,7 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: #f0f9f2;
+      background: #fef3f0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -384,7 +415,7 @@
       }
     }
 
-    /* ----- MOBILE NAV ----- */
+    /* ----- MOBILE NAV (Professional SVG Icons) ----- */
     .mobile-bottom-nav {
       display: none;
     }
@@ -420,7 +451,7 @@
         box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
         justify-content: space-around;
         align-items: center;
-        padding: 0.4rem 0 0.6rem;
+        padding: 0.5rem 0 0.7rem;
         z-index: 200;
       }
       .mobile-bottom-nav a {
@@ -428,33 +459,46 @@
         flex-direction: column;
         align-items: center;
         text-decoration: none;
-        color: #2f3e4e;
+        color: #4b5f6b;
         font-size: 0.55rem;
         font-weight: 500;
-        gap: 0.1rem;
-        padding: 0.2rem 0.4rem;
+        gap: 0.15rem;
+        padding: 0.2rem 0.6rem;
         transition: 0.2s;
         flex: 1;
-        max-width: 90px;
-        border-radius: 40px;
+        max-width: 100px;
+        border-radius: 8px;
       }
       .mobile-bottom-nav a:hover {
-        color: #0f6e3a;
+        color: #1f8b4c;
         background: #f0f8f2;
       }
       .mobile-bottom-nav a .nav-icon {
-        font-size: 1.3rem;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.1rem;
+      }
+      .mobile-bottom-nav a .nav-icon svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
+      .mobile-bottom-nav a .nav-label {
+        font-size: 0.6rem;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
       }
       .mobile-bottom-nav .nav-home {
         background: #f0f8f2;
-        border-radius: 40px;
-        padding: 0.2rem 0.6rem;
-        margin: 0 0.2rem;
+        border-radius: 12px;
+        padding: 0.25rem 0.6rem;
+        margin: 0 0.1rem;
         flex: 1.2;
-        max-width: 110px;
-      }
-      .mobile-bottom-nav .nav-home .nav-icon {
-        font-size: 1.5rem;
+        max-width: 120px;
       }
       .mobile-bottom-nav .cart-badge {
         background: #1f8b4c;
@@ -463,7 +507,7 @@
         padding: 0.02rem 0.5rem;
         font-size: 0.45rem;
         font-weight: 600;
-        margin-left: 0.1rem;
+        margin-left: 0.15rem;
         display: inline-block;
       }
 
@@ -480,6 +524,13 @@
       .search-box {
         max-width: 100%;
       }
+
+      .simple-popup {
+        bottom: 80px;
+        padding: 0.6rem 1.4rem;
+        font-size: 0.8rem;
+      }
+
       .toast-container {
         top: 70px;
         right: 12px;
@@ -513,6 +564,17 @@
         right: 8px;
         max-width: 280px;
       }
+      .mobile-bottom-nav a .nav-label {
+        font-size: 0.55rem;
+      }
+      .mobile-bottom-nav .nav-home {
+        max-width: 100px;
+      }
+      .simple-popup {
+        bottom: 70px;
+        padding: 0.5rem 1.2rem;
+        font-size: 0.75rem;
+      }
     }
   </style>
 </head>
@@ -526,29 +588,35 @@
       <div class="nav-links">
         <a href="/">Home</a>
         <a href="/product/" class="active">Products</a>
-        <a href="/cart/" class="cart-pill">🛒 Cart <span id="cartCount">0</span></a>
+        <a href="/cart/" class="cart-pill">Cart <span id="cartCount">0</span></a>
       </div>
     </div>
   </nav>
 
   <div class="mobile-bottom-nav">
     <a href="/product/" class="nav-home">
-      <span class="nav-icon">📦</span>
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4 8 4 8-4zm0 0v10l-8 4-8-4V7l8 4 8-4z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
       <span class="nav-label">Products</span>
     </a>
     <a href="/" class="nav-home">
-      <span class="nav-icon">🏠</span>
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
       <span class="nav-label">Home</span>
     </a>
     <a href="/cart/">
-      <span class="nav-icon">🛒</span>
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="20" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
       <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
     </a>
   </div>
 
   <main class="container">
     <div class="page-header">
-      <h1 class="page-title">🛍️ All Products <span class="product-count" id="productCount"></span></h1>
+      <h1 class="page-title">All Products <span class="product-count" id="productCount"></span></h1>
       <div class="search-box">
         <input type="text" id="searchInput" placeholder="Search products...">
         <button id="searchBtn">Search</button>
@@ -560,10 +628,15 @@
       <p style="color:#4b6b5e;font-size:0.85rem;margin-top:0.5rem;">Loading products…</p>
     </div>
     <div id="errorState" style="display:none;text-align:center;padding:2rem;color:#991b1b;">
-      <p>😕 Failed to load products. <button onclick="location.reload()" style="background:#1f8b4c;color:white;border:none;padding:0.2rem 0.8rem;border-radius:40px;font-weight:600;cursor:pointer;">Retry</button></p>
+      <p>Failed to load products. <button onclick="location.reload()" style="background:#1f8b4c;color:white;border:none;padding:0.2rem 0.8rem;border-radius:40px;font-weight:600;cursor:pointer;">Retry</button></p>
     </div>
     <div id="productsGrid" class="products-grid" style="display:none;"></div>
   </main>
+
+  <!-- SIMPLE FLOATING POPUP (Small, no overlay) -->
+  <div id="simplePopup" class="simple-popup">
+    <span class="icon">✓</span> Added to cart
+  </div>
 
   <div class="toast-container" id="toastContainer"></div>
 
@@ -575,6 +648,7 @@
       let supabaseUrl = null;
       let supabaseAnonKey = null;
       let allProducts = [];
+      let popupTimeout = null;
 
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
@@ -585,9 +659,10 @@
       const productCount = document.getElementById('productCount');
       const searchInput = document.getElementById('searchInput');
       const searchBtn = document.getElementById('searchBtn');
+      const simplePopup = document.getElementById('simplePopup');
 
       // ----- TOAST -----
-      function showToast(title, message, icon = '✅') {
+      function showToast(title, message, icon = '❌') {
         const toast = document.createElement('div');
         toast.className = 'toast';
         toast.innerHTML = `
@@ -645,7 +720,7 @@
 
           loadingState.style.display = 'none';
           if (!products || products.length === 0) {
-            productsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#4b6b5e;">📦 No products available yet</div>';
+            productsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#4b6b5e;">No products available yet</div>';
             productsGrid.style.display = 'grid';
             productCount.textContent = '(0 items)';
             return;
@@ -675,7 +750,7 @@
               <p class="product-description">${escapeHtml(p.description || '')}</p>
               <div class="product-footer">
                 <span class="product-price">${parseFloat(p.price || 0).toFixed(2)}</span>
-                <button class="add-to-cart-btn" onclick="window.addToCart(${p.id}, '${escapeHtml(p.title || 'Product')}', ${p.price || 0}, '${escapeHtml(p.image_url || '')}')">🛒 Add</button>
+                <button class="add-to-cart-btn" onclick="window.addToCart(${p.id}, '${escapeHtml(p.title || 'Product')}', ${p.price || 0}, '${escapeHtml(p.image_url || '')}')">Add</button>
               </div>
             </div>
           `;
@@ -709,19 +784,33 @@
         if (e.key === 'Enter') handleSearch();
       });
 
+      // ----- SIMPLE POPUP -----
+      function showSimplePopup() {
+        if (popupTimeout) {
+          clearTimeout(popupTimeout);
+          popupTimeout = null;
+        }
+        
+        simplePopup.classList.add('active');
+        
+        popupTimeout = setTimeout(() => {
+          simplePopup.classList.remove('active');
+          popupTimeout = null;
+        }, 1200);
+      }
+
       // ----- CART -----
       window.addToCart = function(id, title, price, imageUrl) {
         let cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
         const existing = cart.find(item => item.id === id);
         if (existing) {
           existing.quantity += 1;
-          showToast('Updated in cart', `${title} (×${existing.quantity})`, '🔄');
         } else {
           cart.push({ id, title, price, imageUrl, quantity: 1 });
-          showToast('Added to cart', title, '✅');
         }
         localStorage.setItem('grocery_cart', JSON.stringify(cart));
         updateCartCount();
+        showSimplePopup();
       };
 
       function updateCartCount() {
