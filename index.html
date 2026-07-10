@@ -105,33 +105,6 @@
       font-weight: 600;
     }
 
-    /* ----- HERO ----- */
-    .hero {
-      background: linear-gradient(135deg, #f0f9f2 0%, #e8f5ec 100%);
-      padding: 2.5rem 1.2rem 2rem;
-      text-align: center;
-      border-bottom: 1px solid #dce8e2;
-    }
-    .hero h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #1a3428;
-      margin-bottom: 0.3rem;
-      letter-spacing: -0.5px;
-    }
-    .hero p {
-      color: #4b6b5e;
-      font-size: 1rem;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-    .hero .welcome-text {
-      font-size: 1.1rem;
-      color: #1f8b4c;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-    }
-
     /* ----- MAIN ----- */
     .container {
       max-width: 1400px;
@@ -156,18 +129,12 @@
       font-size: 1.4rem;
       font-weight: 700;
       color: #1a3428;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .category-title .icon {
-      font-size: 1.3rem;
     }
     .category-count {
       font-size: 0.75rem;
       color: #4b6b5e;
       font-weight: 400;
-      margin-left: 0.3rem;
+      margin-left: 0.5rem;
     }
     .category-more-btn {
       background: none;
@@ -663,16 +630,6 @@
         display: inline-block;
       }
 
-      .hero h1 {
-        font-size: 1.6rem;
-      }
-      .hero p {
-        font-size: 0.9rem;
-      }
-      .hero .welcome-text {
-        font-size: 1rem;
-      }
-
       .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
         gap: 0.8rem;
@@ -730,12 +687,6 @@
         right: 8px;
         max-width: 280px;
       }
-      .hero h1 {
-        font-size: 1.4rem;
-      }
-      .category-title {
-        font-size: 1rem;
-      }
     }
   </style>
 </head>
@@ -768,12 +719,6 @@
       <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
     </a>
   </div>
-
-  <header class="hero">
-    <div class="welcome-text">👋 Welcome to Batisha Online!</div>
-    <h1>🌿 Fresh Groceries, Delivered</h1>
-    <p>Shop the best quality fruits, vegetables & everyday essentials</p>
-  </header>
 
   <main class="container" id="mainContainer">
     <div id="loadingState" style="text-align:center;padding:2rem;">
@@ -884,17 +829,8 @@
           'medicine': 'Medicine',
           'vegetables': 'Vegetables',
           'fruits': 'Fruits',
-          'bakery': 'Bakery Items',
+          'bakery': 'Bakery',
           'others': 'Others'
-        };
-        const categoryIcons = {
-          'electronics': '💻',
-          'grocery': '🛒',
-          'medicine': '💊',
-          'vegetables': '🥬',
-          'fruits': '🍎',
-          'bakery': '🍞',
-          'others': '📦'
         };
 
         products.forEach(p => {
@@ -915,9 +851,8 @@
           header.className = 'category-header';
           header.innerHTML = `
             <h2 class="category-title">
-              <span class="icon">${categoryIcons[cat] || '📦'}</span>
               ${categoryLabels[cat] || cat}
-              <span class="category-count">(${items.length} items)</span>
+              <span class="category-count">${items.length} items</span>
             </h2>
             ${items.length > 4 ? `<button class="category-more-btn" onclick="window.toggleCategory('${cat}')">View All <span class="arrow">▼</span></button>` : ''}
           `;
@@ -933,8 +868,8 @@
             if (index >= 4) card.classList.add('hidden-item');
             
             const imgHtml = p.image_url
-              ? `<div class="product-image-frame"><img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>${categoryIcons[cat] || '🥬'}</div>'"></div>`
-              : `<div class="product-image-frame"><div class="product-image-placeholder">${categoryIcons[cat] || '🥬'}</div></div>`;
+              ? `<div class="product-image-frame"><img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'"></div>`
+              : `<div class="product-image-frame"><div class="product-image-placeholder">🥬</div></div>`;
             
             card.innerHTML = `
               ${imgHtml}
@@ -943,7 +878,7 @@
                 <p class="product-description">${escapeHtml(p.description || '')}</p>
                 <div class="product-footer">
                   <span class="product-price">${parseFloat(p.price || 0).toFixed(2)}</span>
-                  <button class="add-to-cart-btn" onclick="window.addToCart(${p.id}, '${escapeHtml(p.title || 'Product')}', ${p.price || 0}, '${escapeHtml(p.image_url || '')}')">🛒 Add</button>
+                  <button class="add-to-cart-btn" onclick="window.addToCart(${p.id}, '${escapeHtml(p.title || 'Product')}', ${p.price || 0}, '${escapeHtml(p.image_url || '')}')">Add</button>
                 </div>
               </div>
             `;
