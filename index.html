@@ -267,9 +267,6 @@
       font-size: 0.7rem;
       cursor: pointer;
       transition: 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 0.2rem;
     }
     .add-to-cart-btn:hover {
       background: #0f6e3a;
@@ -279,28 +276,25 @@
       transform: scale(0.95);
     }
 
-    /* ----- PROFESSIONAL CART POPUP ----- */
-    .cart-popup-overlay {
+    /* ----- SIMPLE POPUP (Transparent black) ----- */
+    .simple-popup {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      z-index: 9999;
+      background: rgba(0, 0, 0, 0.6);
       display: none;
       align-items: center;
       justify-content: center;
-      animation: fadeIn 0.25s ease;
-      padding: 1rem;
+      z-index: 9999;
+      animation: popupFade 0.2s ease;
     }
-    .cart-popup-overlay.active {
+    .simple-popup.active {
       display: flex;
     }
 
-    @keyframes fadeIn {
+    @keyframes popupFade {
       from {
         opacity: 0;
         transform: scale(0.95);
@@ -311,153 +305,27 @@
       }
     }
 
-    .cart-popup {
-      background: #ffffff;
-      border-radius: 20px;
-      max-width: 420px;
-      width: 100%;
-      padding: 1.8rem 1.5rem 1.5rem;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
-      animation: slideUp 0.3s ease;
-      position: relative;
-      border: 1px solid #f0f5f2;
-    }
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .cart-popup-header {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      margin-bottom: 1.2rem;
-      padding-bottom: 0.8rem;
-      border-bottom: 1px solid #f0f5f2;
-    }
-    .cart-popup-header .check-icon {
-      width: 44px;
-      height: 44px;
-      background: #f0f9f2;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      flex-shrink: 0;
-    }
-    .cart-popup-header .title-area {
-      flex: 1;
-    }
-    .cart-popup-header .title-area h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #1a3428;
-    }
-    .cart-popup-header .title-area p {
-      font-size: 0.8rem;
-      color: #4b6b5e;
-    }
-    .cart-popup-close {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      color: #9ca3af;
-      cursor: pointer;
-      padding: 0.2rem;
-      transition: 0.2s;
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-    }
-    .cart-popup-close:hover {
-      color: #1a2a3a;
-    }
-
-    .cart-popup-item {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid #f0f5f2;
-    }
-    .cart-popup-item:last-child {
-      border-bottom: none;
-    }
-    .cart-popup-item img {
-      width: 48px;
-      height: 48px;
-      object-fit: contain;
-      border-radius: 8px;
-      background: #f8fbf9;
-      border: 1px solid #e8edf2;
-    }
-    .cart-popup-item .item-details {
-      flex: 1;
-    }
-    .cart-popup-item .item-details .name {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #1e2e2a;
-    }
-    .cart-popup-item .item-details .price {
-      font-size: 0.75rem;
-      color: #4b6b5e;
-    }
-    .cart-popup-item .item-details .qty {
-      font-size: 0.75rem;
-      color: #1f8b4c;
-      font-weight: 600;
-    }
-    .cart-popup-item .item-total {
-      font-weight: 700;
-      color: #0f6e3a;
-      font-size: 0.9rem;
-    }
-    .cart-popup-item .item-total::before {
-      content: '৳';
-    }
-
-    .cart-popup-footer {
-      display: flex;
-      gap: 0.6rem;
-      margin-top: 1.2rem;
-      padding-top: 1rem;
-      border-top: 1px solid #f0f5f2;
-    }
-    .cart-popup-footer .btn {
-      padding: 0.6rem 1.2rem;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      border: none;
-      cursor: pointer;
-      transition: 0.2s;
-      flex: 1;
-      text-align: center;
-    }
-    .cart-popup-footer .btn-continue {
-      background: #f3f6f8;
-      color: #1a2a3a;
-      border: 1px solid #e4eaf0;
-    }
-    .cart-popup-footer .btn-continue:hover {
-      background: #e8edf2;
-    }
-    .cart-popup-footer .btn-view-cart {
-      background: #1f8b4c;
+    .simple-popup-box {
+      background: rgba(0, 0, 0, 0.85);
       color: white;
-      box-shadow: 0 2px 8px rgba(31, 139, 76, 0.15);
+      padding: 1.5rem 2.5rem;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      max-width: 320px;
+      width: 90%;
     }
-    .cart-popup-footer .btn-view-cart:hover {
-      background: #0f6e3a;
-      transform: translateY(-1px);
+    .simple-popup-box .icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .simple-popup-box .text {
+      font-size: 1rem;
+      line-height: 1.4;
     }
 
     /* ----- TOAST (for errors) ----- */
@@ -547,7 +415,7 @@
       }
     }
 
-    /* ----- MOBILE NAV ----- */
+    /* ----- MOBILE NAV (Professional) ----- */
     .mobile-bottom-nav {
       display: none;
     }
@@ -583,7 +451,7 @@
         box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
         justify-content: space-around;
         align-items: center;
-        padding: 0.4rem 0 0.6rem;
+        padding: 0.5rem 0 0.7rem;
         z-index: 200;
       }
       .mobile-bottom-nav a {
@@ -591,33 +459,33 @@
         flex-direction: column;
         align-items: center;
         text-decoration: none;
-        color: #2f3e4e;
+        color: #4b5f6b;
         font-size: 0.55rem;
         font-weight: 500;
-        gap: 0.1rem;
-        padding: 0.2rem 0.4rem;
+        gap: 0.15rem;
+        padding: 0.2rem 0.6rem;
         transition: 0.2s;
         flex: 1;
-        max-width: 90px;
-        border-radius: 40px;
+        max-width: 100px;
+        border-radius: 8px;
       }
       .mobile-bottom-nav a:hover {
-        color: #0f6e3a;
+        color: #1f8b4c;
         background: #f0f8f2;
       }
-      .mobile-bottom-nav a .nav-icon {
-        font-size: 1.3rem;
+      .mobile-bottom-nav a .nav-label {
+        font-size: 0.6rem;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
       }
       .mobile-bottom-nav .nav-home {
         background: #f0f8f2;
-        border-radius: 40px;
-        padding: 0.2rem 0.6rem;
-        margin: 0 0.2rem;
+        border-radius: 12px;
+        padding: 0.25rem 0.6rem;
+        margin: 0 0.1rem;
         flex: 1.2;
-        max-width: 110px;
-      }
-      .mobile-bottom-nav .nav-home .nav-icon {
-        font-size: 1.5rem;
+        max-width: 120px;
       }
       .mobile-bottom-nav .cart-badge {
         background: #1f8b4c;
@@ -626,7 +494,7 @@
         padding: 0.02rem 0.5rem;
         font-size: 0.45rem;
         font-weight: 600;
-        margin-left: 0.1rem;
+        margin-left: 0.15rem;
         display: inline-block;
       }
 
@@ -641,17 +509,13 @@
         font-size: 1.1rem;
       }
 
-      .cart-popup {
-        padding: 1.5rem 1.2rem;
-        margin: 0.5rem;
-        max-width: 100%;
-      }
-      .cart-popup-header .title-area h3 {
+      .simple-popup-box {
+        padding: 1.2rem 2rem;
         font-size: 1rem;
+        max-width: 280px;
       }
-      .cart-popup-footer .btn {
-        font-size: 0.75rem;
-        padding: 0.5rem 1rem;
+      .simple-popup-box .text {
+        font-size: 0.9rem;
       }
 
       .toast-container {
@@ -687,6 +551,12 @@
         right: 8px;
         max-width: 280px;
       }
+      .mobile-bottom-nav a .nav-label {
+        font-size: 0.55rem;
+      }
+      .mobile-bottom-nav .nav-home {
+        max-width: 100px;
+      }
     }
   </style>
 </head>
@@ -700,22 +570,19 @@
       <div class="nav-links">
         <a href="/">Home</a>
         <a href="/product/">Products</a>
-        <a href="/cart/" class="cart-pill">🛒 Cart <span id="cartCount">0</span></a>
+        <a href="/cart/" class="cart-pill">Cart <span id="cartCount">0</span></a>
       </div>
     </div>
   </nav>
 
   <div class="mobile-bottom-nav">
     <a href="/product/">
-      <span class="nav-icon">📦</span>
       <span class="nav-label">Products</span>
     </a>
     <a href="/" class="nav-home">
-      <span class="nav-icon">🏠</span>
       <span class="nav-label">Home</span>
     </a>
     <a href="/cart/">
-      <span class="nav-icon">🛒</span>
       <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
     </a>
   </div>
@@ -723,30 +590,19 @@
   <main class="container" id="mainContainer">
     <div id="loadingState" style="text-align:center;padding:2rem;">
       <div style="width:32px;height:32px;border:3px solid #e2ebe6;border-top-color:#1f8b4c;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto;"></div>
-      <p style="color:#4b6b5e;font-size:0.85rem;margin-top:0.5rem;">Loading fresh picks…</p>
+      <p style="color:#4b6b5e;font-size:0.85rem;margin-top:0.5rem;">Loading products…</p>
     </div>
     <div id="errorState" style="display:none;text-align:center;padding:2rem;color:#991b1b;">
-      <p>😕 Failed to load products. <button onclick="location.reload()" style="background:#1f8b4c;color:white;border:none;padding:0.2rem 0.8rem;border-radius:40px;font-weight:600;cursor:pointer;">Retry</button></p>
+      <p>Failed to load products. <button onclick="location.reload()" style="background:#1f8b4c;color:white;border:none;padding:0.2rem 0.8rem;border-radius:40px;font-weight:600;cursor:pointer;">Retry</button></p>
     </div>
     <div id="categoryContainer"></div>
   </main>
 
-  <!-- PROFESSIONAL CART POPUP -->
-  <div id="cartPopup" class="cart-popup-overlay">
-    <div class="cart-popup">
-      <button class="cart-popup-close" id="cartPopupClose">✕</button>
-      <div class="cart-popup-header">
-        <div class="check-icon">✅</div>
-        <div class="title-area">
-          <h3>Added to Cart</h3>
-          <p id="cartPopupMessage">Item has been added to your cart</p>
-        </div>
-      </div>
-      <div id="cartPopupItem"></div>
-      <div class="cart-popup-footer">
-        <button class="btn btn-continue" id="cartPopupContinue">Continue Shopping</button>
-        <button class="btn btn-view-cart" id="cartPopupViewCart">🛒 View Cart</button>
-      </div>
+  <!-- SIMPLE POPUP (Transparent black) -->
+  <div id="simplePopup" class="simple-popup">
+    <div class="simple-popup-box">
+      <div class="icon">✓</div>
+      <div class="text">Added to cart successfully</div>
     </div>
   </div>
 
@@ -760,6 +616,7 @@
       let supabaseUrl = null;
       let supabaseAnonKey = null;
       let allProducts = [];
+      let popupTimeout = null;
 
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
@@ -767,12 +624,7 @@
       const cartCountSpan = document.getElementById('cartCount');
       const mobileCartCountSpan = document.getElementById('mobileCartCount');
       const toastContainer = document.getElementById('toastContainer');
-      const cartPopup = document.getElementById('cartPopup');
-      const cartPopupItem = document.getElementById('cartPopupItem');
-      const cartPopupMessage = document.getElementById('cartPopupMessage');
-      const cartPopupClose = document.getElementById('cartPopupClose');
-      const cartPopupContinue = document.getElementById('cartPopupContinue');
-      const cartPopupViewCart = document.getElementById('cartPopupViewCart');
+      const simplePopup = document.getElementById('simplePopup');
 
       // ----- CONFIG -----
       async function fetchConfig() {
@@ -804,7 +656,7 @@
 
           loadingState.style.display = 'none';
           if (!allProducts || allProducts.length === 0) {
-            categoryContainer.innerHTML = '<div style="text-align:center;padding:2rem;color:#4b6b5e;">📦 No products available yet</div>';
+            categoryContainer.innerHTML = '<div style="text-align:center;padding:2rem;color:#4b6b5e;">No products available yet</div>';
             categoryContainer.style.display = 'block';
             return;
           }
@@ -911,66 +763,38 @@
         return d.innerHTML;
       }
 
-      // ----- PROFESSIONAL CART POPUP -----
-      function showCartPopup(product, quantity = 1) {
-        const total = (product.price * quantity).toFixed(2);
+      // ----- SIMPLE POPUP -----
+      function showSimplePopup() {
+        // Clear any existing timeout
+        if (popupTimeout) {
+          clearTimeout(popupTimeout);
+          popupTimeout = null;
+        }
         
-        cartPopupMessage.textContent = `${quantity} item${quantity > 1 ? 's' : ''} added to your cart`;
+        simplePopup.classList.add('active');
         
-        const imgHtml = product.imageUrl
-          ? `<img src="${escapeHtml(product.imageUrl)}" alt="${escapeHtml(product.title)}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22%3E%3Crect width=%2248%22 height=%2248%22 fill=%22%23f3f8f5%22/%3E%3Ctext x=%2224%22 y=%2232%22 text-anchor=%22middle%22 font-size=%2224%22%3E🛒%3C/text%3E%3C/svg%3E'">`
-          : `<div style="width:48px;height:48px;background:#f3f8f5;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;border:1px solid #e8edf2;">🛒</div>`;
-        
-        cartPopupItem.innerHTML = `
-          <div class="cart-popup-item">
-            ${imgHtml}
-            <div class="item-details">
-              <div class="name">${escapeHtml(product.title)}</div>
-              <div class="price">৳${parseFloat(product.price).toFixed(2)} × ${quantity}</div>
-              <div class="qty">Subtotal: ৳${total}</div>
-            </div>
-            <div class="item-total">${total}</div>
-          </div>
-        `;
-        
-        cartPopup.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        // Auto-hide after 1.2 seconds
+        popupTimeout = setTimeout(() => {
+          simplePopup.classList.remove('active');
+          popupTimeout = null;
+        }, 1200);
       }
-
-      function hideCartPopup() {
-        cartPopup.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-
-      cartPopupClose.addEventListener('click', hideCartPopup);
-      cartPopupContinue.addEventListener('click', hideCartPopup);
-      
-      cartPopupViewCart.addEventListener('click', () => {
-        window.location.href = '/cart/';
-      });
-
-      cartPopup.addEventListener('click', (e) => {
-        if (e.target === cartPopup) hideCartPopup();
-      });
 
       // ----- CART -----
       window.addToCart = function(id, title, price, imageUrl) {
         let cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
         const existing = cart.find(item => item.id === id);
-        let quantity = 1;
         
         if (existing) {
           existing.quantity += 1;
-          quantity = existing.quantity;
         } else {
           cart.push({ id, title, price, imageUrl, quantity: 1 });
         }
         localStorage.setItem('grocery_cart', JSON.stringify(cart));
         updateCartCount();
         
-        // Show professional popup
-        const product = { id, title, price, imageUrl };
-        showCartPopup(product, quantity);
+        // Show simple popup
+        showSimplePopup();
       };
 
       function updateCartCount() {
