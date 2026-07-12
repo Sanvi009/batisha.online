@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Orders · Batisha admin</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -17,10 +17,11 @@
       width: 100%;
     }
 
+    /* ----- HEADER (Mobile-First) ----- */
     .header {
       background: #ffffff;
       border-bottom: 1px solid #e8edf2;
-      padding: 0.7rem 1rem;
+      padding: 0.6rem 1rem;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -33,14 +34,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.5rem;
       width: 100%;
     }
     .header-left {
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      flex-shrink: 0;
     }
     .logo {
       display: flex;
@@ -48,68 +47,142 @@
       gap: 0.4rem;
       text-decoration: none;
       color: #1a1f36;
-      flex-shrink: 0;
     }
-    .logo-icon {
-      width: 34px;
-      height: 34px;
-      background: linear-gradient(145deg, #1e6b3e, #2b7a4a);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+    .logo-image {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      border-radius: 6px;
     }
-    .logo-icon svg { width: 20px; height: 20px; fill: white; }
     .logo-text {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 700;
       letter-spacing: -0.3px;
       white-space: nowrap;
     }
     .logo-text span { font-weight: 400; color: #4b6b5e; font-size: 0.65rem; }
     .page-title {
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #1a1f36;
       white-space: nowrap;
     }
-    .header-actions {
+
+    /* ----- HAMBURGER MENU ----- */
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #1a1f36;
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      transition: 0.2s;
+      line-height: 1;
+    }
+    .menu-toggle:hover { background: #f0f3f7; }
+
+    /* ----- SIDEBAR (Slide-out) ----- */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.open {
+      display: block;
+      opacity: 1;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 260px;
+      height: 100%;
+      background: #ffffff;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.08);
+      z-index: 201;
+      transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      padding: 1.5rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .sidebar.open {
+      left: 0;
+    }
+    .sidebar-logo {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      flex-shrink: 0;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #1a1f36;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e8edf2;
     }
-    .nav-link {
+    .sidebar-logo .logo-image {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+    .sidebar-logo .logo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .sidebar-logo .logo-text span { font-weight: 400; color: #4b6b5e; font-size: 0.7rem; }
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .sidebar-nav a {
       text-decoration: none;
       color: #4b5f6b;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
       font-weight: 500;
-      font-size: 0.8rem;
-      padding: 0.3rem 0.8rem;
-      border-radius: 6px;
+      font-size: 0.9rem;
       transition: 0.15s;
-      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
     }
-    .nav-link:hover { background: #f0f3f7; color: #1a1f36; }
-    .nav-link.active { color: #1f8b4c; background: #f0f8f2; }
-    .btn-logout {
+    .sidebar-nav a:hover { background: #f0f3f7; color: #1a1f36; }
+    .sidebar-nav a.active { color: #1f8b4c; background: #f0f8f2; }
+    .sidebar-nav a .icon { font-size: 1.1rem; }
+    .sidebar-footer {
+      margin-top: auto;
+      border-top: 1px solid #e8edf2;
+      padding-top: 1rem;
+    }
+    .sidebar-footer .btn-logout {
+      width: 100%;
       background: #fef2f2;
       color: #991b1b;
       border: none;
-      padding: 0.25rem 0.8rem;
+      padding: 0.6rem;
       border-radius: 30px;
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
       transition: 0.15s;
-      white-space: nowrap;
     }
-    .btn-logout:hover { background: #fee2e2; }
+    .sidebar-footer .btn-logout:hover { background: #fee2e2; }
 
+    /* ----- STATS BAR (Mobile-First) ----- */
     .stats-bar {
       background: #ffffff;
       border-bottom: 1px solid #e8edf2;
-      padding: 0.5rem 1rem;
+      padding: 0.5rem 0.8rem;
       width: 100%;
       overflow: hidden;
     }
@@ -131,7 +204,7 @@
       display: flex;
       align-items: center;
       gap: 0.3rem;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: #4b5f6b;
       flex-shrink: 0;
       white-space: nowrap;
@@ -139,25 +212,27 @@
     .stat-item .num {
       font-weight: 700;
       color: #1a1f36;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
     .stat-item .num.green { color: #1f8b4c; }
-    .stat-item .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2px; }
-    .stat-divider { width: 1px; height: 20px; background: #e8edf2; flex-shrink: 0; }
+    .stat-item .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2px; }
+    .stat-divider { width: 1px; height: 18px; background: #e8edf2; flex-shrink: 0; }
 
+    /* ----- MAIN CONTENT ----- */
     .main {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 1rem;
+      padding: 0.8rem;
       width: 100%;
     }
 
+    /* ----- STATE CONTAINERS ----- */
     .state-container {
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 3rem 1rem;
+      padding: 2.5rem 1rem;
       background: #ffffff;
       border-radius: 12px;
       border: 1px solid #e8edf2;
@@ -165,10 +240,10 @@
       width: 100%;
     }
     .state-container .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
-    .state-container h3 { font-size: 1rem; color: #1a1f36; }
+    .state-container h3 { font-size: 0.95rem; color: #1a1f36; }
     .state-container p { color: #6b7a86; font-size: 0.8rem; margin-top: 0.2rem; }
     .spinner {
-      width: 30px; height: 30px;
+      width: 28px; height: 28px;
       border: 3px solid #e2ebe6;
       border-top-color: #1f8b4c;
       border-radius: 50%;
@@ -177,17 +252,18 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* ----- ORDER LIST (Mobile Cards) ----- */
     .order-list {
-      display: none;
+      display: flex;
       flex-direction: column;
-      gap: 0.7rem;
+      gap: 0.6rem;
       width: 100%;
     }
     .order-card {
       background: #ffffff;
       border-radius: 12px;
       border: 1px solid #e8edf2;
-      padding: 0.8rem;
+      padding: 0.7rem;
       transition: 0.15s;
       width: 100%;
       box-shadow: 0 1px 2px rgba(0,0,0,0.02);
@@ -197,18 +273,18 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
     .order-id {
       font-weight: 700;
       color: #1a1f36;
       font-size: 0.8rem;
     }
-    .order-id span { color: #6b7a86; font-weight: 400; font-size: 0.75rem; }
+    .order-id span { color: #6b7a86; font-weight: 400; font-size: 0.7rem; }
     .order-status {
-      padding: 0.1rem 0.6rem;
+      padding: 0.05rem 0.5rem;
       border-radius: 20px;
-      font-size: 0.55rem;
+      font-size: 0.5rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.2px;
@@ -221,13 +297,13 @@
     .status-cancelled { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
 
     .order-card-body {
-      margin-top: 0.4rem;
+      margin-top: 0.3rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.2rem 0.6rem;
+      gap: 0.15rem 0.5rem;
     }
     .order-card-body .detail {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: #4b5f6b;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -240,27 +316,27 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 0.6rem;
-      padding-top: 0.5rem;
+      margin-top: 0.5rem;
+      padding-top: 0.4rem;
       border-top: 1px solid #f0f3f7;
-      gap: 0.4rem;
+      gap: 0.3rem;
       flex-wrap: wrap;
     }
     .order-total {
       font-weight: 700;
       color: #1f8b4c;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
     .order-total::before { content: '৳'; }
     .order-actions {
       display: flex;
-      gap: 0.2rem;
+      gap: 0.15rem;
       flex-wrap: wrap;
     }
     .btn-sm {
-      padding: 0.2rem 0.6rem;
+      padding: 0.15rem 0.5rem;
       border-radius: 30px;
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       font-weight: 600;
       border: none;
       cursor: pointer;
@@ -274,6 +350,7 @@
     .btn-delete { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
     .btn-delete:hover { background: #fee2e2; }
 
+    /* ----- TABLE (Desktop fallback) ----- */
     .table-container {
       display: none;
       background: #ffffff;
@@ -283,40 +360,30 @@
       width: 100%;
       box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
-    .table-wrapper {
-      overflow-x: auto;
-      width: 100%;
-      -webkit-overflow-scrolling: touch;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 700px;
-    }
-    thead {
-      background: #f8fbf9;
-      border-bottom: 1px solid #e8edf2;
-    }
+    .table-wrapper { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    thead { background: #f8fbf9; border-bottom: 1px solid #e8edf2; }
     th {
-      padding: 0.7rem 0.8rem;
+      padding: 0.6rem 0.7rem;
       text-align: left;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       text-transform: uppercase;
       letter-spacing: 0.3px;
       color: #4b5f6b;
       font-weight: 600;
     }
     td {
-      padding: 0.6rem 0.8rem;
+      padding: 0.5rem 0.7rem;
       border-bottom: 1px solid #f0f3f7;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #1a1f36;
       vertical-align: middle;
     }
     tbody tr:hover { background: #f8fbf9; }
     tbody tr:last-child td { border-bottom: none; }
-    .actions-cell { display: flex; gap: 0.2rem; flex-wrap: wrap; }
+    .actions-cell { display: flex; gap: 0.15rem; flex-wrap: wrap; }
 
+    /* ----- MODAL ----- */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -333,7 +400,7 @@
     .modal-box {
       background: #ffffff;
       border-radius: 16px 16px 0 0;
-      padding: 1.2rem 1rem 1.5rem;
+      padding: 1rem 1rem 1.2rem;
       max-width: 600px;
       width: 100%;
       max-height: 85vh;
@@ -342,17 +409,17 @@
     }
     @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     .modal-handle {
-      width: 36px;
+      width: 32px;
       height: 3px;
       background: #dde5ed;
       border-radius: 3px;
-      margin: 0 auto 0.8rem;
+      margin: 0 auto 0.6rem;
     }
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.6rem;
     }
     .modal-title { font-size: 1rem; font-weight: 700; color: #1a1f36; }
     .modal-close {
@@ -367,30 +434,30 @@
     .modal-info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.2rem 0.6rem;
-      margin-bottom: 0.8rem;
+      gap: 0.15rem 0.5rem;
+      margin-bottom: 0.6rem;
     }
-    .modal-info-grid .row { font-size: 0.75rem; }
-    .modal-info-grid .label { color: #6b7a86; display: block; font-size: 0.65rem; }
+    .modal-info-grid .row { font-size: 0.7rem; }
+    .modal-info-grid .label { color: #6b7a86; display: block; font-size: 0.6rem; }
     .modal-info-grid .value { font-weight: 600; color: #1a1f36; }
     .modal-items-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 0.6rem 0;
-      font-size: 0.75rem;
+      margin: 0.5rem 0;
+      font-size: 0.7rem;
     }
     .modal-items-table th {
       text-align: left;
-      padding: 0.3rem 0.2rem;
+      padding: 0.25rem 0.15rem;
       color: #6b7a86;
       font-weight: 600;
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       text-transform: uppercase;
       letter-spacing: 0.2px;
       border-bottom: 1px solid #f0f3f7;
     }
     .modal-items-table td {
-      padding: 0.3rem 0.2rem;
+      padding: 0.25rem 0.15rem;
       border-bottom: 1px solid #f0f3f7;
     }
     .modal-items-table tr:last-child td { border-bottom: none; }
@@ -400,7 +467,7 @@
       gap: 0.3rem;
     }
     .modal-items-table .product-name img {
-      width: 24px; height: 24px;
+      width: 20px; height: 20px;
       border-radius: 4px;
       object-fit: contain;
       background: #f8fbf9;
@@ -408,20 +475,20 @@
     }
     .modal-actions {
       display: flex;
-      gap: 0.4rem;
-      margin-top: 0.8rem;
+      gap: 0.3rem;
+      margin-top: 0.6rem;
       flex-wrap: wrap;
     }
     .modal-actions .btn {
-      padding: 0.35rem 0.9rem;
+      padding: 0.3rem 0.8rem;
       border-radius: 30px;
       font-weight: 600;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       border: none;
       cursor: pointer;
       transition: 0.15s;
       flex: 1;
-      min-width: 70px;
+      min-width: 60px;
       text-align: center;
     }
     .btn-deliver-modal { background: #f0fdf4; color: #0f6e3a; border: 1px solid #bbf7d0; }
@@ -440,46 +507,52 @@
     @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .confirm-modal .modal-icon { font-size: 2.5rem; margin-bottom: 0.3rem; }
     .confirm-modal .modal-title { font-size: 1rem; margin-bottom: 0.2rem; }
-    .confirm-modal .modal-sub { color: #6b7a86; font-size: 0.8rem; margin-bottom: 1rem; }
+    .confirm-modal .modal-sub { color: #6b7a86; font-size: 0.8rem; margin-bottom: 0.8rem; }
     .confirm-modal .modal-actions { justify-content: center; }
-    .confirm-modal .modal-actions .btn { flex: none; min-width: 80px; padding: 0.4rem 1rem; }
+    .confirm-modal .modal-actions .btn { flex: none; min-width: 70px; padding: 0.35rem 0.9rem; }
     .btn-danger { background: #dc2626; color: white; }
     .btn-danger:hover { background: #b91c1c; }
     .btn-secondary { background: #f3f6f8; color: #1f2a3a; border: 1px solid #e4eaf0; }
     .btn-secondary:hover { background: #e8edf2; }
 
+    /* ----- TOAST ----- */
     .toast {
       position: fixed;
-      bottom: 1.2rem;
+      bottom: 1rem;
       left: 50%;
       transform: translateX(-50%);
-      padding: 0.4rem 1rem;
+      padding: 0.35rem 0.9rem;
       border-radius: 30px;
       font-weight: 500;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       z-index: 3000;
       display: none;
       color: white;
       box-shadow: 0 4px 12px rgba(0,0,0,0.12);
       animation: toastIn 0.3s ease;
       white-space: nowrap;
+      max-width: 90%;
     }
     @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(15px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
     .toast.success { background: #1f8b4c; }
     .toast.error { background: #dc2626; }
 
-    @media (min-width: 640px) {
+    /* ----- DESKTOP OVERRIDES ----- */
+    @media (min-width: 768px) {
       .header { padding: 0.7rem 1.5rem; }
       .stats-bar { padding: 0.5rem 1.5rem; }
       .main { padding: 1.5rem; }
       .order-card { padding: 1rem; }
-    }
-
-    @media (min-width: 768px) {
       .order-list { display: none !important; }
       .table-container { display: block !important; }
-      .header-left { gap: 1rem; }
+      .logo-image { width: 48px; height: 48px; }
       .logo-text { font-size: 1.1rem; }
+      .page-title { font-size: 1rem; }
+      .menu-toggle { display: none; }
+      .sidebar-overlay, .sidebar { display: none !important; }
+      .modal-box { border-radius: 16px; }
+      .modal-overlay { align-items: center; }
+      .modal-handle { display: none; }
     }
 
     @media (max-width: 767px) {
@@ -487,27 +560,28 @@
       .table-container { display: none !important; }
       .header { padding: 0.5rem 0.8rem; }
       .stats-bar { padding: 0.4rem 0.8rem; }
-      .stats-inner { gap: 0.6rem; }
+      .stats-inner { gap: 0.5rem; }
       .stat-item { font-size: 0.6rem; }
       .stat-item .num { font-size: 0.75rem; }
-      .main { padding: 0.8rem; }
+      .main { padding: 0.7rem; }
       .page-title { font-size: 0.85rem; }
       .logo-text { font-size: 0.9rem; }
-      .logo-icon { width: 30px; height: 30px; }
-      .logo-icon svg { width: 18px; height: 18px; }
-      .modal-box { padding: 1rem 0.8rem 1.2rem; }
-      .modal-info-grid { grid-template-columns: 1fr; }
-      .toast { font-size: 0.7rem; padding: 0.3rem 0.8rem; bottom: 1rem; }
+      .logo-image { width: 36px; height: 36px; }
+      .toast { font-size: 0.7rem; padding: 0.3rem 0.8rem; bottom: 0.8rem; }
       .order-card-body { grid-template-columns: 1fr 1fr; }
+      .sidebar { width: 240px; left: -240px; }
     }
 
     @media (max-width: 480px) {
       .order-card-body { grid-template-columns: 1fr; }
-      .order-card { padding: 0.7rem; }
-      .order-card-body .detail { font-size: 0.65rem; }
-      .order-actions .btn-sm { font-size: 0.55rem; padding: 0.15rem 0.5rem; }
-      .order-status { font-size: 0.5rem; padding: 0.05rem 0.5rem; }
-      .order-total { font-size: 0.75rem; }
+      .order-card { padding: 0.5rem; }
+      .order-card-body .detail { font-size: 0.6rem; }
+      .order-actions .btn-sm { font-size: 0.5rem; padding: 0.1rem 0.4rem; }
+      .order-status { font-size: 0.45rem; padding: 0.05rem 0.4rem; }
+      .order-total { font-size: 0.7rem; }
+      .logo-image { width: 32px; height: 32px; }
+      .logo-text { font-size: 0.85rem; }
+      .menu-toggle { font-size: 1.4rem; }
     }
   </style>
 </head>
@@ -516,20 +590,30 @@
     <div class="header-inner">
       <div class="header-left">
         <a href="/" class="logo">
-          <div class="logo-icon">
-            <svg viewBox="0 0 32 32"><path d="M10 10v-2a6 6 0 0 1 12 0v2h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V12a2 2 0 0 1 2-2h4zm2 0h8v-2a4 4 0 0 0-8 0v2zm-2 2v2h2v-2h-2zm4 0v2h4v-2h-4zm8 0v2h2v-2h-2zM8 14v2h2v-2H8zm16 0v2h2v-2h-2zM8 18v8h16v-8H8z"/></svg>
-          </div>
+          <img src="/assets/logo.png" alt="Batisha" class="logo-image">
           <span class="logo-text">Batisha <span>online</span></span>
         </a>
         <span class="page-title">📦 Orders</span>
       </div>
-      <div class="header-actions">
-        <a href="/admin/dashboard" class="nav-link">📊 Products</a>
-        <a href="/admin/orders" class="nav-link active">📦 Orders</a>
-        <button class="btn-logout" id="logoutButton">Logout</button>
-      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
     </div>
   </header>
+
+  <!-- SIDEBAR OVERLAY & MENU -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="sidebar" id="sidebar">
+    <a href="/" class="sidebar-logo">
+      <img src="/assets/logo.png" alt="Batisha" class="logo-image">
+      <span class="logo-text">Batisha <span>online</span></span>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="/admin/dashboard"><span class="icon">📊</span> Products</a>
+      <a href="/admin/orders" class="active"><span class="icon">📦</span> Orders</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="logoutButton">🚪 Logout</button>
+    </div>
+  </div>
 
   <div class="stats-bar">
     <div class="stats-inner">
@@ -545,9 +629,7 @@
 
   <main class="main">
     <div id="loadingState" class="state-container"><div class="spinner"></div><h3>Loading orders...</h3></div>
-    
-    <div id="errorState" class="state-container"><div class="icon">❌</div><h3>Failed to load orders</h3><p>Please try again</p><button class="btn-sm btn-view" onclick="location.reload()" style="margin-top:0.6rem;font-size:0.75rem;">Retry</button></div>
-    
+    <div id="errorState" class="state-container"><div class="icon">❌</div><h3>Failed to load orders</h3><p>Please try again</p><button class="btn-sm btn-view" onclick="location.reload()" style="margin-top:0.5rem;font-size:0.7rem;">Retry</button></div>
     <div id="emptyState" class="state-container"><div class="icon">📦</div><h3>No orders yet</h3><p>Orders will appear here when customers place them</p></div>
 
     <div id="orderList" class="order-list"></div>
@@ -605,7 +687,6 @@
         } catch { localStorage.removeItem(SESSION_KEY); return false; }
       }
       if (!hasValidSession()) { window.location.replace(LOGIN_PATH); throw new Error('Unauthorized'); }
-      document.documentElement.classList.add('auth-verified');
 
       let supabaseUrl = null, supabaseAnonKey = null;
       const loadingState = document.getElementById('loadingState');
@@ -624,6 +705,21 @@
       const confirmDeleteText = document.getElementById('confirmDeleteText');
       const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
       const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+
+      // SIDEBAR TOGGLE
+      const menuToggle = document.getElementById('menuToggle');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+      const logoutBtn = document.getElementById('logoutButton');
+
+      function toggleSidebar(open) {
+        if (open === undefined) open = !sidebar.classList.contains('open');
+        sidebar.classList.toggle('open', open);
+        sidebarOverlay.classList.toggle('open', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+      menuToggle.addEventListener('click', () => toggleSidebar());
+      sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
 
       let allOrders = [];
       let pendingDeleteId = null;
@@ -771,7 +867,7 @@
             <div class="row"><span class="label">Status</span><div class="value"><span class="order-status status-${order.status}">${order.status}</span></div></div>
             <div class="row"><span class="label">Total</span><div class="value" style="color:#1f8b4c;font-weight:700;">৳${parseFloat(order.total_price).toFixed(2)}</div></div>
           </div>
-          <h4 style="font-size:0.8rem;color:#1a1f36;margin:0.6rem 0 0.3rem;">Items</h4>
+          <h4 style="font-size:0.75rem;color:#1a1f36;margin:0.5rem 0 0.25rem;">Items</h4>
           <table class="modal-items-table">
             <thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Subtotal</th></tr></thead>
             <tbody>
@@ -870,9 +966,8 @@
       modalCloseBtn.addEventListener('click', () => { orderDetailModal.style.display = 'none'; });
       orderDetailModal.addEventListener('click', (e) => { if (e.target === orderDetailModal) orderDetailModal.style.display = 'none'; });
 
-      function handleLogout() { localStorage.removeItem(SESSION_KEY); window.location.replace(LOGIN_PATH); }
-      document.getElementById('logoutButton').addEventListener('click', handleLogout);
-      setInterval(() => { if (!hasValidSession()) handleLogout(); }, 5000);
+      logoutBtn.addEventListener('click', function() { localStorage.removeItem(SESSION_KEY); window.location.replace(LOGIN_PATH); });
+      setInterval(() => { if (!hasValidSession()) { localStorage.removeItem(SESSION_KEY); window.location.replace(LOGIN_PATH); } }, 5000);
 
       async function init() {
         const configOk = await fetchConfig();
