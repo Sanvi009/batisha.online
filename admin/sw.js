@@ -3,7 +3,8 @@ const urlsToCache = [
   '/admin/',
   '/admin/dashboard/',
   '/admin/orders/',
-  '/admin/assets/admin-icon-192.png'
+  '/admin/assets/admin-icon-192.png',
+  '/admin/manifest.json'
 ];
 
 self.addEventListener('install', event => {
