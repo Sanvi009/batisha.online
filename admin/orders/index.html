@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Orders · Batisha admin</title>
-  <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="manifest" href="/admin/manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1119,12 +1118,11 @@
     })();
   </script>
   <script>
-    // Register Admin Service Worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/admin/sw.js')
-        .then(() => console.log('✅ Admin Service Worker registered'))
-        .catch(err => console.log('❌ Admin SW registration failed:', err));
-    }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/admin/sw.js', { scope: '/admin/' })
+      .then(() => console.log('✅ Admin Service Worker registered'))
+      .catch(err => console.log('❌ Admin SW registration failed:', err));
+  }
   </script>
 </body>
 </html>
