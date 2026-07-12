@@ -2,7 +2,7 @@
   "name": "Batisha Admin",
   "short_name": "Batisha Admin",
   "description": "Admin panel for Batisha Online grocery",
-  "start_url": "/admin/dashboard/",
+  "start_url": "/admin/",
   "display": "standalone",
   "background_color": "#f5f7fa",
   "theme_color": "#1f8b4c",
