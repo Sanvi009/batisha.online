@@ -27,6 +27,6 @@ export default function handler(req, res) {
   return res.status(200).json({
     supabaseUrl: supabaseUrl,
     supabaseAnonKey: supabaseAnonKey,
-    tableName: 'groceries'
+    tableName: 'product'  // ✅ FIXED: Changed from 'groceries' to 'product'
   });
 }
