@@ -440,39 +440,72 @@
     .modal-info-grid .row { font-size: 0.7rem; }
     .modal-info-grid .label { color: #6b7a86; display: block; font-size: 0.6rem; }
     .modal-info-grid .value { font-weight: 600; color: #1a1f36; }
+
+    /* ✅ FIXED ITEMS TABLE - HORIZONTAL SCROLL + WRAPPING */
+    .modal-items-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0.5rem -0.5rem 0.5rem -0.5rem;
+      padding: 0 0.5rem;
+    }
     .modal-items-table {
       width: 100%;
+      min-width: 300px;
       border-collapse: collapse;
-      margin: 0.5rem 0;
       font-size: 0.7rem;
     }
     .modal-items-table th {
       text-align: left;
-      padding: 0.25rem 0.15rem;
+      padding: 0.25rem 0.4rem;
       color: #6b7a86;
       font-weight: 600;
       font-size: 0.55rem;
       text-transform: uppercase;
       letter-spacing: 0.2px;
       border-bottom: 1px solid #f0f3f7;
+      white-space: nowrap;
     }
     .modal-items-table td {
-      padding: 0.25rem 0.15rem;
+      padding: 0.25rem 0.4rem;
       border-bottom: 1px solid #f0f3f7;
+      vertical-align: middle;
     }
     .modal-items-table tr:last-child td { border-bottom: none; }
     .modal-items-table .product-name {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      min-width: 80px;
     }
     .modal-items-table .product-name img {
-      width: 20px; height: 20px;
+      width: 22px; height: 22px;
       border-radius: 4px;
       object-fit: contain;
       background: #f8fbf9;
       border: 1px solid #e8edf2;
+      flex-shrink: 0;
     }
+    .modal-items-table .product-name .name-text {
+      word-break: break-word;
+      overflow-wrap: break-word;
+      max-width: 120px;
+    }
+    .modal-items-table td.price-col, 
+    .modal-items-table td.qty-col,
+    .modal-items-table td.subtotal-col {
+      white-space: nowrap;
+      text-align: right;
+    }
+    .modal-items-table th.price-col,
+    .modal-items-table th.qty-col,
+    .modal-items-table th.subtotal-col {
+      text-align: right;
+    }
+    .modal-items-table td.subtotal-col strong {
+      color: #1f8b4c;
+    }
+
     .modal-actions {
       display: flex;
       gap: 0.3rem;
@@ -553,6 +586,7 @@
       .modal-box { border-radius: 16px; }
       .modal-overlay { align-items: center; }
       .modal-handle { display: none; }
+      .modal-items-table .product-name .name-text { max-width: 200px; }
     }
 
     @media (max-width: 767px) {
@@ -570,6 +604,7 @@
       .toast { font-size: 0.7rem; padding: 0.3rem 0.8rem; bottom: 0.8rem; }
       .order-card-body { grid-template-columns: 1fr 1fr; }
       .sidebar { width: 240px; left: -240px; }
+      .modal-items-table .product-name .name-text { max-width: 80px; }
     }
 
     @media (max-width: 480px) {
@@ -582,6 +617,8 @@
       .logo-image { width: 32px; height: 32px; }
       .logo-text { font-size: 0.85rem; }
       .menu-toggle { font-size: 1.4rem; }
+      .modal-items-table { font-size: 0.6rem; }
+      .modal-items-table .product-name .name-text { max-width: 60px; }
     }
   </style>
 </head>
@@ -858,6 +895,8 @@
         const items = await fetchOrderItems(orderId);
         const date = new Date(order.created_at).toLocaleString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
         modalOrderTitle.textContent = `Order #${orderId}`;
+        
+        // ✅ UPDATED: Items table with proper horizontal scroll & wrapping
         modalContent.innerHTML = `
           <div class="modal-info-grid">
             <div class="row"><span class="label">Customer</span><div class="value">${escapeHtml(order.customer_name)}</div></div>
@@ -868,20 +907,35 @@
             <div class="row"><span class="label">Total</span><div class="value" style="color:#1f8b4c;font-weight:700;">৳${parseFloat(order.total_price).toFixed(2)}</div></div>
           </div>
           <h4 style="font-size:0.75rem;color:#1a1f36;margin:0.5rem 0 0.25rem;">Items</h4>
-          <table class="modal-items-table">
-            <thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Subtotal</th></tr></thead>
-            <tbody>
-              ${items.map(item => `
+          <div class="modal-items-wrapper">
+            <table class="modal-items-table">
+              <thead>
                 <tr>
-                  <td><div class="product-name">${item.product_image_url ? `<img src="${escapeHtml(item.product_image_url)}">` : '🥬'} ${escapeHtml(item.product_title)}</div></td>
-                  <td>৳${parseFloat(item.product_price).toFixed(2)}</td>
-                  <td>×${item.quantity}</td>
-                  <td><strong>৳${(item.product_price * item.quantity).toFixed(2)}</strong></td>
+                  <th>Product</th>
+                  <th class="price-col">Price</th>
+                  <th class="qty-col">Qty</th>
+                  <th class="subtotal-col">Subtotal</th>
                 </tr>
-              `).join('')}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                ${items.map(item => `
+                  <tr>
+                    <td>
+                      <div class="product-name">
+                        ${item.product_image_url ? `<img src="${escapeHtml(item.product_image_url)}">` : '🥬'}
+                        <span class="name-text">${escapeHtml(item.product_title)}</span>
+                      </div>
+                    </td>
+                    <td class="price-col">৳${parseFloat(item.product_price).toFixed(2)}</td>
+                    <td class="qty-col">×${item.quantity}</td>
+                    <td class="subtotal-col"><strong>৳${(item.product_price * item.quantity).toFixed(2)}</strong></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
         `;
+        
         modalActions.innerHTML = '';
         if (order.status === 'pending') {
           modalActions.innerHTML = `
