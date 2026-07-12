@@ -756,7 +756,7 @@
       document.documentElement.classList.add('auth-verified');
 
       let supabaseUrl = null, supabaseAnonKey = null;
-      const TABLE_NAME = 'product';
+      const TABLE_NAME = 'product'; // ✅ HARDCODED to avoid config mismatch
       const BUCKET_NAME = 'product';
 
       const addProductForm = document.getElementById('addProductForm');
