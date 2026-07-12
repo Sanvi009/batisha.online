@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Dashboard · Batisha admin</title>
+  <link rel="manifest" href="/admin/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Batisha Admin">
+  <link rel="apple-touch-icon" href="/admin/assets/admin-icon-192.png">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -820,6 +825,7 @@
       if (!hasValidSession()) { window.location.replace(LOGIN_PATH); throw new Error('Unauthorized'); }
 
       let supabaseUrl = null, supabaseAnonKey = null;
+      let supabaseClient = null;
       const TABLE_NAME = 'product';
       const BUCKET_NAME = 'product';
 
@@ -934,7 +940,40 @@
           const resp = await fetch('/api/config');
           if (!resp.ok) throw new Error('Config failed');
           const cfg = await resp.json();
-          supabaseUrl = cfg.supabaseUrl; supabaseAnonKey = cfg.supabaseAnonKey;
+          supabaseUrl = cfg.supabaseUrl; 
+          supabaseAnonKey = cfg.supabaseAnonKey;
+          
+          // Create supabase client for Realtime
+          supabaseClient = {
+            channel: (name) => ({
+              on: (event, config, callback) => {
+                if (event === 'postgres_changes' && config.event === 'INSERT' && config.table === 'orders') {
+                  // Store callback for later use
+                  window.__orderInsertCallback = callback;
+                }
+                return { subscribe: () => {
+                  // Set up Realtime subscription
+                  const ws = new WebSocket(
+                    `${supabaseUrl.replace('http', 'ws')}/realtime/v1/websocket?apikey=${supabaseAnonKey}`
+                  );
+                  ws.onopen = () => {
+                    ws.send(JSON.stringify({
+                      type: 'subscribe',
+                      channel: 'realtime:public:orders',
+                      config: { event: 'INSERT', schema: 'public', table: 'orders' }
+                    }));
+                  };
+                  ws.onmessage = (e) => {
+                    const data = JSON.parse(e.data);
+                    if (data.type === 'INSERT' && window.__orderInsertCallback) {
+                      window.__orderInsertCallback({ new: data.record });
+                    }
+                  };
+                  return { unsubscribe: () => ws.close() };
+                }};
+              }
+            })
+          };
           return true;
         } catch { showToast('Failed to load config', 'error'); return false; }
       }
@@ -970,7 +1009,6 @@
         });
       }
 
-      // ✅ FIXED: RENDER PRODUCTS WITH CARD EDIT SUPPORT
       function renderProducts(products) {
         productList.innerHTML = '';
         products.forEach(product => {
@@ -1129,14 +1167,12 @@
         }
       });
 
-      // ✅ FIXED: EDIT ON CARD (MOBILE)
       window.startEditCard = function(productId) {
         const card = document.querySelector(`.product-card[data-id="${productId}"]`);
         if (!card) return;
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
 
-        // Cancel any active edit
         if (editingRowId !== null) window.cancelEdit(editingRowId);
         editingRowId = productId;
 
@@ -1160,7 +1196,6 @@
         `;
       };
 
-      // ✅ FIXED: SAVE EDIT ON CARD
       window.saveEditCard = async function(productId) {
         const card = document.querySelector(`.product-card[data-id="${productId}"]`);
         if (!card) return;
@@ -1209,9 +1244,7 @@
         saveBtn.disabled = false;
       };
 
-      // ✅ FIXED: TABLE EDIT (DESKTOP)
       window.startEdit = function(productId) {
-        // If mobile, use card edit
         if (window.innerWidth < 768) {
           window.startEditCard(productId);
           return;
@@ -1246,7 +1279,6 @@
         editingRowId = null;
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
-        // Cancel card edit if on mobile
         if (window.innerWidth < 768) {
           renderProducts(allProducts);
           applyFilter(currentCategoryFilter);
@@ -1373,14 +1405,67 @@
       logoutBtn.addEventListener('click', handleLogout);
       setInterval(() => { if (!hasValidSession()) handleLogout(); }, 5000);
 
+      // ----- REALTIME ORDER NOTIFICATIONS -----
+      function setupOrderNotifications() {
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+          Notification.requestPermission();
+        }
+
+        // Subscribe to new orders via Realtime
+        if (supabaseClient) {
+          const channel = supabaseClient.channel('orders-realtime')
+            .on(
+              'postgres_changes',
+              {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'orders'
+              },
+              (payload) => {
+                const order = payload.new;
+                
+                // 1. Show toast notification
+                showToast('📦 New Order!', `Order #${order.id} from ${order.customer_name} · ৳${order.total_price}`, 'success');
+
+                // 2. Show browser notification (if permission granted)
+                if ('Notification' in window && Notification.permission === 'granted') {
+                  new Notification('🛒 New Order Received', {
+                    body: `Order #${order.id} · ${order.customer_name} · ৳${order.total_price}`,
+                    icon: '/admin/assets/admin-icon-192.png'
+                  });
+                }
+
+                // 3. Update stats if they're visible
+                const totalStat = document.getElementById('statTotal');
+                if (totalStat) {
+                  const current = parseInt(totalStat.textContent) || 0;
+                  totalStat.textContent = current + 1;
+                }
+              }
+            )
+            .subscribe();
+        }
+      }
+
       async function init() {
         const configOk = await fetchConfig();
-        if (configOk) await fetchProducts();
-        else showState('error');
+        if (configOk) {
+          await fetchProducts();
+          setupOrderNotifications();
+        } else showState('error');
       }
 
       window.addEventListener('DOMContentLoaded', init);
     })();
+  </script>
+  <script>
+    // Register Admin Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/admin/sw.js')
+        .then(() => console.log('✅ Admin Service Worker registered'))
+        .catch(err => console.log('❌ Admin SW registration failed:', err));
+    }
   </script>
 </body>
 </html>
