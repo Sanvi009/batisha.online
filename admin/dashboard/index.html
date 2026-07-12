@@ -970,11 +970,13 @@
         });
       }
 
+      // ✅ FIXED: RENDER PRODUCTS WITH CARD EDIT SUPPORT
       function renderProducts(products) {
         productList.innerHTML = '';
         products.forEach(product => {
           const card = document.createElement('div');
           card.className = 'product-card';
+          card.setAttribute('data-id', product.id);
           const imgHtml = product.image_url 
             ? `<img src="${escapeHtml(product.image_url)}" class="product-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
             : '';
@@ -988,7 +990,7 @@
               <div class="product-card-price">${parseFloat(product.price || 0).toFixed(2)}</div>
             </div>
             <div class="product-card-actions">
-              <button class="btn-sm btn-edit" onclick="window.startEdit(${product.id})">✏️</button>
+              <button class="btn-sm btn-edit" onclick="window.startEditCard(${product.id})">✏️</button>
               <button class="btn-sm btn-delete" onclick="window.confirmDelete(${product.id}, '${escapeHtml(product.title || 'this product')}', '${escapeHtml(product.image_url || '')}')">🗑️</button>
             </div>
           `;
@@ -1127,7 +1129,94 @@
         }
       });
 
+      // ✅ FIXED: EDIT ON CARD (MOBILE)
+      window.startEditCard = function(productId) {
+        const card = document.querySelector(`.product-card[data-id="${productId}"]`);
+        if (!card) return;
+        const product = allProducts.find(p => p.id === productId);
+        if (!product) return;
+
+        // Cancel any active edit
+        if (editingRowId !== null) window.cancelEdit(editingRowId);
+        editingRowId = productId;
+
+        const info = card.querySelector('.product-card-info');
+        const actions = card.querySelector('.product-card-actions');
+
+        info.innerHTML = `
+          <input type="text" class="form-input" id="card-title-${productId}" value="${escapeHtml(product.title || '')}" style="font-size:0.75rem;padding:0.2rem 0.4rem;margin-bottom:0.2rem;">
+          <input type="text" class="form-input" id="card-desc-${productId}" value="${escapeHtml(product.description || '')}" style="font-size:0.65rem;padding:0.2rem 0.4rem;margin-bottom:0.2rem;">
+          <select class="form-input" id="card-cat-${productId}" style="font-size:0.65rem;padding:0.2rem 0.4rem;margin-bottom:0.2rem;">
+            ${['electronics','grocery','medicine','vegetables','fruits','bakery','others'].map(c => 
+              `<option value="${c}" ${product.category === c ? 'selected' : ''}>${getCategoryLabel(c)}</option>`
+            ).join('')}
+          </select>
+          <input type="number" class="form-input" id="card-price-${productId}" value="${product.price || 0}" step="0.01" style="font-size:0.75rem;padding:0.2rem 0.4rem;">
+        `;
+
+        actions.innerHTML = `
+          <button class="btn-sm btn-save" onclick="window.saveEditCard(${productId})">💾</button>
+          <button class="btn-sm btn-secondary" onclick="window.cancelEdit(${productId})">✖</button>
+        `;
+      };
+
+      // ✅ FIXED: SAVE EDIT ON CARD
+      window.saveEditCard = async function(productId) {
+        const card = document.querySelector(`.product-card[data-id="${productId}"]`);
+        if (!card) return;
+
+        const titleEl = document.getElementById(`card-title-${productId}`);
+        const descEl = document.getElementById(`card-desc-${productId}`);
+        const catEl = document.getElementById(`card-cat-${productId}`);
+        const priceEl = document.getElementById(`card-price-${productId}`);
+
+        if (!titleEl || !catEl || !priceEl) return;
+
+        const updatedTitle = titleEl.value.trim();
+        const updatedDescription = descEl ? descEl.value.trim() : '';
+        const updatedCategory = catEl.value;
+        const updatedPrice = parseFloat(priceEl.value) || 0;
+
+        if (!updatedTitle) { showToast('Title is required!', 'error'); return; }
+        if (!updatedCategory) { showToast('Category is required!', 'error'); return; }
+
+        const saveBtn = card.querySelector('.btn-save');
+        saveBtn.textContent = '⏳';
+        saveBtn.disabled = true;
+
+        try {
+          const response = await fetch(`${supabaseUrl}/rest/v1/${TABLE_NAME}?id=eq.${productId}`, {
+            method: 'PATCH',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+            body: JSON.stringify({ title: updatedTitle, description: updatedDescription, price: updatedPrice, category: updatedCategory }),
+          });
+          if (!response.ok) throw new Error('Update failed');
+
+          const productIndex = allProducts.findIndex(p => p.id === productId);
+          if (productIndex !== -1) {
+            allProducts[productIndex].title = updatedTitle;
+            allProducts[productIndex].description = updatedDescription;
+            allProducts[productIndex].price = updatedPrice;
+            allProducts[productIndex].category = updatedCategory;
+          }
+
+          editingRowId = null;
+          renderProducts(allProducts);
+          applyFilter(currentCategoryFilter);
+          showToast('✅ Product updated!');
+        } catch { showToast('Update failed', 'error'); }
+        saveBtn.textContent = '💾';
+        saveBtn.disabled = false;
+      };
+
+      // ✅ FIXED: TABLE EDIT (DESKTOP)
       window.startEdit = function(productId) {
+        // If mobile, use card edit
+        if (window.innerWidth < 768) {
+          window.startEditCard(productId);
+          return;
+        }
+
         if (editingRowId !== null) window.cancelEdit(editingRowId);
         editingRowId = productId;
         const product = allProducts.find(p => p.id === productId);
@@ -1157,6 +1246,12 @@
         editingRowId = null;
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
+        // Cancel card edit if on mobile
+        if (window.innerWidth < 768) {
+          renderProducts(allProducts);
+          applyFilter(currentCategoryFilter);
+          return;
+        }
         const row = document.querySelector(`tr[data-id="${productId}"]`);
         if (!row) return;
         row.querySelector('.cell-title').innerHTML = escapeHtml(product.title || '—');
@@ -1170,6 +1265,11 @@
       };
 
       window.saveEdit = async function(productId) {
+        if (window.innerWidth < 768) {
+          window.saveEditCard(productId);
+          return;
+        }
+
         const row = document.querySelector(`tr[data-id="${productId}"]`);
         if (!row) return;
         const titleInput = row.querySelector('.edit-title');
