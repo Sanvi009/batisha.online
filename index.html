@@ -150,13 +150,12 @@
     </div>
   </nav>
 
-  <!-- ===== ANNOUNCEMENT TICKER (NEW) ===== -->
+  <!-- ===== ANNOUNCEMENT TICKER ===== -->
   <div class="announcement-wrapper" id="announcementWrapper">
     <div class="announcement-track" id="announcementTrack">
       <!-- Content will be injected by JS -->
     </div>
   </div>
-  <!-- ======================================= -->
 
   <div class="mobile-bottom-nav">
     <a href="/product/">
@@ -178,6 +177,7 @@
       <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
     </a>
   </div>
+
   <main class="container" id="mainContainer">
     <div id="loadingState" style="text-align:center;padding:2rem;">
       <div style="width:32px;height:32px;border:3px solid #e2ebe6;border-top-color:#1f8b4c;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto;"></div>
@@ -188,16 +188,20 @@
     </div>
     <div id="categoryContainer"></div>
   </main>
+
   <div id="simplePopup" class="simple-popup">
     <span class="icon">✓</span> Added to cart
   </div>
+
   <div class="toast-container" id="toastContainer"></div>
+
   <script>
     (function() {
       'use strict';
       const TABLE_NAME = 'product';
-      const ANNOUNCE_TABLE = 'announcements'; // Your new table
+      const ANNOUNCE_TABLE = 'announcements';
       let supabaseUrl = null, supabaseAnonKey = null, allProducts = [], popupTimeout = null;
+      
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
       const categoryContainer = document.getElementById('categoryContainer');
@@ -206,7 +210,6 @@
       const toastContainer = document.getElementById('toastContainer');
       const simplePopup = document.getElementById('simplePopup');
       
-      // Announcement elements
       const announcementWrapper = document.getElementById('announcementWrapper');
       const announcementTrack = document.getElementById('announcementTrack');
 
@@ -215,38 +218,49 @@
           const resp = await fetch('/api/config');
           if (!resp.ok) throw new Error('Config failed');
           const cfg = await resp.json();
-          supabaseUrl = cfg.supabaseUrl; supabaseAnonKey = cfg.supabaseAnonKey;
+          supabaseUrl = cfg.supabaseUrl; 
+          supabaseAnonKey = cfg.supabaseAnonKey;
           return true;
         } catch { return false; }
       }
 
       // ==========================================
-      // FETCH ANNOUNCEMENT LOGIC
+      // ANNOUNCEMENT LOGIC
       // ==========================================
       async function fetchAnnouncement() {
+        console.log("📢 Fetching announcement...");
         try {
+          if (!supabaseUrl || !supabaseAnonKey) {
+            console.log("📢 Config not ready yet, skipping announcement.");
+            return;
+          }
+
           const response = await fetch(`${supabaseUrl}/rest/v1/${ANNOUNCE_TABLE}?select=*&limit=1`, {
             headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
           });
           if (!response.ok) throw new Error('Failed to fetch announcement');
           const data = await response.json();
+          console.log("📢 Data received:", data);
+          
           if (data && data.length > 0) {
             const row = data[0];
+            console.log("📢 Row found:", row);
+            
             if (row.is_active === true && row.text && row.text.trim() !== '') {
-              // Show and populate the ticker
+              console.log("📢 Ticker is ACTIVE. Showing text:", row.text);
               announcementWrapper.style.display = 'block';
-              // We duplicate the text twice so the scrolling loop looks seamless
               const text = escapeHtml(row.text);
               announcementTrack.innerHTML = `<span>${text}</span><span>${text}</span><span>${text}</span><span>${text}</span>`;
             } else {
-              // Hide if inactive or empty
+              console.log("📢 Ticker is INACTIVE or text is empty. Hiding.");
               announcementWrapper.style.display = 'none';
             }
           } else {
+            console.log("📢 No announcement row found.");
             announcementWrapper.style.display = 'none';
           }
         } catch (error) {
-          console.error('Announcement fetch error:', error);
+          console.error("📢 Error fetching announcement:", error);
           announcementWrapper.style.display = 'none';
         }
       }
@@ -254,67 +268,104 @@
 
       async function fetchProducts() {
         try {
-          loadingState.style.display = 'block'; errorState.style.display = 'none'; categoryContainer.style.display = 'none';
+          loadingState.style.display = 'block'; 
+          errorState.style.display = 'none'; 
+          categoryContainer.style.display = 'none';
+          
           const url = `${supabaseUrl}/rest/v1/${TABLE_NAME}?select=*&order=id.desc`;
-          const response = await fetch(url, { headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` } });
+          const response = await fetch(url, { 
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` } 
+          });
           if (!response.ok) throw new Error('Fetch failed');
           allProducts = await response.json();
+          
           loadingState.style.display = 'none';
           if (!allProducts || allProducts.length === 0) {
             categoryContainer.innerHTML = '<div style="text-align:center;padding:2rem;color:#4b6b5e;">No products available yet</div>';
-            categoryContainer.style.display = 'block'; return;
+            categoryContainer.style.display = 'block'; 
+            return;
           }
-          renderCategories(allProducts); categoryContainer.style.display = 'block';
-        } catch { loadingState.style.display = 'none'; errorState.style.display = 'block'; }
+          renderCategories(allProducts); 
+          categoryContainer.style.display = 'block';
+        } catch { 
+          loadingState.style.display = 'none'; 
+          errorState.style.display = 'block'; 
+        }
       }
+
       function renderCategories(products) {
         categoryContainer.innerHTML = '';
         const categoryMap = {};
         const categoryOrder = ['electronics', 'grocery', 'medicine', 'vegetables', 'fruits', 'bakery', 'others'];
         const categoryLabels = { 'electronics':'Electronics','grocery':'Grocery','medicine':'Medicine','vegetables':'Vegetables','fruits':'Fruits','bakery':'Bakery','others':'Others' };
-        products.forEach(p => { const cat = p.category || 'others'; if (!categoryMap[cat]) categoryMap[cat] = []; categoryMap[cat].push(p); });
+        
+        products.forEach(p => { 
+          const cat = p.category || 'others'; 
+          if (!categoryMap[cat]) categoryMap[cat] = []; 
+          categoryMap[cat].push(p); 
+        });
+        
         categoryOrder.forEach(cat => {
           if (!categoryMap[cat] || categoryMap[cat].length === 0) return;
           const items = categoryMap[cat];
-          const section = document.createElement('div'); section.className = 'category-section'; section.id = `category-${cat}`;
-          const header = document.createElement('div'); header.className = 'category-header';
+          const section = document.createElement('div'); 
+          section.className = 'category-section'; 
+          section.id = `category-${cat}`;
+          const header = document.createElement('div'); 
+          header.className = 'category-header';
           header.innerHTML = `<h2 class="category-title">${categoryLabels[cat] || cat} <span class="category-count">${items.length} items</span></h2>${items.length > 4 ? `<button class="category-more-btn" onclick="window.toggleCategory('${cat}')">View All <span class="arrow">▼</span></button>` : ''}`;
           section.appendChild(header);
-          const grid = document.createElement('div'); grid.className = 'products-grid hidden-items'; grid.id = `grid-${cat}`;
+          const grid = document.createElement('div'); 
+          grid.className = 'products-grid hidden-items'; 
+          grid.id = `grid-${cat}`;
           items.forEach((p, index) => {
-            const card = document.createElement('div'); card.className = 'product-card';
+            const card = document.createElement('div'); 
+            card.className = 'product-card';
             if (index >= 4) card.classList.add('hidden-item');
             const imgHtml = p.image_url ? `<div class="product-image-frame"><img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'"></div>` : `<div class="product-image-frame"><div class="product-image-placeholder">🥬</div></div>`;
             card.innerHTML = `${imgHtml}<div class="product-info"><h3 class="product-title">${escapeHtml(p.title || 'No title')}</h3><p class="product-description">${escapeHtml(p.description || '')}</p><div class="product-footer"><span class="product-price">${parseFloat(p.price || 0).toFixed(2)}</span><button class="add-to-cart-btn" onclick="window.addToCart(${p.id}, '${escapeHtml(p.title || 'Product')}', ${p.price || 0}, '${escapeHtml(p.image_url || '')}')">Add</button></div></div>`;
             grid.appendChild(card);
           });
-          section.appendChild(grid); categoryContainer.appendChild(section);
+          section.appendChild(grid); 
+          categoryContainer.appendChild(section);
         });
       }
+
       window.toggleCategory = function(category) {
-        const grid = document.getElementById(`grid-${category}`); const btn = document.querySelector(`#category-${category} .category-more-btn`);
+        const grid = document.getElementById(`grid-${category}`); 
+        const btn = document.querySelector(`#category-${category} .category-more-btn`);
         if (!grid) return;
         grid.classList.toggle('hidden-items');
-        if (btn) { btn.classList.toggle('active'); btn.innerHTML = grid.classList.contains('hidden-items') ? 'View All <span class="arrow">▼</span>' : 'Show Less <span class="arrow">▲</span>'; }
+        if (btn) { 
+          btn.classList.toggle('active'); 
+          btn.innerHTML = grid.classList.contains('hidden-items') ? 'View All <span class="arrow">▼</span>' : 'Show Less <span class="arrow">▲</span>'; 
+        }
       };
+
       function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+
       function showSimplePopup() {
         if (popupTimeout) { clearTimeout(popupTimeout); popupTimeout = null; }
         simplePopup.classList.add('active');
         popupTimeout = setTimeout(() => { simplePopup.classList.remove('active'); popupTimeout = null; }, 1200);
       }
+
       window.addToCart = function(id, title, price, imageUrl) {
         let cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
         const existing = cart.find(item => item.id === id);
         if (existing) { existing.quantity += 1; } else { cart.push({ id, title, price, imageUrl, quantity: 1 }); }
-        localStorage.setItem('grocery_cart', JSON.stringify(cart)); updateCartCount(); showSimplePopup();
+        localStorage.setItem('grocery_cart', JSON.stringify(cart)); 
+        updateCartCount(); 
+        showSimplePopup();
       };
+
       function updateCartCount() {
         const cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
         const total = cart.reduce((sum, i) => sum + i.quantity, 0);
         if (cartCountSpan) cartCountSpan.textContent = total;
         if (mobileCartCountSpan) mobileCartCountSpan.textContent = total;
       }
+
       function showToast(title, message, icon = '❌') {
         const toast = document.createElement('div'); toast.className = 'toast';
         toast.innerHTML = `<div class="toast-icon">${icon}</div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div><button class="toast-close">✕</button>`;
@@ -323,33 +374,34 @@
         closeBtn.addEventListener('click', () => removeToast(toast));
         setTimeout(() => removeToast(toast), 3500);
       }
+
       function removeToast(toast) {
         if (toast.classList.contains('removing')) return;
         toast.classList.add('removing');
         setTimeout(() => { if (toast.parentElement) toast.remove(); }, 300);
       }
+
       async function init() { 
-  try {
-    updateCartCount(); 
-    const ok = await fetchConfig(); 
-    if (!ok) {
-      document.getElementById('loadingState').style.display = 'none';
-      document.getElementById('errorState').style.display = 'block';
-      return;
-    }
-    
-    await fetchAnnouncement(); // Load announcement first
-    await fetchProducts(); 
-  } catch (err) {
-    console.error('Init error:', err);
-    document.getElementById('loadingState').style.display = 'none';
-    document.getElementById('errorState').style.display = 'block';
-  }
-}
-      window.addEventListener('DOMContentLoaded', init); window.addEventListener('storage', updateCartCount);
-      const style = document.createElement('style'); style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`; document.head.appendChild(style);
+        updateCartCount(); 
+        const ok = await fetchConfig(); 
+        if (ok) {
+          await fetchAnnouncement(); // Load announcement
+          await fetchProducts(); // Load products
+        } else {
+          document.getElementById('loadingState').style.display = 'none';
+          document.getElementById('errorState').style.display = 'block';
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', init); 
+      window.addEventListener('storage', updateCartCount);
+      
+      const style = document.createElement('style'); 
+      style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`; 
+      document.head.appendChild(style);
     })();
   </script>
+
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js')
