@@ -169,10 +169,11 @@
       transform: rotate(180deg);
     }
 
+    /* ---- 3 COLUMNS WITH SMALLER CARDS ---- */
     .products-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.8rem;
       transition: all 0.3s ease;
     }
     .products-grid.hidden-items .product-card.hidden-item {
@@ -181,16 +182,16 @@
 
     .product-card {
       background: white;
-      border-radius: 16px;
+      border-radius: 12px;
       overflow: hidden;
       border: 1px solid #eef2f6;
       transition: 0.2s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
       position: relative;
     }
     .product-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
     }
     .product-card.hidden-item {
       display: block;
@@ -199,7 +200,7 @@
     .product-image-frame {
       position: relative;
       width: 100%;
-      padding-bottom: 100%;
+      padding-bottom: 90%;
       background: #f3f8f5;
       overflow: hidden;
     }
@@ -224,15 +225,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 3rem;
+      font-size: 2.4rem;
       color: #2d7a4b;
     }
 
     .product-info {
-      padding: 0.7rem 0.8rem 0.9rem;
+      padding: 0.5rem 0.6rem 0.7rem;
     }
     .product-title {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: 600;
       color: #1e2e2a;
       display: -webkit-box;
@@ -242,23 +243,23 @@
     }
     .product-description {
       color: #5f6f6a;
-      font-size: 0.7rem;
+      font-size: 0.6rem;
       display: -webkit-box;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      margin: 0.1rem 0 0.3rem;
+      margin: 0.05rem 0 0.25rem;
     }
     .product-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-top: 0.4rem;
+      padding-top: 0.3rem;
       border-top: 1px solid #edf2ef;
     }
     .product-price {
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.85rem;
       color: #0f6e3a;
     }
     .product-price::before {
@@ -269,10 +270,10 @@
       background: #1f8b4c;
       color: white;
       border: none;
-      padding: 0.3rem 1rem;
+      padding: 0.2rem 0.7rem;
       border-radius: 30px;
       font-weight: 600;
-      font-size: 0.7rem;
+      font-size: 0.6rem;
       cursor: pointer;
       transition: 0.2s;
     }
@@ -501,15 +502,32 @@
         display: inline-block;
       }
 
+      /* ---- 2 COLUMNS ON MOBILE ---- */
       .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-        gap: 0.8rem;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 0.6rem;
       }
       .container {
         padding: 1rem;
       }
       .category-title {
         font-size: 1.1rem;
+      }
+      .product-image-frame {
+        padding-bottom: 85%;
+      }
+      .product-info {
+        padding: 0.4rem 0.5rem 0.6rem;
+      }
+      .product-title {
+        font-size: 0.7rem;
+      }
+      .product-price {
+        font-size: 0.8rem;
+      }
+      .add-to-cart-btn {
+        font-size: 0.55rem;
+        padding: 0.2rem 0.6rem;
       }
 
       .simple-popup {
@@ -534,17 +552,17 @@
     @media (max-width: 480px) {
       .products-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 0.6rem;
+        gap: 0.5rem;
       }
       .product-title {
-        font-size: 0.75rem;
+        font-size: 0.65rem;
       }
       .product-price {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
       }
       .add-to-cart-btn {
-        font-size: 0.65rem;
-        padding: 0.25rem 0.8rem;
+        font-size: 0.55rem;
+        padding: 0.15rem 0.5rem;
       }
       .toast-container {
         top: 60px;
@@ -717,7 +735,7 @@
               ${categoryLabels[cat] || cat}
               <span class="category-count">${items.length} items</span>
             </h2>
-            ${items.length > 4 ? `<button class="category-more-btn" onclick="window.toggleCategory('${cat}')">View All <span class="arrow">▼</span></button>` : ''}
+            ${items.length > 6 ? `<button class="category-more-btn" onclick="window.toggleCategory('${cat}')">View All <span class="arrow">▼</span></button>` : ''}
           `;
           section.appendChild(header);
 
@@ -728,7 +746,7 @@
           items.forEach((p, index) => {
             const card = document.createElement('div');
             card.className = 'product-card';
-            if (index >= 4) card.classList.add('hidden-item');
+            if (index >= 6) card.classList.add('hidden-item');
             
             const imgHtml = p.image_url
               ? `<div class="product-image-frame"><img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'"></div>`
