@@ -875,28 +875,41 @@
     })();
   </script>
 
-  <!-- 🔥 TEMPORARY FORCE-UNREGISTER SCRIPT (remove after 1-2 days) -->
+  <!-- PWA Auto-Update Logic -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (let registration of registrations) {
-          registration.unregister();
-          console.log('✅ Unregistered old Service Worker');
-        }
-        // Reload to get fresh content
-        if (registrations.length > 0) {
-          location.reload();
+      let refreshing = false;
+
+      // 1. Register the SW
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => {
+          console.log('✅ Service Worker registered');
+
+          // 2. Check for updates every time the page loads
+          registration.update();
+
+          // 3. Listen for a new SW waiting
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // 4. Tell the new SW to take over
+                newWorker.postMessage('skipWaiting');
+              }
+            });
+          });
+        })
+        .catch(err => console.log('❌ SW registration failed:', err));
+
+      // 5. When the new SW takes over, reload the page automatically
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          console.log('🔄 New version detected - refreshing automatically...');
+          window.location.reload();
         }
       });
     }
-  </script>
-
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('✅ New Service Worker registered'))
-      .catch(err => console.log('❌ Service Worker registration failed:', err));
-  }
   </script>
 </body>
 </html>
