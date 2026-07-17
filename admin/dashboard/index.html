@@ -387,6 +387,48 @@
     }
     .btn-cancel-form:hover { background: #e8edf2; }
 
+    /* ----- ANNOUNCEMENT PANEL (NEW) ----- */
+    .announcement-panel {
+      background: #ffffff;
+      border: 1px solid #e8edf2;
+      border-radius: 12px;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      width: 100%;
+    }
+    .announcement-panel .form-title { margin-bottom: 0.6rem; }
+    .toggle-group {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.6rem;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: #d1d5db;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.2s;
+      flex-shrink: 0;
+    }
+    .toggle-switch.active { background: #1f8b4c; }
+    .toggle-switch .knob {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .toggle-switch.active .knob { left: 22px; }
+    .toggle-label { font-size: 0.8rem; font-weight: 500; color: #1a1f36; }
+
     /* ----- PRODUCT LIST (Mobile Cards) ----- */
     .product-list {
       display: flex;
@@ -716,6 +758,24 @@
   </div>
 
   <main class="main">
+    
+    <!-- ===== ANNOUNCEMENT CONTROL PANEL (NEW) ===== -->
+    <div class="announcement-panel">
+      <h2 class="form-title">📢 Announcement Ticker</h2>
+      <div class="toggle-group">
+        <div class="toggle-switch" id="announceToggle">
+          <div class="knob"></div>
+        </div>
+        <span class="toggle-label" id="announceStatus">Off</span>
+      </div>
+      <div class="form-group" style="margin-bottom: 0.5rem;">
+        <label for="announceText">Announcement Text</label>
+        <input type="text" id="announceText" class="form-input" placeholder="e.g. 📢 Free delivery on orders over ৳500!" maxlength="200">
+      </div>
+      <button class="btn-submit" id="saveAnnounceBtn" style="flex:none; width:auto; padding:0.45rem 1.5rem;">💾 Save Announcement</button>
+    </div>
+    <!-- ============================================ -->
+
     <div style="margin-bottom:0.8rem;display:flex;gap:0.4rem;flex-wrap:wrap;">
       <button class="btn-submit" id="toggleFormBtn" style="flex:none;padding:0.45rem 1rem;font-size:0.75rem;">➕ Add Product</button>
     </div>
@@ -829,6 +889,7 @@
       let supabaseClient = null;
       const TABLE_NAME = 'product';
       const BUCKET_NAME = 'product';
+      const ANNOUNCE_TABLE = 'announcements'; // Your new table
 
       const addProductForm = document.getElementById('addProductForm');
       const productForm = document.getElementById('productForm');
@@ -850,6 +911,12 @@
       const modalCancelBtn = document.getElementById('modalCancelBtn');
       const modalConfirmBtn = document.getElementById('modalConfirmBtn');
       const categoryFilter = document.getElementById('categoryFilter');
+
+      // ANNOUNCEMENT ELEMENTS
+      const announceToggle = document.getElementById('announceToggle');
+      const announceStatus = document.getElementById('announceStatus');
+      const announceText = document.getElementById('announceText');
+      const saveAnnounceBtn = document.getElementById('saveAnnounceBtn');
 
       // SIDEBAR TOGGLE
       const menuToggle = document.getElementById('menuToggle');
@@ -944,16 +1011,13 @@
           supabaseUrl = cfg.supabaseUrl; 
           supabaseAnonKey = cfg.supabaseAnonKey;
           
-          // Create supabase client for Realtime
           supabaseClient = {
             channel: (name) => ({
               on: (event, config, callback) => {
                 if (event === 'postgres_changes' && config.event === 'INSERT' && config.table === 'orders') {
-                  // Store callback for later use
                   window.__orderInsertCallback = callback;
                 }
                 return { subscribe: () => {
-                  // Set up Realtime subscription
                   const ws = new WebSocket(
                     `${supabaseUrl.replace('http', 'ws')}/realtime/v1/websocket?apikey=${supabaseAnonKey}`
                   );
@@ -978,6 +1042,87 @@
           return true;
         } catch { showToast('Failed to load config', 'error'); return false; }
       }
+
+      // ==========================================
+      // ANNOUNCEMENT LOGIC
+      // ==========================================
+      async function fetchAnnouncement() {
+        try {
+          const response = await fetch(`${supabaseUrl}/rest/v1/${ANNOUNCE_TABLE}?select=*&limit=1`, {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (!response.ok) throw new Error('Failed to fetch announcement');
+          const data = await response.json();
+          if (data && data.length > 0) {
+            const row = data[0];
+            announceText.value = row.text || '';
+            if (row.is_active === true) {
+              announceToggle.classList.add('active');
+              announceStatus.textContent = 'On';
+            } else {
+              announceToggle.classList.remove('active');
+              announceStatus.textContent = 'Off';
+            }
+          } else {
+            // No row exists, create one
+            await createAnnouncementRow();
+          }
+        } catch (error) {
+          console.error('Announcement fetch error:', error);
+        }
+      }
+
+      async function createAnnouncementRow() {
+        try {
+          await fetch(`${supabaseUrl}/rest/v1/${ANNOUNCE_TABLE}`, {
+            method: 'POST',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ is_active: false, text: '' })
+          });
+        } catch (error) {
+          console.error('Failed to create announcement row:', error);
+        }
+      }
+
+      async function saveAnnouncement() {
+        const isActive = announceToggle.classList.contains('active');
+        const text = announceText.value.trim();
+        saveAnnounceBtn.disabled = true;
+        saveAnnounceBtn.textContent = '⏳ Saving...';
+        try {
+          const response = await fetch(`${supabaseUrl}/rest/v1/${ANNOUNCE_TABLE}?select=id`, {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (!response.ok) throw new Error('Failed to fetch ID');
+          const data = await response.json();
+          if (!data || data.length === 0) {
+            await createAnnouncementRow();
+          } else {
+            const id = data[0].id;
+            const updateRes = await fetch(`${supabaseUrl}/rest/v1/${ANNOUNCE_TABLE}?id=eq.${id}`, {
+              method: 'PATCH',
+              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ is_active: isActive, text: text, updated_at: new Date().toISOString() })
+            });
+            if (!updateRes.ok) throw new Error('Update failed');
+          }
+          showToast('✅ Announcement saved!');
+        } catch (error) {
+          showToast('Failed to save announcement: ' + error.message, 'error');
+        } finally {
+          saveAnnounceBtn.disabled = false;
+          saveAnnounceBtn.textContent = '💾 Save Announcement';
+        }
+      }
+
+      // Toggle click
+      announceToggle.addEventListener('click', () => {
+        announceToggle.classList.toggle('active');
+        announceStatus.textContent = announceToggle.classList.contains('active') ? 'On' : 'Off';
+      });
+
+      saveAnnounceBtn.addEventListener('click', saveAnnouncement);
+      // ==========================================
 
       async function fetchProducts() {
         try {
@@ -1408,12 +1553,9 @@
 
       // ----- REALTIME ORDER NOTIFICATIONS -----
       function setupOrderNotifications() {
-        // Request notification permission
         if ('Notification' in window && Notification.permission === 'default') {
           Notification.requestPermission();
         }
-
-        // Subscribe to new orders via Realtime
         if (supabaseClient) {
           const channel = supabaseClient.channel('orders-realtime')
             .on(
@@ -1425,19 +1567,13 @@
               },
               (payload) => {
                 const order = payload.new;
-                
-                // 1. Show toast notification
                 showToast('📦 New Order!', `Order #${order.id} from ${order.customer_name} · ৳${order.total_price}`, 'success');
-
-                // 2. Show browser notification (if permission granted)
                 if ('Notification' in window && Notification.permission === 'granted') {
                   new Notification('🛒 New Order Received', {
                     body: `Order #${order.id} · ${order.customer_name} · ৳${order.total_price}`,
                     icon: '/admin/assets/admin-icon-192.png'
                   });
                 }
-
-                // 3. Update stats if they're visible
                 const totalStat = document.getElementById('statTotal');
                 if (totalStat) {
                   const current = parseInt(totalStat.textContent) || 0;
@@ -1452,6 +1588,7 @@
       async function init() {
         const configOk = await fetchConfig();
         if (configOk) {
+          await fetchAnnouncement(); // Load the announcement first
           await fetchProducts();
           setupOrderNotifications();
         } else showState('error');
