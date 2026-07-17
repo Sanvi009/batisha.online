@@ -1586,14 +1586,25 @@
       }
 
       async function init() {
-        const configOk = await fetchConfig();
-        if (configOk) {
-          await fetchAnnouncement(); // Load the announcement first
-          await fetchProducts();
-          setupOrderNotifications();
-        } else showState('error');
-      }
-
+  try {
+    const configOk = await fetchConfig();
+    if (!configOk) {
+      showState('error');
+      return;
+    }
+    
+    // Load announcement first
+    await fetchAnnouncement();
+    
+    // Then load products
+    await fetchProducts();
+    
+    setupOrderNotifications();
+  } catch (err) {
+    console.error('Init error:', err);
+    showState('error');
+  }
+}
       window.addEventListener('DOMContentLoaded', init);
     })();
   </script>
