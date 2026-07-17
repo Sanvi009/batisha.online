@@ -1,4 +1,4 @@
-const CACHE_NAME = 'batisha-v3'; // INCREMENT THIS (v3, v4, etc.) WHEN YOU UPDATE CODE
+const CACHE_NAME = 'batisha-v4'; // INCREMENT THIS (v3, v4, etc.) WHEN YOU UPDATE CODE
 
 const urlsToCache = [
   '/',
