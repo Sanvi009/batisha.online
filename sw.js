@@ -1,4 +1,5 @@
-const CACHE_NAME = 'batisha-v2';
+const CACHE_NAME = 'batisha-v2'; // INCREMENT THIS (v3, v4, etc.) WHEN YOU UPDATE CODE
+
 const urlsToCache = [
   '/',
   '/product/',
@@ -8,46 +9,31 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', event => {
-  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
   );
+  self.skipWaiting(); // Force immediate activation
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keyList => {
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        keyList.map(key => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName); // Delete old caches
           }
         })
       );
     })
   );
-  return self.clients.claim();
+  self.clients.claim(); // Take control of all open pages
 });
 
-// Network-first strategy
 self.addEventListener('fetch', event => {
   event.respondWith(
-    fetch(event.request)
-      .then(networkResponse => {
-        const responseClone = networkResponse.clone();
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, responseClone);
-        });
-        return networkResponse;
-      })
-      .catch(() => caches.match(event.request))
+    caches.match(event.request)
+      .then(response => response || fetch(event.request))
   );
-});
-
-// Listen for message from client to skip waiting
-self.addEventListener('message', event => {
-  if (event.data === 'skipWaiting') {
-    self.skipWaiting();
-  }
 });
