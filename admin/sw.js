@@ -1,4 +1,5 @@
-const CACHE_NAME = 'batisha-admin-v1';
+const CACHE_NAME = 'batisha-admin-v2'; // INCREMENT THIS WHEN YOU UPDATE
+
 const urlsToCache = [
   '/admin/',
   '/admin/dashboard/',
@@ -12,29 +13,31 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
   );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
-      .then(response => {
-        if (response) return response;
-        
-        return fetch(event.request).then(networkResponse => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, responseClone);
-            });
-          }
-          return networkResponse;
-        });
-      })
-      .catch(() => caches.match('/admin/'))
+      .then(response => response || fetch(event.request))
   );
 });
 
-// Handle notification clicks
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   event.waitUntil(
