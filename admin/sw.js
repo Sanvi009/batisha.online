@@ -1,4 +1,4 @@
-const CACHE_NAME = 'batisha-admin-v2'; // INCREMENT THIS WHEN YOU UPDATE
+const CACHE_NAME = 'batisha-admin-v3'; // INCREMENT THIS WHEN YOU UPDATE
 
 const urlsToCache = [
   '/admin/',
