@@ -25,6 +25,40 @@
     .cart-pill:hover { background: #e4edf7; border-color: #b8cee0; }
     .cart-pill span { background: #1f8b4c; color: white; border-radius: 40px; padding: 0.02rem 0.6rem; font-size: 0.65rem; font-weight: 600; }
     .container { max-width: 1400px; margin: 0 auto; padding: 1.2rem 1.2rem 2rem; }
+
+    /* ----- ANNOUNCEMENT TICKER (NEW) ----- */
+    .announcement-wrapper {
+      width: 100%;
+      background: #fefce8;
+      border-bottom: 1px solid #fde68a;
+      padding: 0.4rem 0;
+      overflow: hidden;
+      display: none; /* Hidden by default, JS will show if active */
+      position: relative;
+      z-index: 99;
+    }
+    .announcement-track {
+      display: flex;
+      white-space: nowrap;
+      animation: scrollText 25s linear infinite;
+      width: max-content;
+    }
+    .announcement-track span {
+      padding: 0 2rem;
+      font-size: 0.8rem;
+      color: #92400e;
+      font-weight: 500;
+    }
+    @keyframes scrollText {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    /* Pause on hover */
+    .announcement-wrapper:hover .announcement-track {
+      animation-play-state: paused;
+    }
+    /* ----- END ANNOUNCEMENT TICKER ----- */
+
     .category-section { margin-bottom: 2.5rem; }
     .category-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; border-bottom: 2px solid #e8edf2; padding-bottom: 0.6rem; }
     .category-title { font-size: 1.4rem; font-weight: 700; color: #1a3428; }
@@ -72,6 +106,7 @@
       .navbar { padding: 0.6rem 1rem; }
       .logo-text { font-size: 1.1rem; }
       .logo-image { width: 58px; height: 58px; }
+      .announcement-track span { font-size: 0.7rem; padding: 0 1.5rem; }
       .mobile-bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid #e4eaf0; box-shadow: 0 -4px 16px rgba(0,0,0,0.04); justify-content: space-around; align-items: center; padding: 0.5rem 0 0.7rem; z-index: 200; }
       .mobile-bottom-nav a { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #4b5f6b; font-size: 0.55rem; font-weight: 500; gap: 0.15rem; padding: 0.2rem 0.6rem; transition: 0.2s; flex: 1; max-width: 100px; border-radius: 8px; }
       .mobile-bottom-nav a:hover { color: #1f8b4c; background: #f0f8f2; }
@@ -114,6 +149,15 @@
       </div>
     </div>
   </nav>
+
+  <!-- ===== ANNOUNCEMENT TICKER (NEW) ===== -->
+  <div class="announcement-wrapper" id="announcementWrapper">
+    <div class="announcement-track" id="announcementTrack">
+      <!-- Content will be injected by JS -->
+    </div>
+  </div>
+  <!-- ======================================= -->
+
   <div class="mobile-bottom-nav">
     <a href="/product/">
       <span class="nav-icon">
@@ -152,6 +196,7 @@
     (function() {
       'use strict';
       const TABLE_NAME = 'product';
+      const ANNOUNCE_TABLE = 'announcements'; // Your new table
       let supabaseUrl = null, supabaseAnonKey = null, allProducts = [], popupTimeout = null;
       const loadingState = document.getElementById('loadingState');
       const errorState = document.getElementById('errorState');
@@ -160,6 +205,11 @@
       const mobileCartCountSpan = document.getElementById('mobileCartCount');
       const toastContainer = document.getElementById('toastContainer');
       const simplePopup = document.getElementById('simplePopup');
+      
+      // Announcement elements
+      const announcementWrapper = document.getElementById('announcementWrapper');
+      const announcementTrack = document.getElementById('announcementTrack');
+
       async function fetchConfig() {
         try {
           const resp = await fetch('/api/config');
@@ -169,6 +219,39 @@
           return true;
         } catch { return false; }
       }
+
+      // ==========================================
+      // FETCH ANNOUNCEMENT LOGIC
+      // ==========================================
+      async function fetchAnnouncement() {
+        try {
+          const response = await fetch(`${supabaseUrl}/rest/v1/${ANNOUNCE_TABLE}?select=*&limit=1`, {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (!response.ok) throw new Error('Failed to fetch announcement');
+          const data = await response.json();
+          if (data && data.length > 0) {
+            const row = data[0];
+            if (row.is_active === true && row.text && row.text.trim() !== '') {
+              // Show and populate the ticker
+              announcementWrapper.style.display = 'block';
+              // We duplicate the text twice so the scrolling loop looks seamless
+              const text = escapeHtml(row.text);
+              announcementTrack.innerHTML = `<span>${text}</span><span>${text}</span><span>${text}</span><span>${text}</span>`;
+            } else {
+              // Hide if inactive or empty
+              announcementWrapper.style.display = 'none';
+            }
+          } else {
+            announcementWrapper.style.display = 'none';
+          }
+        } catch (error) {
+          console.error('Announcement fetch error:', error);
+          announcementWrapper.style.display = 'none';
+        }
+      }
+      // ==========================================
+
       async function fetchProducts() {
         try {
           loadingState.style.display = 'block'; errorState.style.display = 'none'; categoryContainer.style.display = 'none';
@@ -245,7 +328,14 @@
         toast.classList.add('removing');
         setTimeout(() => { if (toast.parentElement) toast.remove(); }, 300);
       }
-      async function init() { updateCartCount(); const ok = await fetchConfig(); if (ok) await fetchProducts(); }
+      async function init() { 
+        updateCartCount(); 
+        const ok = await fetchConfig(); 
+        if (ok) {
+          await fetchAnnouncement(); // Load announcement first
+          await fetchProducts(); 
+        }
+      }
       window.addEventListener('DOMContentLoaded', init); window.addEventListener('storage', updateCartCount);
       const style = document.createElement('style'); style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`; document.head.appendChild(style);
     })();
