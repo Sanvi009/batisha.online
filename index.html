@@ -329,13 +329,23 @@
         setTimeout(() => { if (toast.parentElement) toast.remove(); }, 300);
       }
       async function init() { 
-        updateCartCount(); 
-        const ok = await fetchConfig(); 
-        if (ok) {
-          await fetchAnnouncement(); // Load announcement first
-          await fetchProducts(); 
-        }
-      }
+  try {
+    updateCartCount(); 
+    const ok = await fetchConfig(); 
+    if (!ok) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'block';
+      return;
+    }
+    
+    await fetchAnnouncement(); // Load announcement first
+    await fetchProducts(); 
+  } catch (err) {
+    console.error('Init error:', err);
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('errorState').style.display = 'block';
+  }
+}
       window.addEventListener('DOMContentLoaded', init); window.addEventListener('storage', updateCartCount);
       const style = document.createElement('style'); style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`; document.head.appendChild(style);
     })();
