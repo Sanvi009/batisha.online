@@ -4,11 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>Admin · Batisha online</title>
-  <link rel="manifest" href="/admin/manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Batisha Admin">
-  <link rel="apple-touch-icon" href="/admin/assets/admin-icon-192.png">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #fcfcfc; min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 1.5rem; margin: 0; color: #1e2b3a; }
@@ -101,23 +96,6 @@
       function init() { if (checkExistingSession()) return; loginForm.addEventListener('submit', handleLogin); usernameInput.addEventListener('input', hideError); passwordInput.addEventListener('input', hideError); usernameInput.focus(); }
       window.addEventListener('DOMContentLoaded', init);
     })();
-  </script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/admin/sw.js', { scope: '/admin/' })
-        .then(registration => {
-          registration.update();
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                window.location.reload();
-              }
-            });
-          });
-        })
-        .catch(err => console.log('❌ Admin SW registration failed:', err));
-    }
   </script>
 </body>
 </html>
