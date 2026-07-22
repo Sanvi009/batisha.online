@@ -532,7 +532,7 @@
     }
 
     /* ============================================== */
-    /* ----- PRODUCT ASSIGNMENT MODAL (NEW) ----- */
+    /* ----- PRODUCT ASSIGNMENT MODAL (CLEAN) ----- */
     /* ============================================== */
     .assign-modal .modal-box {
       max-width: 750px;
@@ -571,12 +571,12 @@
       flex: 1;
     }
 
-    /* --- Section Titles --- */
+    /* Section Titles */
     .assign-section-title {
       font-size: 0.8rem;
       font-weight: 700;
       color: #1a1f36;
-      margin: 0.6rem 0 0.4rem;
+      margin: 0.8rem 0 0.4rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -590,41 +590,38 @@
       font-weight: 600;
     }
 
-    /* --- Search Bar --- */
-    .assign-search-wrapper {
+    /* Tabs for Add Mode */
+    .assign-tabs {
       display: flex;
       gap: 0.3rem;
       margin-bottom: 0.6rem;
     }
-    .assign-search-wrapper input {
-      flex: 1;
-      padding: 0.4rem 0.7rem;
-      border: 1px solid #e4ece8;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      background: #f8fbf9;
-      outline: none;
-      transition: 0.15s;
-    }
-    .assign-search-wrapper input:focus {
-      border-color: #1f8b4c;
-      box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
-      background: #ffffff;
-    }
-    .assign-search-wrapper button {
-      background: #1f8b4c;
-      color: white;
-      border: none;
-      padding: 0.3rem 0.8rem;
-      border-radius: 8px;
+    .assign-tab {
+      padding: 0.25rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.65rem;
       font-weight: 600;
-      font-size: 0.7rem;
+      border: 1px solid #e4eaf0;
+      background: white;
+      color: #4b5f6b;
       cursor: pointer;
       transition: 0.15s;
+      flex: 1;
+      text-align: center;
     }
-    .assign-search-wrapper button:hover { background: #0f6e3a; }
+    .assign-tab.active {
+      background: #1f8b4c;
+      color: white;
+      border-color: #1f8b4c;
+    }
+    .assign-tab:hover:not(.active) { background: #f0f3f7; }
 
-    /* --- Tiny Card Grid --- */
+    .assign-panel {
+      display: none;
+    }
+    .assign-panel.active { display: block; }
+
+    /* Tiny Grid */
     .tiny-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -642,7 +639,7 @@
       position: relative;
       overflow: hidden;
     }
-    .tiny-card:hover { border-color: #b8cee0; transform: translateY(-1px); }
+    .tiny-card:hover { border-color: #b8cee0; }
     .tiny-card.selected {
       border-color: #1f8b4c;
       background: #f0fdf4;
@@ -711,17 +708,18 @@
       transition: 0.15s;
       width: 100%;
       margin-top: 0.2rem;
+      display: none;
     }
     .load-more-btn:hover { background: #e8edf2; }
     .load-more-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .assign-actions-row {
+    .assign-action-row {
       display: flex;
       gap: 0.4rem;
       margin-top: 0.4rem;
       flex-wrap: wrap;
     }
-    .assign-actions-row .btn {
+    .assign-action-row .btn {
       padding: 0.3rem 0.8rem;
       border-radius: 30px;
       font-size: 0.65rem;
@@ -736,7 +734,7 @@
     .btn-assign-selected:hover { background: #0f6e3a; }
     .btn-assign-selected:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* --- Assigned List (Bottom) --- */
+    /* Assigned List */
     .assigned-list {
       display: flex;
       flex-direction: column;
@@ -752,10 +750,6 @@
       border-radius: 8px;
       padding: 0.3rem 0.5rem;
       transition: 0.15s;
-    }
-    .assigned-item.selected {
-      border-color: #dc2626;
-      background: #fef2f2;
     }
     .assigned-item-img {
       width: 32px;
@@ -816,7 +810,7 @@
     .btn-xs-remove { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
     .btn-xs-remove:hover { background: #fee2e2; }
 
-    /* --- Inline Edit Price --- */
+    /* Inline Edit Price */
     .inline-edit-wrapper {
       display: flex;
       align-items: center;
@@ -845,26 +839,6 @@
     .inline-edit-wrapper .btn-save-price:hover { background: #0f6e3a; }
     .inline-edit-wrapper .btn-cancel-price { background: #f3f6f8; color: #1a1f36; border: 1px solid #e4eaf0; }
     .inline-edit-wrapper .btn-cancel-price:hover { background: #e8edf2; }
-
-    .assigned-bulk-actions {
-      display: flex;
-      gap: 0.3rem;
-      margin-top: 0.2rem;
-      padding-top: 0.4rem;
-      border-top: 1px solid #eef2f6;
-    }
-    .assigned-bulk-actions .btn {
-      padding: 0.2rem 0.6rem;
-      border-radius: 30px;
-      font-size: 0.6rem;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      transition: 0.15s;
-    }
-    .btn-bulk-remove { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-    .btn-bulk-remove:hover { background: #fee2e2; }
-    .btn-bulk-remove:disabled { opacity: 0.5; cursor: not-allowed; }
 
     /* ----- MODAL (Standard) ----- */
     .modal-overlay {
@@ -936,7 +910,6 @@
       .page-title { font-size: 1rem; }
       .menu-toggle { display: none; }
       .sidebar-overlay, .sidebar { display: none !important; }
-      .assign-modal .modal-box { border-radius: 16px; }
       .tiny-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
     }
 
@@ -1084,7 +1057,7 @@
   </div>
 
   <!-- ============================================== -->
-  <!-- PRODUCT ASSIGNMENT MODAL (NEW INTERFACE)       -->
+  <!-- PRODUCT ASSIGNMENT MODAL (CLEAN & WORKING)     -->
   <!-- ============================================== -->
   <div id="assignModal" class="modal-overlay assign-modal">
     <div class="modal-box">
@@ -1095,39 +1068,85 @@
       
       <div class="assign-modal-scroll">
         
-        <!-- SECTION 1: ADD PRODUCTS (Search + Grid) -->
-        <div class="assign-section-title">
-          Add Existing Products
-          <span class="badge" id="selectionCount">0 selected</span>
+        <!-- TABS -->
+        <div class="assign-tabs">
+          <button class="assign-tab active" data-tab="existing">📦 From Existing</button>
+          <button class="assign-tab" data-tab="manual">✏️ Add New</button>
         </div>
-        
-        <div class="assign-search-wrapper">
-          <input type="text" id="assignSearchInput" placeholder="Search products...">
-          <button id="assignSearchBtn">Search</button>
-        </div>
-        
-        <div id="tinyGridContainer">
+
+        <!-- PANEL: EXISTING PRODUCTS -->
+        <div class="assign-panel active" id="panelExisting">
+          <div class="assign-section-title">
+            Select Products
+            <span class="badge" id="selectionCount">0 selected</span>
+          </div>
+          
+          <div style="display:flex;gap:0.3rem;margin-bottom:0.6rem;">
+            <input type="text" id="assignSearchInput" placeholder="Search products..." style="flex:1;padding:0.4rem 0.7rem;border:1px solid #e4ece8;border-radius:8px;font-size:0.8rem;background:#f8fbf9;outline:none;">
+            <button id="assignSearchBtn" style="background:#1f8b4c;color:white;border:none;padding:0.3rem 0.8rem;border-radius:8px;font-weight:600;font-size:0.7rem;cursor:pointer;">Search</button>
+          </div>
+          
           <div class="tiny-grid" id="tinyGrid"></div>
           <button class="load-more-btn" id="loadMoreBtn">Load More</button>
-        </div>
-        
-        <div class="assign-actions-row">
-          <button class="btn btn-assign-selected" id="assignSelectedBtn">➕ Assign Selected</button>
+          
+          <div class="assign-action-row">
+            <button class="btn btn-assign-selected" id="assignSelectedBtn">➕ Assign Selected</button>
+          </div>
         </div>
 
-        <hr style="border: none; border-top: 1px solid #eef2f6; margin: 0.8rem 0;">
+        <!-- PANEL: MANUAL NEW PRODUCT -->
+        <div class="assign-panel" id="panelManual">
+          <div class="assign-section-title">Create New Product & Assign</div>
+          <form id="assignManualForm" style="display:flex;flex-direction:column;gap:0.5rem;">
+            <div class="form-group">
+              <label for="assignManualTitle">Title *</label>
+              <input type="text" id="assignManualTitle" class="form-input" placeholder="Product name" required>
+            </div>
+            <div class="form-group">
+              <label for="assignManualPrice">Price (৳) *</label>
+              <input type="number" id="assignManualPrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="assignManualCategory">Category *</label>
+              <select id="assignManualCategory" class="form-input" required>
+                <option value="">Select category</option>
+                <option value="electronics">Electronics</option>
+                <option value="grocery">Grocery</option>
+                <option value="medicine">Medicine</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="fruits">Fruits</option>
+                <option value="bakery">Bakery Items</option>
+                <option value="others">Others</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="assignManualDescription">Description</label>
+              <textarea id="assignManualDescription" class="form-input" placeholder="Product description..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Product Image</label>
+              <div class="file-upload-wrapper">
+                <label class="file-upload-label" for="assignManualImage">
+                  📁 Choose Image
+                  <input type="file" id="assignManualImage" accept="image/*">
+                </label>
+                <span id="assignFileName" style="color:#6b7a86;font-size:0.7rem;margin-left:0.3rem;"></span>
+              </div>
+              <img id="assignImagePreview" class="image-preview" src="" alt="Preview">
+            </div>
+            <button type="submit" class="btn-submit" id="assignManualSubmitBtn" style="flex:none;padding:0.45rem 1rem;">➕ Add & Assign</button>
+          </form>
+        </div>
 
-        <!-- SECTION 2: CURRENTLY ASSIGNED PRODUCTS -->
+        <hr style="border:none;border-top:1px solid #eef2f6;margin:0.8rem 0;">
+
+        <!-- ASSIGNED PRODUCTS LIST -->
         <div class="assign-section-title">
           Currently Assigned
           <span class="badge" id="assignedCount">0 items</span>
         </div>
 
         <div class="assigned-list" id="assignedList"></div>
-        
-        <div class="assigned-bulk-actions">
-          <button class="btn btn-bulk-remove" id="bulkRemoveBtn" disabled>🗑️ Remove Selected</button>
-        </div>
 
       </div> <!-- end modal-scroll -->
     </div>
@@ -1159,6 +1178,23 @@
       const PRODUCTS_TABLE = 'product';
       const SHOP_IMAGES_BUCKET = 'shop-images';
 
+      // Shop CRUD variables
+      let selectedShopImageFile = null; // <-- FIXED: This was missing
+      let editingShopId = null;
+      let deleteTargetId = null;
+      let deleteTargetName = null;
+
+      // Assign Modal variables
+      let activeAssignShopId = null;
+      let assignedProductIds = [];
+      let globalProductsCache = [];
+      let gridOffset = 0;
+      const GRID_LIMIT = 12;
+      let gridTotalCount = 0;
+      let selectedProductIds = new Set();
+      let isLoadingMore = false;
+      let editingPriceItemId = null;
+
       const addShopForm = document.getElementById('addShopForm');
       const shopForm = document.getElementById('shopForm');
       const toggleFormBtn = document.getElementById('toggleFormBtn');
@@ -1179,10 +1215,13 @@
       const modalCancelBtn = document.getElementById('modalCancelBtn');
       const modalConfirmBtn = document.getElementById('modalConfirmBtn');
 
-      // ASSIGN MODAL ELEMENTS (NEW)
+      // Assign Modal Elements
       const assignModal = document.getElementById('assignModal');
       const assignModalClose = document.getElementById('assignModalClose');
       const assignShopName = document.getElementById('assignShopName');
+      const assignTabs = document.querySelectorAll('.assign-tab');
+      const panelExisting = document.getElementById('panelExisting');
+      const panelManual = document.getElementById('panelManual');
       const assignSearchInput = document.getElementById('assignSearchInput');
       const assignSearchBtn = document.getElementById('assignSearchBtn');
       const tinyGrid = document.getElementById('tinyGrid');
@@ -1191,30 +1230,17 @@
       const selectionCount = document.getElementById('selectionCount');
       const assignedList = document.getElementById('assignedList');
       const assignedCount = document.getElementById('assignedCount');
-      const bulkRemoveBtn = document.getElementById('bulkRemoveBtn');
+      const assignManualForm = document.getElementById('assignManualForm');
+      const assignManualSubmitBtn = document.getElementById('assignManualSubmitBtn');
+      const assignManualImage = document.getElementById('assignManualImage');
+      const assignFileName = document.getElementById('assignFileName');
+      const assignImagePreview = document.getElementById('assignImagePreview');
 
-      // SIDEBAR TOGGLE
+      // Sidebar
       const menuToggle = document.getElementById('menuToggle');
       const sidebar = document.getElementById('sidebar');
       const sidebarOverlay = document.getElementById('sidebarOverlay');
       const logoutBtn = document.getElementById('logoutButton');
-
-      let allShops = [];
-      let activeAssignShopId = null;
-      let assignedProductIds = [];
-      
-      // Grid state
-      let globalProductsCache = [];
-      let gridOffset = 0;
-      const GRID_LIMIT = 12;
-      let gridTotalCount = 0;
-      let selectedProductIds = new Set();
-      let isLoadingMore = false;
-      let isSearching = false;
-
-      // Assigned list state
-      let selectedAssignedIds = new Set();
-      let editingPriceItemId = null;
 
       function toggleSidebar(open) {
         if (open === undefined) open = !sidebar.classList.contains('open');
@@ -1271,6 +1297,27 @@
         return `${supabaseUrl}/storage/v1/object/public/product/${uniqueName}`;
       }
 
+      // === SHOP CRUD ===
+
+      shopImage.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          selectedShopImageFile = file;
+          fileName.textContent = file.name;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            imagePreview.src = event.target.result;
+            imagePreview.classList.add('active');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          selectedShopImageFile = null;
+          fileName.textContent = '';
+          imagePreview.classList.remove('active');
+          imagePreview.src = '';
+        }
+      });
+
       function showForm() {
         addShopForm.classList.add('active');
         toggleFormBtn.textContent = '✖ Close';
@@ -1292,26 +1339,55 @@
       });
       cancelFormBtn.addEventListener('click', hideForm);
 
-      shopImage.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          selectedShopImageFile = file;
-          fileName.textContent = file.name;
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            imagePreview.src = event.target.result;
-            imagePreview.classList.add('active');
-          };
-          reader.readAsDataURL(file);
-        } else {
+      shopForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('shopName').value.trim();
+        const location = document.getElementById('shopLocation').value.trim();
+        const proprietor = document.getElementById('shopProprietor').value.trim();
+        
+        if (!name) { showToast('Shop name is required!', 'error'); return; }
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Saving...';
+        try {
+          let imageUrl = null;
+          if (selectedShopImageFile) {
+            imageUrl = await uploadShopImage(selectedShopImageFile);
+          }
+          
+          const body = { name, location, proprietor, image_url: imageUrl };
+          let response;
+          if (editingShopId) {
+            response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?id=eq.${editingShopId}`, {
+              method: 'PATCH',
+              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+              body: JSON.stringify(body),
+            });
+          } else {
+            response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}`, {
+              method: 'POST',
+              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+              body: JSON.stringify(body),
+            });
+          }
+          if (!response.ok) throw new Error('Save failed');
+          showToast(editingShopId ? '✅ Shop updated!' : '✅ Shop added!');
+          shopForm.reset();
           selectedShopImageFile = null;
-          fileName.textContent = '';
           imagePreview.classList.remove('active');
           imagePreview.src = '';
+          fileName.textContent = '';
+          hideForm();
+          await fetchShops();
+        } catch (error) {
+          showToast('Failed to save shop: ' + error.message, 'error');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '💾 Save Shop';
         }
       });
 
-      // ----- FETCH SHOPS -----
+      // === FETCH SHOPS ===
       async function fetchShops() {
         try {
           showState('loading');
@@ -1338,6 +1414,8 @@
           showState('table');
         } catch { showState('error'); }
       }
+
+      let allShops = [];
 
       function renderShops(shops) {
         shopList.innerHTML = '';
@@ -1407,55 +1485,7 @@
         }
       }
 
-      // ----- CREATE / UPDATE SHOP -----
-      shopForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = document.getElementById('shopName').value.trim();
-        const location = document.getElementById('shopLocation').value.trim();
-        const proprietor = document.getElementById('shopProprietor').value.trim();
-        
-        if (!name) { showToast('Shop name is required!', 'error'); return; }
-        
-        submitBtn.disabled = true;
-        submitBtn.textContent = '⏳ Saving...';
-        try {
-          let imageUrl = null;
-          if (selectedShopImageFile) {
-            imageUrl = await uploadShopImage(selectedShopImageFile);
-          }
-          
-          const body = { name, location, proprietor, image_url: imageUrl };
-          let response;
-          if (editingShopId) {
-            response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?id=eq.${editingShopId}`, {
-              method: 'PATCH',
-              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-              body: JSON.stringify(body),
-            });
-          } else {
-            response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}`, {
-              method: 'POST',
-              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-              body: JSON.stringify(body),
-            });
-          }
-          if (!response.ok) throw new Error('Save failed');
-          showToast(editingShopId ? '✅ Shop updated!' : '✅ Shop added!');
-          shopForm.reset();
-          selectedShopImageFile = null;
-          imagePreview.classList.remove('active');
-          imagePreview.src = '';
-          fileName.textContent = '';
-          hideForm();
-          await fetchShops();
-        } catch (error) {
-          showToast('Failed to save shop: ' + error.message, 'error');
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.textContent = '💾 Save Shop';
-        }
-      });
-
+      // === SHOP EDIT & DELETE ===
       window.startEditShop = function(shopId) {
         const shop = allShops.find(s => s.id === shopId);
         if (!shop) return;
@@ -1475,20 +1505,15 @@
         document.getElementById('shopName').focus();
       };
 
-      // ----- DELETE SHOP -----
-      function showDeleteModal(shopId, shopName) {
+      window.confirmDeleteShop = function(shopId, shopName) {
         deleteTargetId = shopId;
         deleteTargetName = shopName;
         deleteMessage.innerHTML = `Delete shop <strong>"${escapeHtml(shopName)}"</strong>?<br>All product assignments will also be removed.`;
         deleteModal.style.display = 'flex';
-      }
-      function hideDeleteModal() {
-        deleteModal.style.display = 'none';
-        deleteTargetId = null;
-        deleteTargetName = null;
-      }
-      modalCancelBtn.addEventListener('click', hideDeleteModal);
-      deleteModal.addEventListener('click', (e) => { if (e.target === deleteModal) hideDeleteModal(); });
+      };
+
+      modalCancelBtn.addEventListener('click', () => { deleteModal.style.display = 'none'; });
+      deleteModal.addEventListener('click', (e) => { if (e.target === deleteModal) deleteModal.style.display = 'none'; });
 
       modalConfirmBtn.addEventListener('click', async () => {
         if (!deleteTargetId) return;
@@ -1500,26 +1525,15 @@
             headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
           });
           if (!response.ok) throw new Error('Delete failed');
-          allShops = allShops.filter(s => s.id !== deleteTargetId);
-          const row = document.querySelector(`tr[data-id="${deleteTargetId}"]`);
-          if (row) { row.style.opacity = '0'; setTimeout(() => row.remove(), 300); }
           showToast(`🗑️ "${deleteTargetName}" deleted!`);
-          if (allShops.length === 0) showState('empty');
-          else fetchShops();
+          await fetchShops();
         } catch (error) { showToast('Failed to delete: ' + error.message, 'error'); }
-        hideDeleteModal();
+        deleteModal.style.display = 'none';
         modalConfirmBtn.disabled = false;
         modalConfirmBtn.textContent = 'Delete';
       });
 
-      window.confirmDeleteShop = function(shopId, shopName) {
-        showDeleteModal(shopId, shopName);
-      };
-
-      // =========================================================================
-      // =================== NEW ASSIGN MODAL LOGIC ==============================
-      // =========================================================================
-
+      // === ASSIGN MODAL LOGIC ===
       window.openAssignModal = async function(shopId) {
         const shop = allShops.find(s => s.id === shopId);
         if (!shop) return;
@@ -1528,16 +1542,12 @@
         assignModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
         
-        // Reset state
         selectedProductIds.clear();
-        selectedAssignedIds.clear();
         editingPriceItemId = null;
         globalProductsCache = [];
         gridOffset = 0;
-        isSearching = false;
         assignSearchInput.value = '';
         updateSelectionCount();
-        bulkRemoveBtn.disabled = true;
 
         await loadAssignedProducts(shopId);
         await loadGridProducts();
@@ -1552,9 +1562,19 @@
       assignModalClose.addEventListener('click', closeAssignModal);
       assignModal.addEventListener('click', (e) => { if (e.target === assignModal) closeAssignModal(); });
 
-      // --- Fetch Assigned Products ---
+      // Tabs
+      assignTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          assignTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const panelId = tab.dataset.tab === 'existing' ? 'panelExisting' : 'panelManual';
+          document.querySelectorAll('.assign-panel').forEach(p => p.classList.remove('active'));
+          document.getElementById(panelId).classList.add('active');
+        });
+      });
+
+      // === ASSIGNED PRODUCTS ===
       async function loadAssignedProducts(shopId) {
-        // Get product IDs
         const linkRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}?shop_id=eq.${shopId}&select=product_id`, {
           headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
         });
@@ -1568,14 +1588,12 @@
           return;
         }
 
-        // Fetch product details
         const ids = assignedProductIds.join(',');
         const prodRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?id=in.(${ids})&select=*`, {
           headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
         });
         if (!prodRes.ok) return;
         const products = await prodRes.json();
-        
         renderAssignedList(products);
         assignedCount.textContent = `${products.length} items`;
       }
@@ -1586,7 +1604,6 @@
           const div = document.createElement('div');
           div.className = 'assigned-item';
           div.dataset.id = p.id;
-          if (selectedAssignedIds.has(p.id)) div.classList.add('selected');
 
           const isEditing = editingPriceItemId === p.id;
           const imgHtml = p.image_url 
@@ -1622,7 +1639,6 @@
         });
       }
 
-      // --- Assigned List Actions ---
       window.startPriceEdit = function(productId) {
         if (editingPriceItemId !== null) window.cancelPriceEdit(editingPriceItemId);
         editingPriceItemId = productId;
@@ -1638,11 +1654,10 @@
         const newPrice = parseFloat(input.value);
         if (isNaN(newPrice) || newPrice < 0) { showToast('Invalid price', 'error'); return; }
 
-        // Find the original product
         const original = await fetchProductById(productId);
         if (!original) return;
 
-        // 1. Create duplicate product
+        // 1. Create duplicate
         const dupRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}`, {
           method: 'POST',
           headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
@@ -1700,37 +1715,7 @@
         return data[0] || null;
       }
 
-      // --- Bulk Remove Assigned ---
-      assignedList.addEventListener('click', (e) => {
-        const item = e.target.closest('.assigned-item');
-        if (!item) return;
-        if (e.target.closest('.assigned-item-actions')) return;
-        const id = parseInt(item.dataset.id);
-        if (selectedAssignedIds.has(id)) {
-          selectedAssignedIds.delete(id);
-          item.classList.remove('selected');
-        } else {
-          selectedAssignedIds.add(id);
-          item.classList.add('selected');
-        }
-        bulkRemoveBtn.disabled = selectedAssignedIds.size === 0;
-      });
-
-      bulkRemoveBtn.addEventListener('click', async () => {
-        if (selectedAssignedIds.size === 0) return;
-        if (!confirm(`Remove ${selectedAssignedIds.size} product(s) from this shop?`)) return;
-        const ids = Array.from(selectedAssignedIds);
-        for (let id of ids) {
-          await removeAssignedProductInternal(id);
-        }
-        selectedAssignedIds.clear();
-        bulkRemoveBtn.disabled = true;
-        showToast(`🗑️ Removed ${ids.length} product(s) from shop`);
-        await loadAssignedProducts(activeAssignShopId);
-        await fetchShops();
-      });
-
-      // --- Load Grid Products (Paginated) ---
+      // === GRID (Load More) ===
       async function loadGridProducts() {
         if (isLoadingMore) return;
         isLoadingMore = true;
@@ -1741,7 +1726,6 @@
           let url = `${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?select=*&order=id.desc&limit=${GRID_LIMIT}&offset=${gridOffset}`;
           if (assignSearchInput.value.trim() !== '') {
             const q = assignSearchInput.value.trim();
-            // Simple search: title or description contains q (using ilike)
             url = `${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?select=*&or=(title.ilike.%${q}%,description.ilike.%${q}%)&order=id.desc&limit=${GRID_LIMIT}&offset=${gridOffset}`;
           }
           const res = await fetch(url, {
@@ -1818,7 +1802,6 @@
         assignSelectedBtn.disabled = selectedProductIds.size === 0;
       }
 
-      // --- Search ---
       assignSearchBtn.addEventListener('click', () => {
         gridOffset = 0;
         globalProductsCache = [];
@@ -1832,10 +1815,8 @@
         }
       });
 
-      // --- Load More ---
       loadMoreBtn.addEventListener('click', loadGridProducts);
 
-      // --- Assign Selected ---
       assignSelectedBtn.addEventListener('click', async () => {
         if (selectedProductIds.size === 0) return;
         const ids = Array.from(selectedProductIds);
@@ -1867,14 +1848,83 @@
         }
       });
 
-      // =========================================================================
+      // === MANUAL NEW PRODUCT ===
+      assignManualImage.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          selectedAssignImageFile = file;
+          assignFileName.textContent = file.name;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            assignImagePreview.src = event.target.result;
+            assignImagePreview.classList.add('active');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          selectedAssignImageFile = null;
+          assignFileName.textContent = '';
+          assignImagePreview.classList.remove('active');
+          assignImagePreview.src = '';
+        }
+      });
 
-      // ----- LOGOUT -----
+      let selectedAssignImageFile = null;
+
+      assignManualForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!activeAssignShopId) return;
+        const title = document.getElementById('assignManualTitle').value.trim();
+        const price = parseFloat(document.getElementById('assignManualPrice').value) || 0;
+        const category = document.getElementById('assignManualCategory').value;
+        const description = document.getElementById('assignManualDescription').value.trim();
+        
+        if (!title) { showToast('Title is required!', 'error'); return; }
+        if (!category) { showToast('Category is required!', 'error'); return; }
+        
+        assignManualSubmitBtn.disabled = true;
+        assignManualSubmitBtn.textContent = '⏳';
+        try {
+          let imageUrl = null;
+          if (selectedAssignImageFile) {
+            imageUrl = await uploadProductImage(selectedAssignImageFile);
+          }
+          // 1. Create product globally
+          const productRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}`, {
+            method: 'POST',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+            body: JSON.stringify({ title, price, category, description, image_url: imageUrl }),
+          });
+          if (!productRes.ok) throw new Error('Product creation failed');
+          const [newProduct] = await productRes.json();
+          // 2. Link to shop
+          const linkRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}`, {
+            method: 'POST',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ shop_id: activeAssignShopId, product_id: newProduct.id })
+          });
+          if (!linkRes.ok) throw new Error('Linking failed');
+          showToast(`✅ New product "${title}" created and assigned!`);
+          assignManualForm.reset();
+          selectedAssignImageFile = null;
+          assignImagePreview.classList.remove('active');
+          assignImagePreview.src = '';
+          assignFileName.textContent = '';
+          await loadAssignedProducts(activeAssignShopId);
+          await fetchShops();
+        } catch (error) {
+          showToast('Failed: ' + error.message, 'error');
+        } finally {
+          assignManualSubmitBtn.disabled = false;
+          assignManualSubmitBtn.textContent = '➕ Add & Assign';
+        }
+      });
+
+      // === LOGOUT ===
       function handleLogout() { localStorage.removeItem(SESSION_KEY); window.location.replace(LOGIN_PATH); }
       logoutBtn.addEventListener('click', handleLogout);
       setInterval(() => { if (!hasValidSession()) handleLogout(); }, 5000);
 
-      // ----- INIT -----
+      // === INIT ===
       async function init() {
         const configOk = await fetchConfig();
         if (configOk) {
