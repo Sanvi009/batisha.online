@@ -103,14 +103,14 @@
       padding: 1.2rem 1.2rem 2rem; 
     }
 
-    /* --- ANNOUNCEMENT TICKER (CLEAN CSS) --- */
+    /* --- ANNOUNCEMENT TICKER --- */
     .announcement-wrapper {
       width: 100%;
       background: #fefce8;
       border-bottom: 1px solid #fde68a;
       padding: 0.4rem 0;
       overflow: hidden;
-      display: none; /* Hidden by default, JS will show if active */
+      display: none;
       position: relative;
       z-index: 99;
     }
@@ -365,42 +365,43 @@
       to { opacity: 0; transform: translateX(80px) scale(0.9); } 
     }
 
-    /* --- QUICK VIEW MODAL --- */
+    /* --- QUICK VIEW MODAL (IMPROVED LIGHTWEIGHT) --- */
     .quickview-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       z-index: 9999;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 1rem;
-      animation: fadeIn 0.25s ease;
+      animation: qvFadeIn 0.2s ease;
     }
     .quickview-overlay.active {
       display: flex;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.96); }
+    @keyframes qvFadeIn {
+      from { opacity: 0; transform: scale(0.97); }
       to { opacity: 1; transform: scale(1); }
     }
     .quickview-modal {
       background: #ffffff;
-      border-radius: 20px;
+      border-radius: 24px;
       max-width: 600px;
       width: 100%;
-      max-height: 90vh;
+      max-height: 92vh;
       overflow-y: auto;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
       display: flex;
       flex-direction: column;
-      padding: 1.5rem;
+      padding: 1.8rem 1.8rem 1.6rem;
       position: relative;
+      border: 1px solid rgba(255,255,255,0.3);
     }
     .quickview-close {
       position: absolute;
@@ -409,54 +410,64 @@
       background: #f3f6f8;
       border: none;
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       font-size: 1.1rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: 0.2s;
-      color: #1a2a3a;
+      color: #4b5f6b;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
     .quickview-close:hover {
       background: #e8edf2;
+      color: #1a2a3a;
     }
     .quickview-image {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: contain;
-      background: #f3f8f5;
-      border-radius: 12px;
+      background: #f8fbf9;
+      border-radius: 16px;
       margin-bottom: 1rem;
       border: 1px solid #eef2f6;
+      padding: 0.6rem;
     }
     .quickview-title {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 700;
       color: #1a3428;
       margin-bottom: 0.2rem;
+      line-height: 1.3;
     }
     .quickview-description {
       font-size: 0.85rem;
-      color: #4b6b5e;
-      margin-bottom: 0.8rem;
+      color: #5f6f6a;
+      margin-bottom: 0.6rem;
       line-height: 1.6;
+      max-width: 90%;
     }
     .quickview-price {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: #0f6e3a;
-      margin-bottom: 0.8rem;
+      margin-bottom: 1rem;
     }
     .quickview-price::before {
       content: '৳';
+      font-weight: 400;
+      font-size: 1.2rem;
+      margin-right: 0.1rem;
+      color: #2d7a4b;
     }
     .quickview-controls {
       display: flex;
       align-items: center;
       gap: 0.8rem;
-      margin-top: 0.4rem;
+      margin-top: 0.2rem;
+      flex-wrap: wrap;
     }
     .quickview-qty-wrapper {
       display: flex;
@@ -465,16 +476,17 @@
       border-radius: 40px;
       padding: 0.2rem;
       gap: 0.2rem;
+      border: 1px solid #eaf1ec;
     }
     .quickview-qty-btn {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       border: none;
       background: white;
       color: #1a2a3a;
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-size: 1.15rem;
+      font-weight: 500;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -485,10 +497,14 @@
     .quickview-qty-btn:hover {
       background: #1f8b4c;
       color: white;
+      box-shadow: 0 2px 8px rgba(31,139,76,0.15);
     }
     .quickview-qty-btn:disabled {
-      opacity: 0.3;
+      opacity: 0.25;
       cursor: not-allowed;
+      background: #f5f8f7;
+      color: #9ca3af;
+      box-shadow: none;
     }
     .quickview-qty-display {
       font-size: 1rem;
@@ -501,21 +517,31 @@
       background: #1f8b4c;
       color: white;
       border: none;
-      padding: 0.6rem 1.8rem;
+      padding: 0.65rem 2rem;
       border-radius: 40px;
       font-weight: 600;
       font-size: 0.9rem;
       cursor: pointer;
       transition: 0.2s;
       flex: 1;
-      box-shadow: 0 2px 10px rgba(31,139,76,0.15);
+      min-width: 140px;
+      box-shadow: 0 2px 12px rgba(31,139,76,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+    .quickview-add-btn::before {
+      content: '🛒';
+      font-size: 0.9rem;
     }
     .quickview-add-btn:hover {
       background: #0f6e3a;
-      transform: scale(1.02);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(31,139,76,0.25);
     }
     .quickview-add-btn:active {
-      transform: scale(0.96);
+      transform: scale(0.97);
     }
 
     /* --- MOBILE NAV --- */
@@ -610,10 +636,13 @@
       .toast-container { top: 70px; right: 12px; max-width: 320px; }
       .toast { padding: 10px 14px; }
       .toast-title { font-size: 0.8rem; }
-      .quickview-modal { padding: 1rem; border-radius: 16px; }
-      .quickview-title { font-size: 1rem; }
-      .quickview-price { font-size: 1.1rem; }
-      .quickview-qty-btn { width: 30px; height: 30px; font-size: 0.9rem; }
+      .quickview-modal { padding: 1.2rem 1.2rem 1.2rem; border-radius: 20px; }
+      .quickview-title { font-size: 1.1rem; }
+      .quickview-price { font-size: 1.3rem; }
+      .quickview-qty-btn { width: 34px; height: 34px; font-size: 1rem; }
+      .quickview-add-btn { padding: 0.55rem 1.2rem; font-size: 0.8rem; min-width: 100px; }
+      .quickview-description { max-width: 100%; }
+      .quickview-image { padding: 0.4rem; }
     }
 
     @media (max-width: 480px) {
@@ -625,6 +654,11 @@
       .mobile-bottom-nav a .nav-label { font-size: 0.55rem; }
       .mobile-bottom-nav .nav-home { max-width: 100px; }
       .simple-popup { bottom: 70px; padding: 0.5rem 1.2rem; font-size: 0.75rem; }
+      .quickview-modal { padding: 1rem; border-radius: 16px; }
+      .quickview-title { font-size: 1rem; }
+      .quickview-price { font-size: 1.1rem; }
+      .quickview-qty-btn { width: 30px; height: 30px; font-size: 0.9rem; }
+      .quickview-add-btn { padding: 0.5rem 1rem; font-size: 0.75rem; min-width: 80px; }
     }
   </style>
 </head>
@@ -924,9 +958,9 @@
         if (!product.image_url) {
           quickViewImage.src = '';
           quickViewImage.alt = 'No image';
-          quickViewImage.style.background = '#f3f8f5';
+          quickViewImage.style.background = '#f8fbf9';
         } else {
-          quickViewImage.style.background = '#f3f8f5';
+          quickViewImage.style.background = '#f8fbf9';
         }
         quickViewTitle.textContent = product.title || 'No title';
         quickViewDescription.textContent = product.description || '';
