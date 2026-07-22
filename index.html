@@ -175,25 +175,25 @@
     
     .products-grid { 
       display: grid; 
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); 
-      gap: 1rem; 
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); 
+      gap: 0.8rem; 
       transition: all 0.3s ease; 
     }
     .products-grid.hidden-items .product-card.hidden-item { display: none; }
     
     .product-card { 
       background: white; 
-      border-radius: 16px; 
+      border-radius: 12px; 
       overflow: hidden; 
       border: 1px solid #eef2f6; 
       transition: 0.2s ease; 
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03); 
       position: relative; 
       cursor: pointer;
     }
     .product-card:hover { 
-      transform: translateY(-4px); 
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08); 
+      transform: translateY(-3px); 
+      box-shadow: 0 6px 18px rgba(0,0,0,0.07); 
     }
     .product-card.hidden-item { display: block; }
     
@@ -213,7 +213,7 @@
       object-fit: contain; 
       transition: 0.3s; 
     }
-    .product-card:hover .product-image-frame img { transform: scale(1.05); }
+    .product-card:hover .product-image-frame img { transform: scale(1.04); }
     .product-image-placeholder { 
       position: absolute; 
       top: 0; 
@@ -223,13 +223,13 @@
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      font-size: 3rem; 
+      font-size: 2.8rem; 
       color: #2d7a4b; 
     }
     
-    .product-info { padding: 0.7rem 0.8rem 0.9rem; }
+    .product-info { padding: 0.5rem 0.6rem 0.7rem; }
     .product-title { 
-      font-size: 0.85rem; 
+      font-size: 0.8rem; 
       font-weight: 600; 
       color: #1e2e2a; 
       display: -webkit-box; 
@@ -239,23 +239,23 @@
     }
     .product-description { 
       color: #5f6f6a; 
-      font-size: 0.7rem; 
+      font-size: 0.65rem; 
       display: -webkit-box; 
       -webkit-line-clamp: 1; 
       -webkit-box-orient: vertical; 
       overflow: hidden; 
-      margin: 0.1rem 0 0.3rem; 
+      margin: 0.05rem 0 0.2rem; 
     }
     .product-footer { 
       display: flex; 
       align-items: center; 
       justify-content: space-between; 
-      padding-top: 0.4rem; 
+      padding-top: 0.3rem; 
       border-top: 1px solid #edf2ef; 
     }
     .product-price { 
       font-weight: 700; 
-      font-size: 1rem; 
+      font-size: 0.9rem; 
       color: #0f6e3a; 
     }
     .product-price::before { content: '৳'; }
@@ -263,18 +263,18 @@
       background: #1f8b4c; 
       color: white; 
       border: none; 
-      padding: 0.3rem 1rem; 
+      padding: 0.2rem 0.8rem; 
       border-radius: 30px; 
       font-weight: 600; 
-      font-size: 0.7rem; 
+      font-size: 0.65rem; 
       cursor: pointer; 
       transition: 0.2s; 
     }
     .add-to-cart-btn:hover { 
       background: #0f6e3a; 
-      transform: scale(1.05); 
+      transform: scale(1.04); 
     }
-    .add-to-cart-btn:active { transform: scale(0.95); }
+    .add-to-cart-btn:active { transform: scale(0.94); }
 
     /* --- POPUPS & TOASTS --- */
     .simple-popup { 
@@ -629,7 +629,7 @@
         display: inline-block; 
       }
       
-      .products-grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 0.8rem; }
+      .products-grid { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 0.6rem; }
       .container { padding: 1rem; }
       .category-title { font-size: 1.1rem; }
       .simple-popup { bottom: 80px; padding: 0.6rem 1.4rem; font-size: 0.8rem; }
@@ -646,10 +646,10 @@
     }
 
     @media (max-width: 480px) {
-      .products-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
-      .product-title { font-size: 0.75rem; }
-      .product-price { font-size: 0.85rem; }
-      .add-to-cart-btn { font-size: 0.65rem; padding: 0.25rem 0.8rem; }
+      .products-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+      .product-title { font-size: 0.7rem; }
+      .product-price { font-size: 0.8rem; }
+      .add-to-cart-btn { font-size: 0.6rem; padding: 0.2rem 0.7rem; }
       .toast-container { top: 60px; right: 8px; max-width: 280px; }
       .mobile-bottom-nav a .nav-label { font-size: 0.55rem; }
       .mobile-bottom-nav .nav-home { max-width: 100px; }
@@ -869,7 +869,8 @@
           section.id = `category-${cat}`;
           const header = document.createElement('div'); 
           header.className = 'category-header';
-          header.innerHTML = `<h2 class="category-title">${categoryLabels[cat] || cat} <span class="category-count">${items.length} items</span></h2>${items.length > 4 ? `<button class="category-more-btn" onclick="window.toggleCategory('${cat}')">View All <span class="arrow">▼</span></button>` : ''}`;
+          // Show "View All" only if more than 6 items
+          header.innerHTML = `<h2 class="category-title">${categoryLabels[cat] || cat} <span class="category-count">${items.length} items</span></h2>${items.length > 6 ? `<button class="category-more-btn" onclick="window.toggleCategory('${cat}')">View All <span class="arrow">▼</span></button>` : ''}`;
           section.appendChild(header);
           const grid = document.createElement('div'); 
           grid.className = 'products-grid hidden-items'; 
@@ -878,7 +879,8 @@
             const card = document.createElement('div'); 
             card.className = 'product-card';
             card.setAttribute('data-id', p.id);
-            if (index >= 4) card.classList.add('hidden-item');
+            // Hide items after the first 6
+            if (index >= 6) card.classList.add('hidden-item');
             const imgHtml = p.image_url ? `<div class="product-image-frame"><img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'"></div>` : `<div class="product-image-frame"><div class="product-image-placeholder">🥬</div></div>`;
             card.innerHTML = `${imgHtml}<div class="product-info"><h3 class="product-title">${escapeHtml(p.title || 'No title')}</h3><p class="product-description">${escapeHtml(p.description || '')}</p><div class="product-footer"><span class="product-price">${parseFloat(p.price || 0).toFixed(2)}</span><button class="add-to-cart-btn" onclick="window.addToCart(${p.id}, '${escapeHtml(p.title || 'Product')}', ${p.price || 0}, '${escapeHtml(p.image_url || '')}')">Add</button></div></div>`;
             grid.appendChild(card);
