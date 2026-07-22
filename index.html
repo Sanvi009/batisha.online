@@ -396,7 +396,7 @@
     }
     .add-to-cart-btn:active { transform: scale(0.94); }
 
-    /* --- FULL-SCREEN SHOP VIEW (NEW LAYOUT) --- */
+    /* --- FULL-SCREEN SHOP VIEW --- */
     .shop-view-overlay {
       position: fixed;
       top: 0;
@@ -422,6 +422,32 @@
       z-index: 100;
     }
 
+    /* ----- Mobile Back Button (Inside Shop View) ----- */
+    .shop-view-back-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1a2a3a;
+      cursor: pointer;
+      padding: 0.3rem 0.5rem;
+      border-radius: 30px;
+      transition: 0.15s;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .shop-view-back-btn:hover {
+      background: #f0f3f7;
+    }
+    .shop-view-back-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
     .shop-view-body {
       max-width: 1400px;
       margin: 0 auto;
@@ -430,7 +456,7 @@
       flex: 1;
     }
 
-    /* --- NEW TOP SECTION (Split Layout) --- */
+    /* --- TOP SECTION (Split Layout) --- */
     .shop-view-top {
       display: flex;
       gap: 1.5rem;
@@ -891,6 +917,11 @@
       .shop-view-shop-name { font-size: 1.2rem; }
       .shop-view-shop-proprietor { font-size: 0.8rem; }
       .shop-view-shop-location { font-size: 0.75rem; }
+
+      /* Show Back button on mobile inside Shop View */
+      .shop-view-back-btn {
+        display: flex;
+      }
     }
 
     @media (max-width: 480px) {
@@ -969,10 +1000,15 @@
           <a href="/product/" id="shopViewProducts">Products</a>
           <a href="/cart/" class="cart-pill">Cart <span id="shopViewCartCount">0</span></a>
         </div>
+        <!-- Back button for mobile (hidden on desktop) -->
+        <button class="shop-view-back-btn" id="shopViewBackBtn">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
+        </button>
       </div>
     </nav>
     <div class="shop-view-body" id="shopViewBody">
-      <!-- NEW TOP SECTION: Left Image, Right Info -->
+      <!-- TOP SECTION: Left Image, Right Info -->
       <div class="shop-view-top" id="shopViewTop">
         <div class="shop-view-image-wrapper" id="shopViewImageWrapper">
           <img id="shopViewImage" src="" alt="Shop Image" style="display:none;">
@@ -1082,6 +1118,7 @@
       const shopViewImagePlaceholder = document.getElementById('shopViewImagePlaceholder');
       const shopViewProductsGrid = document.getElementById('shopViewProductsGrid');
       const shopViewCartCount = document.getElementById('shopViewCartCount');
+      const shopViewBackBtn = document.getElementById('shopViewBackBtn');
 
       async function fetchConfig() {
         try {
@@ -1284,7 +1321,7 @@
         });
       }
 
-      // Close shop view via navbar links (Home or Products)
+      // Close shop view via navbar links (Home or Products) or Back button
       function closeShopView() {
         shopViewOverlay.classList.remove('active');
         document.body.style.overflow = '';
@@ -1301,6 +1338,13 @@
         window.location.href = '/product/';
       });
       document.getElementById('shopViewLogo').addEventListener('click', (e) => {
+        e.preventDefault();
+        closeShopView();
+        window.location.href = '/';
+      });
+      
+      // Mobile Back button
+      shopViewBackBtn.addEventListener('click', (e) => {
         e.preventDefault();
         closeShopView();
         window.location.href = '/';
