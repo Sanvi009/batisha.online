@@ -134,6 +134,126 @@
       animation-play-state: paused;
     }
 
+    /* --- SHOP CAROUSEL (Instagram Story Style) --- */
+    .shop-carousel-section {
+      padding: 0.8rem 0 0.5rem;
+      border-bottom: 1px solid #eef2f6;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    .shop-carousel-section.visible { display: block; }
+    .shop-carousel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .shop-carousel-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1a3428;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .shop-carousel-wrapper {
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 0.2rem 0;
+    }
+    .shop-carousel-wrapper::-webkit-scrollbar { display: none; }
+    .shop-carousel-track {
+      display: flex;
+      gap: 0.8rem;
+      width: max-content;
+    }
+    .shop-story-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      width: 80px;
+    }
+    .shop-story-card:hover { transform: scale(1.03); }
+    .shop-story-avatar-wrapper {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f0f8f2, #d4e8dc);
+      border: 3px solid #1f8b4c;
+      padding: 2px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(31,139,76,0.12);
+    }
+    .shop-story-avatar-wrapper img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #f8fbf9;
+    }
+    .shop-story-avatar-wrapper .placeholder {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: #2d7a4b;
+      background: #f3f8f5;
+    }
+    .shop-badge {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      background: #1f8b4c;
+      color: white;
+      font-size: 0.4rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 40px;
+      border: 2px solid white;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .shop-story-name {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: #1e2e2a;
+      text-align: center;
+      width: 80px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .shop-carousel-loading {
+      display: flex;
+      gap: 0.8rem;
+      padding: 0.2rem 0;
+    }
+    .shop-skeleton {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: #e8edf2;
+      animation: pulse 1.2s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
     /* --- CATEGORY & PRODUCT GRID --- */
     .category-section { margin-bottom: 2.5rem; }
     .category-header { 
@@ -276,6 +396,113 @@
     }
     .add-to-cart-btn:active { transform: scale(0.94); }
 
+    /* --- FULL-SCREEN SHOP VIEW (NEW) --- */
+    .shop-view-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #f8faf8;
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+      animation: shopFadeIn 0.25s ease;
+    }
+    .shop-view-overlay.active { display: flex; }
+    @keyframes shopFadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    /* Shop View uses the SAME navbar as the main site */
+    .shop-view-overlay .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .shop-view-body {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.2rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    .shop-view-profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 1.2rem 0.5rem 1.8rem;
+      border-bottom: 1px solid #eef2f6;
+      margin-bottom: 1.8rem;
+    }
+    .shop-view-profile-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #1f8b4c;
+      background: #f3f8f5;
+      box-shadow: 0 8px 24px rgba(31,139,76,0.12);
+      margin-bottom: 0.8rem;
+    }
+    .shop-view-profile-image-placeholder {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #f3f8f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.2rem;
+      color: #2d7a4b;
+      border: 4px solid #1f8b4c;
+      margin-bottom: 0.8rem;
+    }
+    .shop-view-shop-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a3428;
+      margin-bottom: 0.1rem;
+    }
+    .shop-view-shop-location {
+      font-size: 0.85rem;
+      color: #4b6b5e;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      justify-content: center;
+    }
+    .shop-view-shop-proprietor {
+      font-size: 0.8rem;
+      color: #5f6f6a;
+      margin-top: 0.1rem;
+      font-weight: 500;
+    }
+    .shop-view-shop-proprietor::before {
+      content: '👤 ';
+    }
+
+    .shop-view-products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 0.8rem;
+    }
+
+    /* Skeleton for lazy-loaded images in shop view */
+    .skeleton-image {
+      background: #e8edf2;
+      animation: pulse 1.2s infinite;
+    }
+    .skeleton-image.loaded {
+      background: transparent;
+      animation: none;
+    }
+
     /* --- POPUPS & TOASTS --- */
     .simple-popup { 
       position: fixed; 
@@ -294,7 +521,7 @@
       opacity: 0; 
       pointer-events: none; 
       transition: all 0.3s ease; 
-      z-index: 9999; 
+      z-index: 99999; 
       max-width: 90%; 
       text-align: center; 
       white-space: nowrap; 
@@ -310,7 +537,7 @@
       position: fixed; 
       top: 80px; 
       right: 16px; 
-      z-index: 9998; 
+      z-index: 99998; 
       display: flex; 
       flex-direction: column; 
       gap: 8px; 
@@ -375,7 +602,7 @@
       background: rgba(0, 0, 0, 0.45);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
-      z-index: 9999;
+      z-index: 99999;
       display: none;
       align-items: center;
       justify-content: center;
@@ -643,6 +870,13 @@
       .quickview-add-btn { padding: 0.55rem 1.2rem; font-size: 0.8rem; min-width: 100px; }
       .quickview-description { max-width: 100%; }
       .quickview-image { padding: 0.4rem; }
+
+      .shop-story-card { width: 70px; }
+      .shop-story-avatar-wrapper { width: 66px; height: 66px; }
+      .shop-story-name { width: 70px; font-size: 0.55rem; }
+      .shop-view-shop-name { font-size: 1.3rem; }
+      .shop-view-profile-image, .shop-view-profile-image-placeholder { width: 100px; height: 100px; }
+      .shop-view-products-grid { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 0.6rem; }
     }
 
     @media (max-width: 480px) {
@@ -659,19 +893,25 @@
       .quickview-price { font-size: 1.1rem; }
       .quickview-qty-btn { width: 30px; height: 30px; font-size: 0.9rem; }
       .quickview-add-btn { padding: 0.5rem 1rem; font-size: 0.75rem; min-width: 80px; }
+
+      .shop-story-card { width: 60px; }
+      .shop-story-avatar-wrapper { width: 56px; height: 56px; }
+      .shop-story-name { width: 60px; font-size: 0.5rem; }
+      .shop-view-profile-image, .shop-view-profile-image-placeholder { width: 80px; height: 80px; }
+      .shop-view-products-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
     }
   </style>
 </head>
 <body>
-  <nav class="navbar">
+  <nav class="navbar" id="mainNavbar">
     <div class="nav-container">
-      <a href="/" class="logo">
+      <a href="/" class="logo" id="mainLogo">
         <img src="/assets/logo.png" alt="Batisha Online" class="logo-image">
         <span class="logo-text">Batisha <span>online</span></span>
       </a>
       <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/product/">Products</a>
+        <a href="/" id="navHome">Home</a>
+        <a href="/product/" id="navProducts">Products</a>
         <a href="/cart/" class="cart-pill">Cart <span id="cartCount">0</span></a>
       </div>
     </div>
@@ -684,27 +924,56 @@
     </div>
   </div>
 
-  <div class="mobile-bottom-nav">
-    <a href="/product/">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4 8 4 8-4zm0 0v10l-8 4-8-4V7l8 4 8-4z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-      <span class="nav-label">Products</span>
-    </a>
-    <a href="/" class="nav-home">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-      <span class="nav-label">Home</span>
-    </a>
-    <a href="/cart/">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="20" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-      <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
-    </a>
+  <!-- ===== SHOP CAROUSEL (Instagram Story Style) ===== -->
+  <div class="container">
+    <div class="shop-carousel-section" id="shopCarouselSection">
+      <div class="shop-carousel-header">
+        <span class="shop-carousel-title">🛍️ Shops</span>
+      </div>
+      <div class="shop-carousel-wrapper" id="shopCarouselWrapper">
+        <div class="shop-carousel-track" id="shopCarouselTrack">
+          <!-- Skeleton loaders while fetching -->
+          <div class="shop-skeleton"></div>
+          <div class="shop-skeleton"></div>
+          <div class="shop-skeleton"></div>
+          <div class="shop-skeleton"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <!-- ===== SHOP VIEW OVERLAY (Full-Screen Modal with Navbar) ===== -->
+  <div class="shop-view-overlay" id="shopViewOverlay">
+    <nav class="navbar" id="shopViewNavbar">
+      <div class="nav-container">
+        <a href="/" class="logo" id="shopViewLogo">
+          <img src="/assets/logo.png" alt="Batisha Online" class="logo-image">
+          <span class="logo-text">Batisha <span>online</span></span>
+        </a>
+        <div class="nav-links">
+          <a href="/" id="shopViewHome">Home</a>
+          <a href="/product/" id="shopViewProducts">Products</a>
+          <a href="/cart/" class="cart-pill">Cart <span id="shopViewCartCount">0</span></a>
+        </div>
+      </div>
+    </nav>
+    <div class="shop-view-body" id="shopViewBody">
+      <div class="shop-view-profile" id="shopViewProfile">
+        <div id="shopViewImageContainer">
+          <img class="shop-view-profile-image" id="shopViewImage" src="" alt="Shop Image">
+          <div class="shop-view-profile-image-placeholder" id="shopViewImagePlaceholder" style="display:none;">🏪</div>
+        </div>
+        <h2 class="shop-view-shop-name" id="shopViewName">Shop Name</h2>
+        <div class="shop-view-shop-location" id="shopViewLocation">📍 Location</div>
+        <div class="shop-view-shop-proprietor" id="shopViewProprietor">Proprietor</div>
+      </div>
+      <div class="shop-view-products-grid" id="shopViewProductsGrid">
+        <!-- Products will be injected here with lazy loading -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
   <main class="container" id="mainContainer">
     <div id="loadingState" style="text-align:center;padding:2rem;">
       <div style="width:32px;height:32px;border:3px solid #e2ebe6;border-top-color:#1f8b4c;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto;"></div>
@@ -741,10 +1010,34 @@
 
   <div class="toast-container" id="toastContainer"></div>
 
+  <!-- ===== MOBILE BOTTOM NAV ===== -->
+  <div class="mobile-bottom-nav">
+    <a href="/product/">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4 8 4 8-4zm0 0v10l-8 4-8-4V7l8 4 8-4z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="nav-label">Products</span>
+    </a>
+    <a href="/" class="nav-home">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="/cart/">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="20" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
+    </a>
+  </div>
+
   <script>
     (function() {
       'use strict';
       const TABLE_NAME = 'product';
+      const SHOPS_TABLE = 'shops';
+      const SHOP_PRODUCTS_TABLE = 'shop_products';
       const ANNOUNCE_TABLE = 'announcements';
       let supabaseUrl = null, supabaseAnonKey = null, allProducts = [], popupTimeout = null;
       
@@ -758,6 +1051,18 @@
       
       const announcementWrapper = document.getElementById('announcementWrapper');
       const announcementTrack = document.getElementById('announcementTrack');
+
+      // Shop Carousel Elements
+      const shopCarouselSection = document.getElementById('shopCarouselSection');
+      const shopCarouselTrack = document.getElementById('shopCarouselTrack');
+      const shopViewOverlay = document.getElementById('shopViewOverlay');
+      const shopViewName = document.getElementById('shopViewName');
+      const shopViewLocation = document.getElementById('shopViewLocation');
+      const shopViewProprietor = document.getElementById('shopViewProprietor');
+      const shopViewImage = document.getElementById('shopViewImage');
+      const shopViewImagePlaceholder = document.getElementById('shopViewImagePlaceholder');
+      const shopViewProductsGrid = document.getElementById('shopViewProductsGrid');
+      const shopViewCartCount = document.getElementById('shopViewCartCount');
 
       async function fetchConfig() {
         try {
@@ -773,44 +1078,195 @@
         }
       }
 
+      // ----- ANNOUNCEMENT -----
       async function fetchAnnouncement() {
-        console.log("📢 Fetching announcement...");
         try {
-          if (!supabaseUrl || !supabaseAnonKey) {
-            console.log("📢 Config not ready, cannot fetch announcement.");
-            return;
-          }
-
+          if (!supabaseUrl || !supabaseAnonKey) return;
           const response = await fetch(`${supabaseUrl}/rest/v1/${ANNOUNCE_TABLE}?select=*&limit=1`, {
             headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
           });
-          if (!response.ok) throw new Error('Failed to fetch announcement');
+          if (!response.ok) return;
           const data = await response.json();
-          console.log("📢 Data received:", data);
-          
           if (data && data.length > 0) {
             const row = data[0];
-            console.log("📢 Row found:", row);
-            
             if (row.is_active === true && row.text && row.text.trim() !== '') {
-              console.log("📢 Ticker is ACTIVE. Showing text:", row.text);
               announcementWrapper.style.display = 'block';
               const text = escapeHtml(row.text);
               announcementTrack.innerHTML = `<span>${text}</span><span>${text}</span><span>${text}</span><span>${text}</span>`;
             } else {
-              console.log("📢 Ticker is INACTIVE or text empty. Hiding.");
               announcementWrapper.style.display = 'none';
             }
           } else {
-            console.log("📢 No announcement row found.");
             announcementWrapper.style.display = 'none';
           }
-        } catch (error) {
-          console.error("📢 Error fetching announcement:", error);
+        } catch {
           announcementWrapper.style.display = 'none';
         }
       }
 
+      // ----- SHOPS (Carousel) -----
+      async function fetchShops() {
+        try {
+          const response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?select=*&order=created_at.desc`, {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (!response.ok) throw new Error('Fetch failed');
+          const shops = await response.json();
+          
+          if (shops && shops.length > 0) {
+            shopCarouselSection.classList.add('visible');
+            renderShopCarousel(shops);
+          } else {
+            shopCarouselSection.classList.remove('visible');
+          }
+        } catch {
+          shopCarouselSection.classList.remove('visible');
+        }
+      }
+
+      function renderShopCarousel(shops) {
+        shopCarouselTrack.innerHTML = '';
+        shops.forEach(shop => {
+          const card = document.createElement('div');
+          card.className = 'shop-story-card';
+          card.setAttribute('data-id', shop.id);
+          
+          const imgHtml = shop.image_url 
+            ? `<img src="${escapeHtml(shop.image_url)}" alt="${escapeHtml(shop.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+            : '';
+          const placeholder = `<div class="placeholder" style="${shop.image_url ? 'display:none;' : ''}">🏪</div>`;
+          
+          card.innerHTML = `
+            <div class="shop-story-avatar-wrapper">
+              ${imgHtml}${placeholder}
+              <div class="shop-badge">Shop</div>
+            </div>
+            <div class="shop-story-name">${escapeHtml(shop.name || 'Shop')}</div>
+          `;
+          
+          card.addEventListener('click', () => openShopView(shop.id));
+          shopCarouselTrack.appendChild(card);
+        });
+      }
+
+      // ----- SHOP VIEW (Full-Screen Modal) -----
+      async function openShopView(shopId) {
+        // Fetch shop details
+        const shopRes = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?id=eq.${shopId}&select=*`, {
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+        });
+        if (!shopRes.ok) return;
+        const shopData = await shopRes.json();
+        const shop = shopData[0];
+        if (!shop) return;
+
+        // Fetch assigned product IDs
+        const linkRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}?shop_id=eq.${shopId}&select=product_id`, {
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+        });
+        if (!linkRes.ok) return;
+        const linkData = await linkRes.json();
+        const productIds = linkData.map(item => item.product_id);
+        
+        if (productIds.length === 0) {
+          shopViewProductsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#4b6b5e;">No products available for this shop yet</div>';
+        } else {
+          const ids = productIds.join(',');
+          const prodRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?id=in.(${ids})&select=*`, {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (prodRes.ok) {
+            const products = await prodRes.json();
+            renderShopProducts(products);
+          } else {
+            shopViewProductsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#991b1b;">Failed to load products</div>';
+          }
+        }
+
+        // Populate profile
+        shopViewName.textContent = shop.name || 'Shop';
+        shopViewLocation.textContent = shop.location ? `📍 ${shop.location}` : '';
+        shopViewProprietor.textContent = shop.proprietor ? `👤 ${shop.proprietor}` : '';
+        if (shop.image_url) {
+          shopViewImage.src = shop.image_url;
+          shopViewImage.style.display = 'block';
+          shopViewImagePlaceholder.style.display = 'none';
+        } else {
+          shopViewImage.style.display = 'none';
+          shopViewImagePlaceholder.style.display = 'flex';
+        }
+
+        // Sync cart count in shop view navbar
+        updateShopViewCartCount();
+        
+        // Show overlay
+        shopViewOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function renderShopProducts(products) {
+        shopViewProductsGrid.innerHTML = '';
+        products.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          card.setAttribute('data-id', p.id);
+          
+          // Lazy loading with skeleton
+          const imgHtml = p.image_url 
+            ? `<div class="product-image-frame"><img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'"></div>`
+            : `<div class="product-image-frame"><div class="product-image-placeholder">🥬</div></div>`;
+          
+          card.innerHTML = `
+            ${imgHtml}
+            <div class="product-info">
+              <h3 class="product-title">${escapeHtml(p.title || 'No title')}</h3>
+              <p class="product-description">${escapeHtml(p.description || '')}</p>
+              <div class="product-footer">
+                <span class="product-price">${parseFloat(p.price || 0).toFixed(2)}</span>
+                <button class="add-to-cart-btn" onclick="window.addToCart(${p.id}, '${escapeHtml(p.title || 'Product')}', ${p.price || 0}, '${escapeHtml(p.image_url || '')}')">Add</button>
+              </div>
+            </div>
+          `;
+          
+          // Quick view on card click
+          card.addEventListener('click', function(e) {
+            if (e.target.closest('.add-to-cart-btn')) return;
+            openQuickView(p.id);
+          });
+          
+          shopViewProductsGrid.appendChild(card);
+        });
+      }
+
+      // Close shop view via navbar links (Home or Products)
+      function closeShopView() {
+        shopViewOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      document.getElementById('shopViewHome').addEventListener('click', (e) => {
+        e.preventDefault();
+        closeShopView();
+        window.location.href = '/';
+      });
+      document.getElementById('shopViewProducts').addEventListener('click', (e) => {
+        e.preventDefault();
+        closeShopView();
+        window.location.href = '/product/';
+      });
+      document.getElementById('shopViewLogo').addEventListener('click', (e) => {
+        e.preventDefault();
+        closeShopView();
+        window.location.href = '/';
+      });
+
+      function updateShopViewCartCount() {
+        const cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
+        const total = cart.reduce((sum, i) => sum + i.quantity, 0);
+        if (shopViewCartCount) shopViewCartCount.textContent = total;
+      }
+
+      // ----- PRODUCTS (Main) -----
       async function fetchProducts() {
         try {
           loadingState.style.display = 'block'; 
@@ -837,7 +1293,6 @@
           renderCategories(allProducts); 
           categoryContainer.style.display = 'block';
           
-          // Attach quick view listeners after rendering
           setTimeout(attachQuickViewListeners, 100);
         } catch (e) { 
           console.error('Product fetch error:', e);
@@ -869,7 +1324,6 @@
           section.id = `category-${cat}`;
           const header = document.createElement('div'); 
           header.className = 'category-header';
-          // Show "View All" only if more than 6 items
           header.innerHTML = `<h2 class="category-title">${categoryLabels[cat] || cat} <span class="category-count">${items.length} items</span></h2>${items.length > 6 ? `<button class="category-more-btn" onclick="window.toggleCategory('${cat}')">View All <span class="arrow">▼</span></button>` : ''}`;
           section.appendChild(header);
           const grid = document.createElement('div'); 
@@ -879,7 +1333,6 @@
             const card = document.createElement('div'); 
             card.className = 'product-card';
             card.setAttribute('data-id', p.id);
-            // Hide items after the first 6
             if (index >= 6) card.classList.add('hidden-item');
             const imgHtml = p.image_url ? `<div class="product-image-frame"><img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'"></div>` : `<div class="product-image-frame"><div class="product-image-placeholder">🥬</div></div>`;
             card.innerHTML = `${imgHtml}<div class="product-info"><h3 class="product-title">${escapeHtml(p.title || 'No title')}</h3><p class="product-description">${escapeHtml(p.description || '')}</p><div class="product-footer"><span class="product-price">${parseFloat(p.price || 0).toFixed(2)}</span><button class="add-to-cart-btn" onclick="window.addToCart(${p.id}, '${escapeHtml(p.title || 'Product')}', ${p.price || 0}, '${escapeHtml(p.image_url || '')}')">Add</button></div></div>`;
@@ -899,7 +1352,6 @@
           btn.classList.toggle('active'); 
           btn.innerHTML = grid.classList.contains('hidden-items') ? 'View All <span class="arrow">▼</span>' : 'Show Less <span class="arrow">▲</span>'; 
         }
-        // Re-attach listeners after toggle
         setTimeout(attachQuickViewListeners, 200);
       };
 
@@ -921,6 +1373,7 @@
         if (existing) { existing.quantity += 1; } else { cart.push({ id, title, price, imageUrl, quantity: 1 }); }
         localStorage.setItem('grocery_cart', JSON.stringify(cart)); 
         updateCartCount(); 
+        updateShopViewCartCount();
         showSimplePopup();
       };
 
@@ -929,6 +1382,7 @@
         const total = cart.reduce((sum, i) => sum + i.quantity, 0);
         if (cartCountSpan) cartCountSpan.textContent = total;
         if (mobileCartCountSpan) mobileCartCountSpan.textContent = total;
+        updateShopViewCartCount();
       }
 
       // ===== QUICK VIEW MODAL LOGIC =====
@@ -946,7 +1400,7 @@
       let quickViewCurrentProduct = null;
       let quickViewCurrentQty = 1;
 
-      function openQuickView(productId) {
+      window.openQuickView = function(productId) {
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
 
@@ -999,7 +1453,6 @@
               quickViewCurrentProduct.image_url || ''
             );
           }
-          // Update popup message to show quantity
           const popup = document.getElementById('simplePopup');
           if (popup) {
             popup.innerHTML = `<span class="icon">✓</span> Added ${quickViewCurrentQty} × ${quickViewCurrentProduct.title} to cart`;
@@ -1029,7 +1482,6 @@
 
       function quickViewCardClick(e) {
         if (e.target.closest('.add-to-cart-btn')) return;
-
         const card = e.currentTarget;
         const addBtnEl = card.querySelector('.add-to-cart-btn');
         if (addBtnEl) {
@@ -1041,19 +1493,18 @@
             return;
           }
         }
-
         const dataId = card.getAttribute('data-id');
         if (dataId) {
           openQuickView(parseInt(dataId));
         }
       }
 
-      // ===== END QUICK VIEW =====
-
+      // ===== INIT =====
       async function init() { 
         updateCartCount(); 
         const ok = await fetchConfig(); 
         await fetchAnnouncement(); 
+        await fetchShops();
         await fetchProducts(); 
       }
 
