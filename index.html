@@ -1146,6 +1146,7 @@
           
           card.addEventListener('click', function(e) {
             e.stopPropagation();
+            console.log("🛍️ Shop clicked, ID:", shop.id);
             window.openShopViewExternal(shop.id);
           });
           
@@ -1155,57 +1156,79 @@
 
       // ----- SHOP VIEW (Full-Screen Modal) -----
       async function openShopView(shopId) {
-        // Fetch shop details
-        const shopRes = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?id=eq.${shopId}&select=*`, {
-          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
-        });
-        if (!shopRes.ok) return;
-        const shopData = await shopRes.json();
-        const shop = shopData[0];
-        if (!shop) return;
-
-        // Fetch assigned product IDs
-        const linkRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}?shop_id=eq.${shopId}&select=product_id`, {
-          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
-        });
-        if (!linkRes.ok) return;
-        const linkData = await linkRes.json();
-        const productIds = linkData.map(item => item.product_id);
+        console.log("🛍️ Opening shop view for ID:", shopId);
         
-        if (productIds.length === 0) {
-          shopViewProductsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#4b6b5e;">No products available for this shop yet</div>';
-        } else {
-          const ids = productIds.join(',');
-          const prodRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?id=in.(${ids})&select=*`, {
+        try {
+          // 1. Fetch shop details
+          const shopRes = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?id=eq.${shopId}&select=*`, {
             headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
           });
-          if (prodRes.ok) {
-            const products = await prodRes.json();
-            renderShopProducts(products);
-          } else {
-            shopViewProductsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#991b1b;">Failed to load products</div>';
+          if (!shopRes.ok) {
+            console.error("❌ Shop fetch failed:", shopRes.status, shopRes.statusText);
+            return;
           }
-        }
+          const shopData = await shopRes.json();
+          const shop = shopData[0];
+          if (!shop) {
+            console.error("❌ Shop not found for ID:", shopId);
+            return;
+          }
+          console.log("✅ Shop found:", shop.name);
 
-        // Populate profile
-        shopViewName.textContent = shop.name || 'Shop';
-        shopViewLocation.textContent = shop.location ? `📍 ${shop.location}` : '';
-        shopViewProprietor.textContent = shop.proprietor ? `👤 ${shop.proprietor}` : '';
-        if (shop.image_url) {
-          shopViewImage.src = shop.image_url;
-          shopViewImage.style.display = 'block';
-          shopViewImagePlaceholder.style.display = 'none';
-        } else {
-          shopViewImage.style.display = 'none';
-          shopViewImagePlaceholder.style.display = 'flex';
-        }
+          // 2. Fetch assigned product IDs
+          const linkRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}?shop_id=eq.${shopId}&select=product_id`, {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (!linkRes.ok) {
+            console.error("❌ Product link fetch failed:", linkRes.status, linkRes.statusText);
+            return;
+          }
+          const linkData = await linkRes.json();
+          const productIds = linkData.map(item => item.product_id);
+          console.log("✅ Product IDs found:", productIds.length);
+          
+          if (productIds.length === 0) {
+            shopViewProductsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#4b6b5e;">No products available for this shop yet</div>';
+          } else {
+            const ids = productIds.join(',');
+            const prodRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?id=in.(${ids})&select=*`, {
+              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+            });
+            if (prodRes.ok) {
+              const products = await prodRes.json();
+              console.log("✅ Products fetched:", products.length);
+              renderShopProducts(products);
+            } else {
+              console.error("❌ Product fetch failed:", prodRes.status, prodRes.statusText);
+              shopViewProductsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#991b1b;">Failed to load products</div>';
+            }
+          }
 
-        // Sync cart count in shop view navbar
-        updateShopViewCartCount();
-        
-        // Show overlay
-        shopViewOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
+          // 3. Populate profile
+          shopViewName.textContent = shop.name || 'Shop';
+          shopViewLocation.textContent = shop.location ? `📍 ${shop.location}` : '';
+          shopViewProprietor.textContent = shop.proprietor ? `👤 ${shop.proprietor}` : '';
+          if (shop.image_url) {
+            shopViewImage.src = shop.image_url;
+            shopViewImage.style.display = 'block';
+            shopViewImagePlaceholder.style.display = 'none';
+          } else {
+            shopViewImage.style.display = 'none';
+            shopViewImagePlaceholder.style.display = 'flex';
+          }
+
+          // 4. Sync cart count
+          updateShopViewCartCount();
+          
+          // 5. Show overlay
+          shopViewOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          console.log("✅ Shop view opened successfully");
+
+        } catch (error) {
+          console.error("❌ Error in openShopView:", error);
+          alert("Failed to open shop. Please check the console for errors.");
+        }
       }
 
       function renderShopProducts(products) {
