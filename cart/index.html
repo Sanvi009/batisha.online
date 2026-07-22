@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="manifest" href="/manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Batisha">
-  <link rel="apple-touch-icon" href="/assets/icon-192.png">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>Cart · Batisha online</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -338,23 +333,6 @@
       function init() { updateCartCount(); renderCart(); }
       window.addEventListener('DOMContentLoaded', init);
     })();
-  </script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
-        .then(registration => {
-          registration.update();
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                window.location.reload();
-              }
-            });
-          });
-        })
-        .catch(err => console.log('❌ SW registration failed:', err));
-    }
   </script>
 </body>
 </html>
