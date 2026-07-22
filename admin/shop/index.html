@@ -1717,53 +1717,69 @@
 
       // === GRID (Load More) ===
       async function loadGridProducts() {
-        if (isLoadingMore) return;
-        isLoadingMore = true;
-        loadMoreBtn.disabled = true;
-        loadMoreBtn.textContent = 'Loading...';
+  if (isLoadingMore) return;
+  isLoadingMore = true;
+  loadMoreBtn.disabled = true;
+  loadMoreBtn.textContent = 'Loading...';
 
-        try {
-          let url = `${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?select=*&order=id.desc&limit=${GRID_LIMIT}&offset=${gridOffset}`;
-          if (assignSearchInput.value.trim() !== '') {
-            const q = assignSearchInput.value.trim();
-            url = `${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?select=*&or=(title.ilike.%${q}%,description.ilike.%${q}%)&order=id.desc&limit=${GRID_LIMIT}&offset=${gridOffset}`;
-          }
-          const res = await fetch(url, {
-            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
-          });
-          if (!res.ok) throw new Error('Fetch failed');
-          const products = await res.json();
+  try {
+    // 1. Build the query URL
+    let url = `${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?select=*&order=id.desc&limit=${GRID_LIMIT}&offset=${gridOffset}`;
+    if (assignSearchInput.value.trim() !== '') {
+      const q = assignSearchInput.value.trim();
+      url = `${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?select=*&or=(title.ilike.%${q}%,description.ilike.%${q}%)&order=id.desc&limit=${GRID_LIMIT}&offset=${gridOffset}`;
+    }
+    
+    // 2. Fetch the products
+    const res = await fetch(url, {
+      headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+    });
+    if (!res.ok) throw new Error('Fetch failed');
+    const products = await res.json();
 
-          // Get total count
-          const countRes = await fetch(url.replace('&limit='+GRID_LIMIT+'&offset='+gridOffset, '&select=id&limit=0'), {
-            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
-          });
-          if (countRes.ok) {
-            const countData = await countRes.json();
-            gridTotalCount = countData.length || 0;
-          }
-
-          if (gridOffset === 0) globalProductsCache = products;
-          else globalProductsCache = [...globalProductsCache, ...products];
-
-          renderGrid(globalProductsCache);
-          gridOffset += products.length;
-          // Ensure we correctly calculate if more products exist
-
-          const hasMore = (gridOffset < gridTotalCount);
-          if (hasMore) {
-          loadMoreBtn.style.display = 'block';
-          } else {
-          loadMoreBtn.style.display = 'none';
-          }
-        } catch (error) {
-          showToast('Failed to load products', 'error');
-        } finally {
-          isLoadingMore = false;
-          loadMoreBtn.disabled = false;
-          loadMoreBtn.textContent = 'Load More';
-        }
+    // 3. Get the TOTAL COUNT from the headers (THE FIX)
+    // We request the exact count using the Prefer header
+    const countUrl = url.replace(`&limit=${GRID_LIMIT}&offset=${gridOffset}`, '');
+    const countRes = await fetch(countUrl, {
+      headers: { 
+        'apikey': supabaseAnonKey, 
+        'Authorization': `Bearer ${supabaseAnonKey}`,
+        'Prefer': 'count=exact' // <--- THIS IS THE CRITICAL FIX
       }
+    });
+    
+    if (countRes.ok) {
+      // Supabase returns the count in the 'content-range' header: "0-11/100"
+      const contentRange = countRes.headers.get('content-range');
+      if (contentRange) {
+        const total = parseInt(contentRange.split('/')[1]);
+        gridTotalCount = total || 0;
+      }
+    }
+
+    // 4. Update cache and render
+    if (gridOffset === 0) globalProductsCache = products;
+    else globalProductsCache = [...globalProductsCache, ...products];
+
+    renderGrid(globalProductsCache);
+    gridOffset += products.length;
+
+    // 5. Show or hide the Load More button
+    if (gridOffset < gridTotalCount) {
+      loadMoreBtn.style.display = 'block';
+    } else {
+      loadMoreBtn.style.display = 'none';
+    }
+  } catch (error) {
+    console.error(error);
+    showToast('Failed to load products', 'error');
+  } finally {
+    isLoadingMore = false;
+    loadMoreBtn.disabled = false;
+    loadMoreBtn.textContent = 'Load More';
+  }
+}
+      
 
       function renderGrid(products) {
         tinyGrid.innerHTML = '';
