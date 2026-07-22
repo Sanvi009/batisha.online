@@ -1748,11 +1748,13 @@
 
           renderGrid(globalProductsCache);
           gridOffset += products.length;
+          // Ensure we correctly calculate if more products exist
 
-          if (gridOffset >= gridTotalCount) {
-            loadMoreBtn.style.display = 'none';
+          const hasMore = (gridOffset < gridTotalCount);
+          if (hasMore) {
+          loadMoreBtn.style.display = 'block';
           } else {
-            loadMoreBtn.style.display = 'block';
+          loadMoreBtn.style.display = 'none';
           }
         } catch (error) {
           showToast('Failed to load products', 'error');
