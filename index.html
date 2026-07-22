@@ -1191,7 +1191,7 @@
             shopViewProductsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#4b6b5e;">No products available for this shop yet</div>';
           } else {
             const ids = productIds.join(',');
-            const prodRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?id=in.(${ids})&select=*`, {
+            const prodRes = await fetch(`${supabaseUrl}/rest/v1/${TABLE_NAME}?id=in.(${ids})&select=*`, {
               headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
             });
             if (prodRes.ok) {
