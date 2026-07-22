@@ -1144,7 +1144,11 @@
             <div class="shop-story-name">${escapeHtml(shop.name || 'Shop')}</div>
           `;
           
-          card.addEventListener('click', () => openShopView(shop.id));
+          card.addEventListener('click', function(e) {
+            e.stopPropagation();
+            window.openShopViewExternal(shop.id);
+          });
+          
           shopCarouselTrack.appendChild(card);
         });
       }
@@ -1231,7 +1235,7 @@
           // Quick view on card click
           card.addEventListener('click', function(e) {
             if (e.target.closest('.add-to-cart-btn')) return;
-            openQuickView(p.id);
+            window.openQuickViewExternal(p.id);
           });
           
           shopViewProductsGrid.appendChild(card);
@@ -1400,7 +1404,7 @@
       let quickViewCurrentProduct = null;
       let quickViewCurrentQty = 1;
 
-      window.openQuickView = function(productId) {
+      function openQuickView(productId) {
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
 
@@ -1489,15 +1493,24 @@
           const match = onclickStr.match(/addToCart\((\d+)/);
           if (match && match[1]) {
             const productId = parseInt(match[1]);
-            openQuickView(productId);
+            window.openQuickViewExternal(productId);
             return;
           }
         }
         const dataId = card.getAttribute('data-id');
         if (dataId) {
-          openQuickView(parseInt(dataId));
+          window.openQuickViewExternal(parseInt(dataId));
         }
       }
+
+      // Expose functions globally
+      window.openShopViewExternal = function(shopId) {
+        openShopView(shopId);
+      };
+
+      window.openQuickViewExternal = function(productId) {
+        openQuickView(productId);
+      };
 
       // ===== INIT =====
       async function init() { 
