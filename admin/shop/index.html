@@ -531,18 +531,27 @@
       border: 1px solid #dde5ed;
     }
 
+    /* ============================================== */
     /* ----- PRODUCT ASSIGNMENT MODAL (NEW) ----- */
+    /* ============================================== */
     .assign-modal .modal-box {
-      max-width: 650px;
+      max-width: 750px;
+      width: 100%;
       border-radius: 16px;
       animation: scaleIn 0.2s ease;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
     }
     @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    
     .assign-modal .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0.6rem;
+      flex-shrink: 0;
     }
     .assign-modal .modal-title { font-size: 1rem; font-weight: 700; color: #1a1f36; }
     .assign-modal .modal-close {
@@ -552,48 +561,310 @@
       color: #6b7a86;
       cursor: pointer;
       padding: 0.2rem;
+      transition: 0.15s;
     }
     .assign-modal .modal-close:hover { color: #991b1b; }
 
-    .assign-mode-buttons {
+    .assign-modal-scroll {
+      overflow-y: auto;
+      padding-right: 0.2rem;
+      flex: 1;
+    }
+
+    /* --- Section Titles --- */
+    .assign-section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #1a1f36;
+      margin: 0.6rem 0 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .assign-section-title .badge {
+      background: #f0f5fc;
+      color: #1e3a5f;
+      font-size: 0.6rem;
+      padding: 0.05rem 0.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    /* --- Search Bar --- */
+    .assign-search-wrapper {
+      display: flex;
+      gap: 0.3rem;
+      margin-bottom: 0.6rem;
+    }
+    .assign-search-wrapper input {
+      flex: 1;
+      padding: 0.4rem 0.7rem;
+      border: 1px solid #e4ece8;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      background: #f8fbf9;
+      outline: none;
+      transition: 0.15s;
+    }
+    .assign-search-wrapper input:focus {
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
+      background: #ffffff;
+    }
+    .assign-search-wrapper button {
+      background: #1f8b4c;
+      color: white;
+      border: none;
+      padding: 0.3rem 0.8rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .assign-search-wrapper button:hover { background: #0f6e3a; }
+
+    /* --- Tiny Card Grid --- */
+    .tiny-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+    }
+    .tiny-card {
+      background: #ffffff;
+      border: 2px solid #e8edf2;
+      border-radius: 10px;
+      padding: 0.4rem;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.15s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .tiny-card:hover { border-color: #b8cee0; transform: translateY(-1px); }
+    .tiny-card.selected {
+      border-color: #1f8b4c;
+      background: #f0fdf4;
+      box-shadow: 0 0 0 2px rgba(31,139,76,0.15);
+    }
+    .tiny-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      background: #1f8b4c;
+      color: white;
+      width: 18px;
+      height: 18px;
+      font-size: 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0 10px 0 10px;
+      font-weight: 700;
+    }
+    .tiny-card-image {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: contain;
+      background: #f8fbf9;
+      border-radius: 6px;
+      margin-bottom: 0.2rem;
+    }
+    .tiny-card-image-placeholder {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: #f3f8f5;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: #2d7a4b;
+      margin-bottom: 0.2rem;
+    }
+    .tiny-card-title {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: #1a1f36;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tiny-card-price {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #1f8b4c;
+    }
+    .tiny-card-price::before { content: '৳'; }
+
+    .load-more-btn {
+      background: #f3f6f8;
+      border: 1px solid #e4eaf0;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #1a1f36;
+      cursor: pointer;
+      transition: 0.15s;
+      width: 100%;
+      margin-top: 0.2rem;
+    }
+    .load-more-btn:hover { background: #e8edf2; }
+    .load-more-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .assign-actions-row {
       display: flex;
       gap: 0.4rem;
-      margin-bottom: 0.8rem;
+      margin-top: 0.4rem;
+      flex-wrap: wrap;
     }
-    .assign-mode-btn {
+    .assign-actions-row .btn {
       padding: 0.3rem 0.8rem;
       border-radius: 30px;
       font-size: 0.65rem;
       font-weight: 600;
-      border: 1px solid #e4eaf0;
-      background: white;
-      color: #4b5f6b;
+      border: none;
       cursor: pointer;
       transition: 0.15s;
       flex: 1;
+      text-align: center;
     }
-    .assign-mode-btn.active {
-      background: #1f8b4c;
-      color: white;
-      border-color: #1f8b4c;
-    }
-    .assign-mode-btn:hover:not(.active) { background: #f0f3f7; }
+    .btn-assign-selected { background: #1f8b4c; color: white; }
+    .btn-assign-selected:hover { background: #0f6e3a; }
+    .btn-assign-selected:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .assign-form-section {
-      display: none;
+    /* --- Assigned List (Bottom) --- */
+    .assigned-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
       margin-top: 0.4rem;
     }
-    .assign-form-section.active { display: block; }
-
-    .assign-product-select {
-      width: 100%;
-      padding: 0.4rem 0.7rem;
-      border-radius: 8px;
-      border: 1px solid #e4ece8;
+    .assigned-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
       background: #f8fbf9;
-      font-size: 0.8rem;
-      color: #1a1f36;
+      border: 1px solid #eef2f6;
+      border-radius: 8px;
+      padding: 0.3rem 0.5rem;
+      transition: 0.15s;
     }
+    .assigned-item.selected {
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+    .assigned-item-img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 4px;
+      background: #ffffff;
+      border: 1px solid #e8edf2;
+      flex-shrink: 0;
+    }
+    .assigned-item-img-placeholder {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      background: #f3f8f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      border: 1px solid #e8edf2;
+    }
+    .assigned-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .assigned-item-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #1a1f36;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .assigned-item-price {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #1f8b4c;
+    }
+    .assigned-item-price::before { content: '৳'; }
+    
+    .assigned-item-actions {
+      display: flex;
+      gap: 0.15rem;
+      flex-shrink: 0;
+    }
+    .assigned-item-actions .btn-xs {
+      padding: 0.1rem 0.4rem;
+      border-radius: 20px;
+      font-size: 0.5rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-xs-edit { background: #f0f5fc; color: #1e3a5f; border: 1px solid #dde5ed; }
+    .btn-xs-edit:hover { background: #e4edf7; }
+    .btn-xs-remove { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .btn-xs-remove:hover { background: #fee2e2; }
+
+    /* --- Inline Edit Price --- */
+    .inline-edit-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex: 1;
+    }
+    .inline-edit-wrapper input {
+      width: 60px;
+      padding: 0.1rem 0.3rem;
+      border: 1px solid #1f8b4c;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      background: white;
+      outline: none;
+    }
+    .inline-edit-wrapper button {
+      padding: 0.05rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.5rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .inline-edit-wrapper .btn-save-price { background: #1f8b4c; color: white; }
+    .inline-edit-wrapper .btn-save-price:hover { background: #0f6e3a; }
+    .inline-edit-wrapper .btn-cancel-price { background: #f3f6f8; color: #1a1f36; border: 1px solid #e4eaf0; }
+    .inline-edit-wrapper .btn-cancel-price:hover { background: #e8edf2; }
+
+    .assigned-bulk-actions {
+      display: flex;
+      gap: 0.3rem;
+      margin-top: 0.2rem;
+      padding-top: 0.4rem;
+      border-top: 1px solid #eef2f6;
+    }
+    .assigned-bulk-actions .btn {
+      padding: 0.2rem 0.6rem;
+      border-radius: 30px;
+      font-size: 0.6rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-bulk-remove { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .btn-bulk-remove:hover { background: #fee2e2; }
+    .btn-bulk-remove:disabled { opacity: 0.5; cursor: not-allowed; }
 
     /* ----- MODAL (Standard) ----- */
     .modal-overlay {
@@ -666,6 +937,7 @@
       .menu-toggle { display: none; }
       .sidebar-overlay, .sidebar { display: none !important; }
       .assign-modal .modal-box { border-radius: 16px; }
+      .tiny-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
     }
 
     @media (max-width: 767px) {
@@ -686,7 +958,10 @@
       .form-container { padding: 0.6rem; }
       .form-grid { gap: 0.5rem; }
       .sidebar { width: 240px; left: -240px; }
-      .assign-mode-buttons { flex-direction: column; }
+      .tiny-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
+      .tiny-card { padding: 0.2rem; }
+      .tiny-card-title { font-size: 0.5rem; }
+      .tiny-card-price { font-size: 0.5rem; }
     }
 
     @media (max-width: 480px) {
@@ -697,6 +972,7 @@
       .logo-image { width: 32px; height: 32px; }
       .logo-text { font-size: 0.85rem; }
       .menu-toggle { font-size: 1.4rem; }
+      .tiny-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
     }
   </style>
 </head>
@@ -807,71 +1083,53 @@
     </div>
   </div>
 
-  <!-- PRODUCT ASSIGNMENT MODAL -->
+  <!-- ============================================== -->
+  <!-- PRODUCT ASSIGNMENT MODAL (NEW INTERFACE)       -->
+  <!-- ============================================== -->
   <div id="assignModal" class="modal-overlay assign-modal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3 class="modal-title" id="assignModalTitle">Manage Products for <span id="assignShopName">—</span></h3>
+        <h3 class="modal-title">📦 Manage Products for <span id="assignShopName">—</span></h3>
         <button class="modal-close" id="assignModalClose">✕</button>
       </div>
-      <div class="assign-mode-buttons">
-        <button class="assign-mode-btn active" data-mode="existing">📦 From Existing</button>
-        <button class="assign-mode-btn" data-mode="manual">✏️ Add New</button>
-      </div>
-      <!-- Existing Product Mode -->
-      <div class="assign-form-section active" id="assignExistingSection">
-        <div class="form-group">
-          <label for="assignProductSelect">Select Product</label>
-          <select id="assignProductSelect" class="assign-product-select">
-            <option value="">— Choose a product —</option>
-          </select>
+      
+      <div class="assign-modal-scroll">
+        
+        <!-- SECTION 1: ADD PRODUCTS (Search + Grid) -->
+        <div class="assign-section-title">
+          Add Existing Products
+          <span class="badge" id="selectionCount">0 selected</span>
         </div>
-        <button class="btn-submit" id="assignExistingBtn" style="flex:none; width:auto; padding:0.45rem 1.5rem;">➕ Assign Product</button>
-      </div>
-      <!-- Manual Product Mode -->
-      <div class="assign-form-section" id="assignManualSection">
-        <form id="assignManualForm" class="form-grid" style="gap:0.5rem;">
-          <div class="form-group">
-            <label for="assignManualTitle">Title *</label>
-            <input type="text" id="assignManualTitle" class="form-input" placeholder="Product name" required>
-          </div>
-          <div class="form-group">
-            <label for="assignManualPrice">Price (৳) *</label>
-            <input type="number" id="assignManualPrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
-          </div>
-          <div class="form-group">
-            <label for="assignManualCategory">Category *</label>
-            <select id="assignManualCategory" class="form-input" required>
-              <option value="">Select category</option>
-              <option value="electronics">Electronics</option>
-              <option value="grocery">Grocery</option>
-              <option value="medicine">Medicine</option>
-              <option value="vegetables">Vegetables</option>
-              <option value="fruits">Fruits</option>
-              <option value="bakery">Bakery Items</option>
-              <option value="others">Others</option>
-            </select>
-          </div>
-          <div class="form-group" style="grid-column:1/-1;">
-            <label for="assignManualDescription">Description</label>
-            <textarea id="assignManualDescription" class="form-input" placeholder="Product description..."></textarea>
-          </div>
-          <div class="form-group" style="grid-column:1/-1;">
-            <label>Product Image</label>
-            <div class="file-upload-wrapper">
-              <label class="file-upload-label" for="assignManualImage">
-                📁 Choose Image
-                <input type="file" id="assignManualImage" accept="image/*">
-              </label>
-              <span id="assignFileName" style="color:#6b7a86;font-size:0.7rem;margin-left:0.3rem;"></span>
-            </div>
-            <img id="assignImagePreview" class="image-preview" src="" alt="Preview">
-          </div>
-          <div class="form-actions" style="grid-column:1/-1;">
-            <button type="submit" class="btn-submit" id="assignManualSubmitBtn">➕ Add & Assign</button>
-          </div>
-        </form>
-      </div>
+        
+        <div class="assign-search-wrapper">
+          <input type="text" id="assignSearchInput" placeholder="Search products...">
+          <button id="assignSearchBtn">Search</button>
+        </div>
+        
+        <div id="tinyGridContainer">
+          <div class="tiny-grid" id="tinyGrid"></div>
+          <button class="load-more-btn" id="loadMoreBtn">Load More</button>
+        </div>
+        
+        <div class="assign-actions-row">
+          <button class="btn btn-assign-selected" id="assignSelectedBtn">➕ Assign Selected</button>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #eef2f6; margin: 0.8rem 0;">
+
+        <!-- SECTION 2: CURRENTLY ASSIGNED PRODUCTS -->
+        <div class="assign-section-title">
+          Currently Assigned
+          <span class="badge" id="assignedCount">0 items</span>
+        </div>
+
+        <div class="assigned-list" id="assignedList"></div>
+        
+        <div class="assigned-bulk-actions">
+          <button class="btn btn-bulk-remove" id="bulkRemoveBtn" disabled>🗑️ Remove Selected</button>
+        </div>
+
+      </div> <!-- end modal-scroll -->
     </div>
   </div>
 
@@ -921,18 +1179,19 @@
       const modalCancelBtn = document.getElementById('modalCancelBtn');
       const modalConfirmBtn = document.getElementById('modalConfirmBtn');
 
-      // ASSIGN MODAL ELEMENTS
+      // ASSIGN MODAL ELEMENTS (NEW)
       const assignModal = document.getElementById('assignModal');
       const assignModalClose = document.getElementById('assignModalClose');
       const assignShopName = document.getElementById('assignShopName');
-      const assignProductSelect = document.getElementById('assignProductSelect');
-      const assignExistingBtn = document.getElementById('assignExistingBtn');
-      const assignManualForm = document.getElementById('assignManualForm');
-      const assignManualSubmitBtn = document.getElementById('assignManualSubmitBtn');
-      const assignManualImage = document.getElementById('assignManualImage');
-      const assignFileName = document.getElementById('assignFileName');
-      const assignImagePreview = document.getElementById('assignImagePreview');
-      const assignModeBtns = document.querySelectorAll('.assign-mode-btn');
+      const assignSearchInput = document.getElementById('assignSearchInput');
+      const assignSearchBtn = document.getElementById('assignSearchBtn');
+      const tinyGrid = document.getElementById('tinyGrid');
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      const assignSelectedBtn = document.getElementById('assignSelectedBtn');
+      const selectionCount = document.getElementById('selectionCount');
+      const assignedList = document.getElementById('assignedList');
+      const assignedCount = document.getElementById('assignedCount');
+      const bulkRemoveBtn = document.getElementById('bulkRemoveBtn');
 
       // SIDEBAR TOGGLE
       const menuToggle = document.getElementById('menuToggle');
@@ -941,14 +1200,21 @@
       const logoutBtn = document.getElementById('logoutButton');
 
       let allShops = [];
-      let allProducts = [];
-      let editingShopId = null;
-      let selectedShopImageFile = null;
-      let selectedAssignImageFile = null;
-      let deleteTargetId = null;
-      let deleteTargetName = null;
       let activeAssignShopId = null;
-      let activeAssignMode = 'existing';
+      let assignedProductIds = [];
+      
+      // Grid state
+      let globalProductsCache = [];
+      let gridOffset = 0;
+      const GRID_LIMIT = 12;
+      let gridTotalCount = 0;
+      let selectedProductIds = new Set();
+      let isLoadingMore = false;
+      let isSearching = false;
+
+      // Assigned list state
+      let selectedAssignedIds = new Set();
+      let editingPriceItemId = null;
 
       function toggleSidebar(open) {
         if (open === undefined) open = !sidebar.classList.contains('open');
@@ -1056,7 +1322,6 @@
           const shops = await response.json();
           allShops = shops;
           if (!shops || shops.length === 0) { showState('empty'); updateStats([]); return; }
-          // Fetch product counts for each shop
           for (let shop of shops) {
             const countRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}?shop_id=eq.${shop.id}&select=id`, {
               headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
@@ -1072,28 +1337,6 @@
           updateStats(shops);
           showState('table');
         } catch { showState('error'); }
-      }
-
-      // ----- FETCH ALL PRODUCTS (for assignment dropdown) -----
-      async function fetchAllProducts() {
-        const response = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?select=id,title&order=id.desc`, {
-          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
-        });
-        if (response.ok) {
-          allProducts = await response.json();
-        }
-      }
-
-      // ----- FETCH ALREADY ASSIGNED PRODUCTS -----
-      async function fetchAssignedProductIds(shopId) {
-        const response = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}?shop_id=eq.${shopId}&select=product_id`, {
-          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          return data.map(item => item.product_id);
-        }
-        return [];
       }
 
       function renderShops(shops) {
@@ -1184,14 +1427,12 @@
           const body = { name, location, proprietor, image_url: imageUrl };
           let response;
           if (editingShopId) {
-            // Update existing
             response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?id=eq.${editingShopId}`, {
               method: 'PATCH',
               headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
               body: JSON.stringify(body),
             });
           } else {
-            // Create new
             response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}`, {
               method: 'POST',
               headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
@@ -1254,7 +1495,6 @@
         modalConfirmBtn.disabled = true;
         modalConfirmBtn.textContent = '⏳';
         try {
-          // Delete shop (cascade will remove shop_products entries)
           const response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?id=eq.${deleteTargetId}`, {
             method: 'DELETE',
             headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
@@ -1276,7 +1516,10 @@
         showDeleteModal(shopId, shopName);
       };
 
-      // ----- ASSIGN PRODUCT MODAL -----
+      // =========================================================================
+      // =================== NEW ASSIGN MODAL LOGIC ==============================
+      // =========================================================================
+
       window.openAssignModal = async function(shopId) {
         const shop = allShops.find(s => s.id === shopId);
         if (!shop) return;
@@ -1284,151 +1527,347 @@
         assignShopName.textContent = shop.name || 'Shop';
         assignModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
-        await fetchAllProducts();
-        await populateAssignDropdown(shopId);
-        // Reset form
-        assignManualForm.reset();
-        selectedAssignImageFile = null;
-        assignImagePreview.classList.remove('active');
-        assignImagePreview.src = '';
-        assignFileName.textContent = '';
-        // Set default mode
-        setAssignMode('existing');
+        
+        // Reset state
+        selectedProductIds.clear();
+        selectedAssignedIds.clear();
+        editingPriceItemId = null;
+        globalProductsCache = [];
+        gridOffset = 0;
+        isSearching = false;
+        assignSearchInput.value = '';
+        updateSelectionCount();
+        bulkRemoveBtn.disabled = true;
+
+        await loadAssignedProducts(shopId);
+        await loadGridProducts();
       };
 
       function closeAssignModal() {
         assignModal.style.display = 'none';
         document.body.style.overflow = '';
         activeAssignShopId = null;
+        assignedProductIds = [];
       }
       assignModalClose.addEventListener('click', closeAssignModal);
       assignModal.addEventListener('click', (e) => { if (e.target === assignModal) closeAssignModal(); });
 
-      async function populateAssignDropdown(shopId) {
-        const assignedIds = await fetchAssignedProductIds(shopId);
-        assignProductSelect.innerHTML = '<option value="">— Choose a product —</option>';
-        allProducts.forEach(p => {
-          const option = document.createElement('option');
-          option.value = p.id;
-          option.textContent = p.title || 'Product #' + p.id;
-          if (assignedIds.includes(p.id)) {
-            option.disabled = true;
-            option.textContent += ' (already assigned)';
-          }
-          assignProductSelect.appendChild(option);
+      // --- Fetch Assigned Products ---
+      async function loadAssignedProducts(shopId) {
+        // Get product IDs
+        const linkRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}?shop_id=eq.${shopId}&select=product_id`, {
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
         });
-      }
-
-      function setAssignMode(mode) {
-        activeAssignMode = mode;
-        assignModeBtns.forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.mode === mode);
-        });
-        document.getElementById('assignExistingSection').classList.toggle('active', mode === 'existing');
-        document.getElementById('assignManualSection').classList.toggle('active', mode === 'manual');
-      }
-      assignModeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          setAssignMode(btn.dataset.mode);
-        });
-      });
-
-      // Assign existing product
-      assignExistingBtn.addEventListener('click', async () => {
-        const productId = parseInt(assignProductSelect.value);
-        if (!productId || !activeAssignShopId) {
-          showToast('Please select a product', 'error');
+        if (!linkRes.ok) return;
+        const linkData = await linkRes.json();
+        assignedProductIds = linkData.map(item => item.product_id);
+        
+        if (assignedProductIds.length === 0) {
+          assignedList.innerHTML = `<div style="text-align:center;color:#6b7a86;font-size:0.75rem;padding:1rem 0;">No products assigned yet</div>`;
+          assignedCount.textContent = '0 items';
           return;
         }
-        assignExistingBtn.disabled = true;
-        assignExistingBtn.textContent = '⏳';
+
+        // Fetch product details
+        const ids = assignedProductIds.join(',');
+        const prodRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?id=in.(${ids})&select=*`, {
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+        });
+        if (!prodRes.ok) return;
+        const products = await prodRes.json();
+        
+        renderAssignedList(products);
+        assignedCount.textContent = `${products.length} items`;
+      }
+
+      function renderAssignedList(products) {
+        assignedList.innerHTML = '';
+        products.forEach(p => {
+          const div = document.createElement('div');
+          div.className = 'assigned-item';
+          div.dataset.id = p.id;
+          if (selectedAssignedIds.has(p.id)) div.classList.add('selected');
+
+          const isEditing = editingPriceItemId === p.id;
+          const imgHtml = p.image_url 
+            ? `<img src="${escapeHtml(p.image_url)}" class="assigned-item-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+            : '';
+          const placeholder = `<div class="assigned-item-img-placeholder" style="${p.image_url ? 'display:none;' : ''}">🥬</div>`;
+
+          let priceHtml = '';
+          if (isEditing) {
+            priceHtml = `
+              <div class="inline-edit-wrapper">
+                <input type="number" id="edit-price-input-${p.id}" value="${p.price || 0}" step="0.01" min="0">
+                <button class="btn-save-price" onclick="window.savePriceEdit(${p.id})">Save</button>
+                <button class="btn-cancel-price" onclick="window.cancelPriceEdit(${p.id})">Cancel</button>
+              </div>
+            `;
+          } else {
+            priceHtml = `<span class="assigned-item-price">${parseFloat(p.price || 0).toFixed(2)}</span>`;
+          }
+
+          div.innerHTML = `
+            ${imgHtml}${placeholder}
+            <div class="assigned-item-info">
+              <div class="assigned-item-title">${escapeHtml(p.title || '—')}</div>
+              ${priceHtml}
+            </div>
+            <div class="assigned-item-actions">
+              <button class="btn-xs btn-xs-edit" onclick="window.startPriceEdit(${p.id})">💰</button>
+              <button class="btn-xs btn-xs-remove" onclick="window.removeAssignedProduct(${p.id}, '${escapeHtml(p.title || '')}')">✕</button>
+            </div>
+          `;
+          assignedList.appendChild(div);
+        });
+      }
+
+      // --- Assigned List Actions ---
+      window.startPriceEdit = function(productId) {
+        if (editingPriceItemId !== null) window.cancelPriceEdit(editingPriceItemId);
+        editingPriceItemId = productId;
+        loadAssignedProducts(activeAssignShopId);
+      };
+      window.cancelPriceEdit = function(productId) {
+        if (editingPriceItemId === productId) editingPriceItemId = null;
+        loadAssignedProducts(activeAssignShopId);
+      };
+      window.savePriceEdit = async function(productId) {
+        const input = document.getElementById(`edit-price-input-${productId}`);
+        if (!input) return;
+        const newPrice = parseFloat(input.value);
+        if (isNaN(newPrice) || newPrice < 0) { showToast('Invalid price', 'error'); return; }
+
+        // Find the original product
+        const original = await fetchProductById(productId);
+        if (!original) return;
+
+        // 1. Create duplicate product
+        const dupRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}`, {
+          method: 'POST',
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+          body: JSON.stringify({
+            title: original.title,
+            description: original.description,
+            price: newPrice,
+            category: original.category,
+            image_url: original.image_url
+          })
+        });
+        if (!dupRes.ok) { showToast('Failed to duplicate product', 'error'); return; }
+        const [newProduct] = await dupRes.json();
+
+        // 2. Link new product to shop
+        const linkRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}`, {
+          method: 'POST',
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ shop_id: activeAssignShopId, product_id: newProduct.id })
+        });
+        if (!linkRes.ok) { showToast('Failed to link duplicate', 'error'); return; }
+
+        // 3. Remove original from shop
+        await removeAssignedProductInternal(productId);
+
+        showToast(`✅ Duplicated "${original.title}" with new price!`);
+        editingPriceItemId = null;
+        await loadAssignedProducts(activeAssignShopId);
+        await fetchShops();
+      };
+
+      window.removeAssignedProduct = async function(productId, title) {
+        if (!confirm(`Remove "${title}" from this shop? (Global product remains)`)) return;
+        await removeAssignedProductInternal(productId);
+        showToast(`🗑️ Removed from shop`);
+        await loadAssignedProducts(activeAssignShopId);
+        await fetchShops();
+      };
+
+      async function removeAssignedProductInternal(productId) {
+        const delRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}?shop_id=eq.${activeAssignShopId}&product_id=eq.${productId}`, {
+          method: 'DELETE',
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+        });
+        if (!delRes.ok) throw new Error('Remove failed');
+        assignedProductIds = assignedProductIds.filter(id => id !== productId);
+      }
+
+      async function fetchProductById(id) {
+        const res = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?id=eq.${id}&select=*`, {
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+        });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data[0] || null;
+      }
+
+      // --- Bulk Remove Assigned ---
+      assignedList.addEventListener('click', (e) => {
+        const item = e.target.closest('.assigned-item');
+        if (!item) return;
+        if (e.target.closest('.assigned-item-actions')) return;
+        const id = parseInt(item.dataset.id);
+        if (selectedAssignedIds.has(id)) {
+          selectedAssignedIds.delete(id);
+          item.classList.remove('selected');
+        } else {
+          selectedAssignedIds.add(id);
+          item.classList.add('selected');
+        }
+        bulkRemoveBtn.disabled = selectedAssignedIds.size === 0;
+      });
+
+      bulkRemoveBtn.addEventListener('click', async () => {
+        if (selectedAssignedIds.size === 0) return;
+        if (!confirm(`Remove ${selectedAssignedIds.size} product(s) from this shop?`)) return;
+        const ids = Array.from(selectedAssignedIds);
+        for (let id of ids) {
+          await removeAssignedProductInternal(id);
+        }
+        selectedAssignedIds.clear();
+        bulkRemoveBtn.disabled = true;
+        showToast(`🗑️ Removed ${ids.length} product(s) from shop`);
+        await loadAssignedProducts(activeAssignShopId);
+        await fetchShops();
+      });
+
+      // --- Load Grid Products (Paginated) ---
+      async function loadGridProducts() {
+        if (isLoadingMore) return;
+        isLoadingMore = true;
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.textContent = 'Loading...';
+
         try {
-          const response = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}`, {
-            method: 'POST',
-            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ shop_id: activeAssignShopId, product_id: productId })
+          let url = `${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?select=*&order=id.desc&limit=${GRID_LIMIT}&offset=${gridOffset}`;
+          if (assignSearchInput.value.trim() !== '') {
+            const q = assignSearchInput.value.trim();
+            // Simple search: title or description contains q (using ilike)
+            url = `${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?select=*&or=(title.ilike.%${q}%,description.ilike.%${q}%)&order=id.desc&limit=${GRID_LIMIT}&offset=${gridOffset}`;
+          }
+          const res = await fetch(url, {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
           });
-          if (!response.ok) throw new Error('Assign failed');
-          showToast('✅ Product assigned to shop!');
-          await populateAssignDropdown(activeAssignShopId);
+          if (!res.ok) throw new Error('Fetch failed');
+          const products = await res.json();
+
+          // Get total count
+          const countRes = await fetch(url.replace('&limit='+GRID_LIMIT+'&offset='+gridOffset, '&select=id&limit=0'), {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (countRes.ok) {
+            const countData = await countRes.json();
+            gridTotalCount = countData.length || 0;
+          }
+
+          if (gridOffset === 0) globalProductsCache = products;
+          else globalProductsCache = [...globalProductsCache, ...products];
+
+          renderGrid(globalProductsCache);
+          gridOffset += products.length;
+
+          if (gridOffset >= gridTotalCount) {
+            loadMoreBtn.style.display = 'none';
+          } else {
+            loadMoreBtn.style.display = 'block';
+          }
+        } catch (error) {
+          showToast('Failed to load products', 'error');
+        } finally {
+          isLoadingMore = false;
+          loadMoreBtn.disabled = false;
+          loadMoreBtn.textContent = 'Load More';
+        }
+      }
+
+      function renderGrid(products) {
+        tinyGrid.innerHTML = '';
+        products.forEach(p => {
+          const isAssigned = assignedProductIds.includes(p.id);
+          const isSelected = selectedProductIds.has(p.id);
+          const card = document.createElement('div');
+          card.className = 'tiny-card';
+          if (isSelected) card.classList.add('selected');
+          if (isAssigned) card.style.opacity = '0.5';
+          const imgHtml = p.image_url 
+            ? `<img src="${escapeHtml(p.image_url)}" class="tiny-card-image" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+            : '';
+          const placeholder = `<div class="tiny-card-image-placeholder" style="${p.image_url ? 'display:none;' : ''}">🥬</div>`;
+          card.innerHTML = `
+            ${imgHtml}${placeholder}
+            <div class="tiny-card-title">${escapeHtml(p.title || '—')}</div>
+            <div class="tiny-card-price">${parseFloat(p.price || 0).toFixed(2)}</div>
+          `;
+          if (!isAssigned) {
+            card.addEventListener('click', () => {
+              if (selectedProductIds.has(p.id)) {
+                selectedProductIds.delete(p.id);
+                card.classList.remove('selected');
+              } else {
+                selectedProductIds.add(p.id);
+                card.classList.add('selected');
+              }
+              updateSelectionCount();
+            });
+          }
+          tinyGrid.appendChild(card);
+        });
+      }
+
+      function updateSelectionCount() {
+        selectionCount.textContent = `${selectedProductIds.size} selected`;
+        assignSelectedBtn.disabled = selectedProductIds.size === 0;
+      }
+
+      // --- Search ---
+      assignSearchBtn.addEventListener('click', () => {
+        gridOffset = 0;
+        globalProductsCache = [];
+        loadGridProducts();
+      });
+      assignSearchInput.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') {
+          gridOffset = 0;
+          globalProductsCache = [];
+          loadGridProducts();
+        }
+      });
+
+      // --- Load More ---
+      loadMoreBtn.addEventListener('click', loadGridProducts);
+
+      // --- Assign Selected ---
+      assignSelectedBtn.addEventListener('click', async () => {
+        if (selectedProductIds.size === 0) return;
+        const ids = Array.from(selectedProductIds);
+        assignSelectedBtn.disabled = true;
+        assignSelectedBtn.textContent = '⏳ Assigning...';
+        try {
+          for (let id of ids) {
+            const res = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}`, {
+              method: 'POST',
+              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ shop_id: activeAssignShopId, product_id: id })
+            });
+            if (!res.ok) throw new Error('Assign failed');
+          }
+          showToast(`✅ Assigned ${ids.length} product(s)!`);
+          selectedProductIds.clear();
+          updateSelectionCount();
+          await loadAssignedProducts(activeAssignShopId);
           await fetchShops();
+          // Refresh grid to mark them as assigned
+          gridOffset = 0;
+          globalProductsCache = [];
+          await loadGridProducts();
         } catch (error) {
           showToast('Failed to assign: ' + error.message, 'error');
         } finally {
-          assignExistingBtn.disabled = false;
-          assignExistingBtn.textContent = '➕ Assign Product';
+          assignSelectedBtn.disabled = false;
+          assignSelectedBtn.textContent = '➕ Assign Selected';
         }
       });
 
-      // Assign manual product (creates new product globally + links to shop)
-      assignManualForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!activeAssignShopId) return;
-        const title = document.getElementById('assignManualTitle').value.trim();
-        const price = parseFloat(document.getElementById('assignManualPrice').value) || 0;
-        const category = document.getElementById('assignManualCategory').value;
-        const description = document.getElementById('assignManualDescription').value.trim();
-        
-        if (!title) { showToast('Title is required!', 'error'); return; }
-        if (!category) { showToast('Category is required!', 'error'); return; }
-        
-        assignManualSubmitBtn.disabled = true;
-        assignManualSubmitBtn.textContent = '⏳';
-        try {
-          let imageUrl = null;
-          if (selectedAssignImageFile) {
-            imageUrl = await uploadProductImage(selectedAssignImageFile);
-          }
-          // 1. Create product in global table
-          const productRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}`, {
-            method: 'POST',
-            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
-            body: JSON.stringify({ title, price, category, description, image_url: imageUrl }),
-          });
-          if (!productRes.ok) throw new Error('Product creation failed');
-          const [newProduct] = await productRes.json();
-          // 2. Link to shop
-          const linkRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}`, {
-            method: 'POST',
-            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ shop_id: activeAssignShopId, product_id: newProduct.id })
-          });
-          if (!linkRes.ok) throw new Error('Linking failed');
-          showToast('✅ New product created and assigned!');
-          assignManualForm.reset();
-          selectedAssignImageFile = null;
-          assignImagePreview.classList.remove('active');
-          assignImagePreview.src = '';
-          assignFileName.textContent = '';
-          await populateAssignDropdown(activeAssignShopId);
-          await fetchShops();
-        } catch (error) {
-          showToast('Failed: ' + error.message, 'error');
-        } finally {
-          assignManualSubmitBtn.disabled = false;
-          assignManualSubmitBtn.textContent = '➕ Add & Assign';
-        }
-      });
-
-      // Manual product image preview
-      assignManualImage.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          selectedAssignImageFile = file;
-          assignFileName.textContent = file.name;
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            assignImagePreview.src = event.target.result;
-            assignImagePreview.classList.add('active');
-          };
-          reader.readAsDataURL(file);
-        } else {
-          selectedAssignImageFile = null;
-          assignFileName.textContent = '';
-          assignImagePreview.classList.remove('active');
-          assignImagePreview.src = '';
-        }
-      });
+      // =========================================================================
 
       // ----- LOGOUT -----
       function handleLogout() { localStorage.removeItem(SESSION_KEY); window.location.replace(LOGIN_PATH); }
