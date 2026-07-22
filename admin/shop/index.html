@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Shops · Batisha admin</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f5f7fa;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a1f36;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    /* ----- HEADER (Mobile-First) ----- */
+    .header {
+      background: #ffffff;
+      border-bottom: 1px solid #e8edf2;
+      padding: 0.6rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      width: 100%;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      color: #1a1f36;
+    }
+    .logo-image {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+    .logo-text {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .logo-text span { font-weight: 400; color: #4b6b5e; font-size: 0.65rem; }
+    .page-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1a1f36;
+      white-space: nowrap;
+    }
+
+    /* ----- HAMBURGER MENU ----- */
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #1a1f36;
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      transition: 0.2s;
+      line-height: 1;
+    }
+    .menu-toggle:hover { background: #f0f3f7; }
+
+    /* ----- SIDEBAR (Slide-out) ----- */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.open {
+      display: block;
+      opacity: 1;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 260px;
+      height: 100%;
+      background: #ffffff;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.08);
+      z-index: 201;
+      transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      padding: 1.5rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .sidebar.open {
+      left: 0;
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #1a1f36;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e8edf2;
+    }
+    .sidebar-logo .logo-image {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+    .sidebar-logo .logo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .sidebar-logo .logo-text span { font-weight: 400; color: #4b6b5e; font-size: 0.7rem; }
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .sidebar-nav a {
+      text-decoration: none;
+      color: #4b5f6b;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .sidebar-nav a:hover { background: #f0f3f7; color: #1a1f36; }
+    .sidebar-nav a.active { color: #1f8b4c; background: #f0f8f2; }
+    .sidebar-nav a .icon { font-size: 1.1rem; }
+    .sidebar-footer {
+      margin-top: auto;
+      border-top: 1px solid #e8edf2;
+      padding-top: 1rem;
+    }
+    .sidebar-footer .btn-logout {
+      width: 100%;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      padding: 0.6rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .sidebar-footer .btn-logout:hover { background: #fee2e2; }
+
+    /* ----- STATS BAR (Mobile-First) ----- */
+    .stats-bar {
+      background: #ffffff;
+      border-bottom: 1px solid #e8edf2;
+      padding: 0.5rem 0.8rem;
+      width: 100%;
+      overflow: hidden;
+    }
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .stats-inner::-webkit-scrollbar { display: none; }
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      color: #4b5f6b;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .stat-item .num {
+      font-weight: 700;
+      color: #1a1f36;
+      font-size: 0.8rem;
+    }
+    .stat-item .num.green { color: #1f8b4c; }
+    .stat-item .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2px; }
+    .stat-divider { width: 1px; height: 18px; background: #e8edf2; flex-shrink: 0; }
+
+    /* ----- MAIN CONTENT ----- */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.8rem;
+      width: 100%;
+    }
+
+    /* ----- STATE CONTAINERS ----- */
+    .state-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1rem;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e8edf2;
+      text-align: center;
+      width: 100%;
+    }
+    .state-container .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .state-container h3 { font-size: 0.95rem; color: #1a1f36; }
+    .state-container p { color: #6b7a86; font-size: 0.8rem; margin-top: 0.2rem; }
+    .spinner {
+      width: 28px; height: 28px;
+      border: 3px solid #e2ebe6;
+      border-top-color: #1f8b4c;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-bottom: 0.8rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ----- FORM CONTAINER ----- */
+    .form-container {
+      background: #ffffff;
+      border: 1px solid #e8edf2;
+      border-radius: 12px;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      display: none;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      width: 100%;
+    }
+    .form-container.active { display: block; animation: slideDown 0.25s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .form-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a1f36;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .form-group label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #1a1f36;
+    }
+    .form-input {
+      background: #f8fbf9;
+      border: 1px solid #e4ece8;
+      color: #1a1f36;
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+      transition: 0.15s;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+    .form-input:focus {
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31, 139, 76, 0.08);
+      background: #ffffff;
+    }
+    textarea.form-input { resize: vertical; min-height: 50px; }
+    select.form-input {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7a86' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.8rem center;
+      padding-right: 2.5rem;
+    }
+    .file-upload-wrapper { position: relative; }
+    .file-upload-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f8fbf9;
+      border: 2px dashed #e4ece8;
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      cursor: pointer;
+      transition: 0.15s;
+      color: #4b5f6b;
+      font-size: 0.8rem;
+    }
+    .file-upload-label:hover { border-color: #1f8b4c; color: #1f8b4c; }
+    .file-upload-label input[type="file"] { display: none; }
+    .image-preview {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-top: 0.3rem;
+      display: none;
+      border: 1px solid #e8edf2;
+      background: #f8fbf9;
+    }
+    .image-preview.active { display: block; }
+
+    .form-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+    .btn-submit {
+      background: #1f8b4c;
+      color: white;
+      padding: 0.45rem 1rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      border: none;
+      cursor: pointer;
+      transition: 0.15s;
+      flex: 1;
+    }
+    .btn-submit:hover { background: #0f6e3a; }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-cancel-form {
+      background: #f3f6f8;
+      color: #1a1f36;
+      border: 1px solid #e4eaf0;
+      padding: 0.45rem 1rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: 0.15s;
+      flex: 1;
+    }
+    .btn-cancel-form:hover { background: #e8edf2; }
+
+    /* ----- SHOP LIST (Mobile Cards) ----- */
+    .shop-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      width: 100%;
+    }
+    .shop-card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e8edf2;
+      padding: 0.7rem;
+      transition: 0.15s;
+      width: 100%;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+    .shop-card:active { transform: scale(0.99); }
+    .shop-card-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #f8fbf9;
+      border: 1px solid #e8edf2;
+      flex-shrink: 0;
+    }
+    .shop-card-img-placeholder {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: #f3f8f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #2d7a4b;
+      flex-shrink: 0;
+      border: 1px solid #e8edf2;
+    }
+    .shop-card-info { flex: 1; min-width: 0; }
+    .shop-card-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #1a1f36;
+    }
+    .shop-card-detail {
+      font-size: 0.65rem;
+      color: #6b7a86;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .shop-card-products {
+      font-size: 0.6rem;
+      background: #f0f5fc;
+      color: #1e3a5f;
+      padding: 0.05rem 0.5rem;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 0.1rem;
+      border: 1px solid #dde5ed;
+    }
+    .shop-card-actions {
+      display: flex;
+      gap: 0.15rem;
+      flex-shrink: 0;
+    }
+    .btn-sm {
+      padding: 0.15rem 0.5rem;
+      border-radius: 30px;
+      font-size: 0.55rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: 0.15s;
+      white-space: nowrap;
+    }
+    .btn-edit { background: #f0f5fc; color: #1e3a5f; border: 1px solid #dde5ed; }
+    .btn-edit:hover { background: #e4edf7; }
+    .btn-delete { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .btn-delete:hover { background: #fee2e2; }
+    .btn-save { background: #1f8b4c; color: white; }
+    .btn-save:hover { background: #0f6e3a; }
+    .btn-secondary { background: #f3f6f8; color: #1a1f36; border: 1px solid #e4eaf0; }
+    .btn-manage-products { background: #e8f0fe; color: #1a5a8c; border: 1px solid #b8d4f0; }
+    .btn-manage-products:hover { background: #d6e4f8; }
+
+    /* ----- TABLE (Desktop fallback) ----- */
+    .table-container {
+      display: none;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e8edf2;
+      overflow: hidden;
+      width: 100%;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .table-wrapper { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    thead { background: #f8fbf9; border-bottom: 1px solid #e8edf2; }
+    th {
+      padding: 0.6rem 0.7rem;
+      text-align: left;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #4b5f6b;
+      font-weight: 600;
+    }
+    td {
+      padding: 0.5rem 0.7rem;
+      border-bottom: 1px solid #f0f3f7;
+      font-size: 0.75rem;
+      color: #1a1f36;
+      vertical-align: middle;
+    }
+    tbody tr:hover { background: #f8fbf9; }
+    tbody tr:last-child td { border-bottom: none; }
+    .actions-cell { display: flex; gap: 0.15rem; flex-wrap: wrap; }
+    .shop-thumb {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: #f8fbf9;
+      border: 1px solid #e8edf2;
+    }
+    .no-image {
+      width: 36px;
+      height: 36px;
+      background: #f3f8f5;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      border: 1px solid #e8edf2;
+    }
+    .products-badge {
+      font-size: 0.6rem;
+      background: #f0f5fc;
+      color: #1e3a5f;
+      padding: 0.05rem 0.5rem;
+      border-radius: 12px;
+      display: inline-block;
+      border: 1px solid #dde5ed;
+    }
+
+    /* ----- PRODUCT ASSIGNMENT MODAL (NEW) ----- */
+    .assign-modal .modal-box {
+      max-width: 650px;
+      border-radius: 16px;
+      animation: scaleIn 0.2s ease;
+    }
+    @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .assign-modal .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+    .assign-modal .modal-title { font-size: 1rem; font-weight: 700; color: #1a1f36; }
+    .assign-modal .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: #6b7a86;
+      cursor: pointer;
+      padding: 0.2rem;
+    }
+    .assign-modal .modal-close:hover { color: #991b1b; }
+
+    .assign-mode-buttons {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 0.8rem;
+    }
+    .assign-mode-btn {
+      padding: 0.3rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      border: 1px solid #e4eaf0;
+      background: white;
+      color: #4b5f6b;
+      cursor: pointer;
+      transition: 0.15s;
+      flex: 1;
+    }
+    .assign-mode-btn.active {
+      background: #1f8b4c;
+      color: white;
+      border-color: #1f8b4c;
+    }
+    .assign-mode-btn:hover:not(.active) { background: #f0f3f7; }
+
+    .assign-form-section {
+      display: none;
+      margin-top: 0.4rem;
+    }
+    .assign-form-section.active { display: block; }
+
+    .assign-product-select {
+      width: 100%;
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #e4ece8;
+      background: #f8fbf9;
+      font-size: 0.8rem;
+      color: #1a1f36;
+    }
+
+    /* ----- MODAL (Standard) ----- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      animation: fadeIn 0.2s ease;
+      padding: 0.8rem;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal-box {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.2rem 1rem;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    }
+    .modal-icon { font-size: 2.5rem; margin-bottom: 0.3rem; }
+    .modal-title { font-size: 1rem; font-weight: 700; color: #1a1f36; margin-bottom: 0.2rem; }
+    .modal-message { color: #6b7a86; font-size: 0.8rem; margin-bottom: 1rem; }
+    .modal-actions { display: flex; gap: 0.5rem; justify-content: center; }
+    .btn-danger { background: #dc2626; color: white; padding: 0.4rem 1rem; border-radius: 30px; font-weight: 600; font-size: 0.75rem; border: none; cursor: pointer; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-secondary { background: #f3f6f8; color: #1a1f36; border: 1px solid #e4eaf0; padding: 0.4rem 1rem; border-radius: 30px; font-weight: 600; font-size: 0.75rem; cursor: pointer; }
+    .btn-secondary:hover { background: #e8edf2; }
+
+    /* ----- TOAST ----- */
+    .toast {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.35rem 0.9rem;
+      border-radius: 30px;
+      font-weight: 500;
+      font-size: 0.75rem;
+      z-index: 3000;
+      display: none;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      animation: toastIn 0.3s ease;
+      white-space: nowrap;
+      max-width: 90%;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(15px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    .toast.success { background: #1f8b4c; }
+    .toast.error { background: #dc2626; }
+
+    /* ----- DESKTOP OVERRIDES ----- */
+    @media (min-width: 768px) {
+      .header { padding: 0.7rem 1.5rem; }
+      .stats-bar { padding: 0.5rem 1.5rem; }
+      .main { padding: 1.5rem; }
+      .form-container { padding: 1.5rem; }
+      .form-grid { grid-template-columns: 1fr 1fr; }
+      .shop-card { padding: 1rem; }
+      .shop-list { display: none !important; }
+      .table-container { display: block !important; }
+      .logo-image { width: 48px; height: 48px; }
+      .logo-text { font-size: 1.1rem; }
+      .page-title { font-size: 1rem; }
+      .menu-toggle { display: none; }
+      .sidebar-overlay, .sidebar { display: none !important; }
+      .assign-modal .modal-box { border-radius: 16px; }
+    }
+
+    @media (max-width: 767px) {
+      .shop-list { display: flex !important; }
+      .table-container { display: none !important; }
+      .header { padding: 0.5rem 0.8rem; }
+      .stats-bar { padding: 0.4rem 0.8rem; }
+      .stats-inner { gap: 0.5rem; }
+      .stat-item { font-size: 0.6rem; }
+      .stat-item .num { font-size: 0.75rem; }
+      .main { padding: 0.7rem; }
+      .page-title { font-size: 0.85rem; }
+      .logo-text { font-size: 0.9rem; }
+      .logo-image { width: 36px; height: 36px; }
+      .toast { font-size: 0.7rem; padding: 0.3rem 0.8rem; bottom: 0.8rem; }
+      .shop-card-img { width: 44px; height: 44px; }
+      .shop-card-img-placeholder { width: 44px; height: 44px; }
+      .form-container { padding: 0.6rem; }
+      .form-grid { gap: 0.5rem; }
+      .sidebar { width: 240px; left: -240px; }
+      .assign-mode-buttons { flex-direction: column; }
+    }
+
+    @media (max-width: 480px) {
+      .shop-card { padding: 0.5rem; }
+      .shop-card-name { font-size: 0.7rem; }
+      .shop-card-detail { font-size: 0.6rem; }
+      .btn-sm { font-size: 0.5rem; padding: 0.1rem 0.4rem; }
+      .logo-image { width: 32px; height: 32px; }
+      .logo-text { font-size: 0.85rem; }
+      .menu-toggle { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="/" class="logo">
+          <img src="/assets/logo.png" alt="Batisha" class="logo-image">
+          <span class="logo-text">Batisha <span>online</span></span>
+        </a>
+        <span class="page-title">🏪 Shops</span>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+    </div>
+  </header>
+
+  <!-- SIDEBAR OVERLAY & MENU -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="sidebar" id="sidebar">
+    <a href="/" class="sidebar-logo">
+      <img src="/assets/logo.png" alt="Batisha" class="logo-image">
+      <span class="logo-text">Batisha <span>online</span></span>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="/admin/dashboard"><span class="icon">📊</span> Products</a>
+      <a href="/admin/orders"><span class="icon">📦</span> Orders</a>
+      <a href="/admin/shop" class="active"><span class="icon">🏪</span> Shops</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="logoutButton">🚪 Logout</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item"><span class="num" id="statTotal">0</span><span class="label">Total Shops</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="num green" id="statProducts">0</span><span class="label">Products</span></div>
+    </div>
+  </div>
+
+  <main class="main">
+    
+    <div style="margin-bottom:0.8rem;display:flex;gap:0.4rem;flex-wrap:wrap;">
+      <button class="btn-submit" id="toggleFormBtn" style="flex:none;padding:0.45rem 1rem;font-size:0.75rem;">➕ Add Shop</button>
+    </div>
+
+    <div id="addShopForm" class="form-container">
+      <h2 class="form-title">🏪 Add New Shop</h2>
+      <form id="shopForm" class="form-grid">
+        <div class="form-group">
+          <label for="shopName">Shop Name *</label>
+          <input type="text" id="shopName" class="form-input" placeholder="Shop name" required>
+        </div>
+        <div class="form-group">
+          <label for="shopLocation">Location</label>
+          <input type="text" id="shopLocation" class="form-input" placeholder="e.g. Dhaka, Bangladesh">
+        </div>
+        <div class="form-group">
+          <label for="shopProprietor">Proprietor Name</label>
+          <input type="text" id="shopProprietor" class="form-input" placeholder="Owner's full name">
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label>Shop Profile Image</label>
+          <div class="file-upload-wrapper">
+            <label class="file-upload-label" for="shopImage">
+              📁 Choose Image
+              <input type="file" id="shopImage" accept="image/*">
+            </label>
+            <span id="fileName" style="color:#6b7a86;font-size:0.7rem;margin-left:0.3rem;"></span>
+          </div>
+          <img id="imagePreview" class="image-preview" src="" alt="Preview">
+        </div>
+        <div class="form-actions" style="grid-column:1/-1;">
+          <button type="submit" class="btn-submit" id="submitBtn">💾 Save Shop</button>
+          <button type="button" class="btn-cancel-form" id="cancelFormBtn">✖ Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="loadingState" class="state-container"><div class="spinner"></div><h3>Loading shops...</h3></div>
+    <div id="errorState" class="state-container"><div class="icon">❌</div><h3>Failed to load shops</h3><p>Please try again</p><button class="btn-sm btn-edit" onclick="location.reload()" style="margin-top:0.5rem;font-size:0.7rem;">Retry</button></div>
+    <div id="emptyState" class="state-container"><div class="icon">🏪</div><h3>No shops yet</h3><p>Add your first shop to get started</p></div>
+
+    <div id="shopList" class="shop-list"></div>
+
+    <div id="tableContainer" class="table-container">
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Image</th><th>Name</th><th>Location</th><th>Proprietor</th><th>Products</th><th>Actions</th></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- DELETE CONFIRM MODAL -->
+  <div id="deleteModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-icon">⚠️</div>
+      <h3 class="modal-title">Delete Shop?</h3>
+      <p class="modal-message" id="deleteMessage">This will also remove all product assignments.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="modalCancelBtn">Cancel</button>
+        <button class="btn-danger" id="modalConfirmBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT ASSIGNMENT MODAL -->
+  <div id="assignModal" class="modal-overlay assign-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="assignModalTitle">Manage Products for <span id="assignShopName">—</span></h3>
+        <button class="modal-close" id="assignModalClose">✕</button>
+      </div>
+      <div class="assign-mode-buttons">
+        <button class="assign-mode-btn active" data-mode="existing">📦 From Existing</button>
+        <button class="assign-mode-btn" data-mode="manual">✏️ Add New</button>
+      </div>
+      <!-- Existing Product Mode -->
+      <div class="assign-form-section active" id="assignExistingSection">
+        <div class="form-group">
+          <label for="assignProductSelect">Select Product</label>
+          <select id="assignProductSelect" class="assign-product-select">
+            <option value="">— Choose a product —</option>
+          </select>
+        </div>
+        <button class="btn-submit" id="assignExistingBtn" style="flex:none; width:auto; padding:0.45rem 1.5rem;">➕ Assign Product</button>
+      </div>
+      <!-- Manual Product Mode -->
+      <div class="assign-form-section" id="assignManualSection">
+        <form id="assignManualForm" class="form-grid" style="gap:0.5rem;">
+          <div class="form-group">
+            <label for="assignManualTitle">Title *</label>
+            <input type="text" id="assignManualTitle" class="form-input" placeholder="Product name" required>
+          </div>
+          <div class="form-group">
+            <label for="assignManualPrice">Price (৳) *</label>
+            <input type="number" id="assignManualPrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+          </div>
+          <div class="form-group">
+            <label for="assignManualCategory">Category *</label>
+            <select id="assignManualCategory" class="form-input" required>
+              <option value="">Select category</option>
+              <option value="electronics">Electronics</option>
+              <option value="grocery">Grocery</option>
+              <option value="medicine">Medicine</option>
+              <option value="vegetables">Vegetables</option>
+              <option value="fruits">Fruits</option>
+              <option value="bakery">Bakery Items</option>
+              <option value="others">Others</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label for="assignManualDescription">Description</label>
+            <textarea id="assignManualDescription" class="form-input" placeholder="Product description..."></textarea>
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Product Image</label>
+            <div class="file-upload-wrapper">
+              <label class="file-upload-label" for="assignManualImage">
+                📁 Choose Image
+                <input type="file" id="assignManualImage" accept="image/*">
+              </label>
+              <span id="assignFileName" style="color:#6b7a86;font-size:0.7rem;margin-left:0.3rem;"></span>
+            </div>
+            <img id="assignImagePreview" class="image-preview" src="" alt="Preview">
+          </div>
+          <div class="form-actions" style="grid-column:1/-1;">
+            <button type="submit" class="btn-submit" id="assignManualSubmitBtn">➕ Add & Assign</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const SESSION_KEY = 'grocery_admin_session';
+      const LOGIN_PATH = '/admin';
+      function hasValidSession() {
+        try {
+          const data = localStorage.getItem(SESSION_KEY);
+          if (!data) return false;
+          const parsed = JSON.parse(data);
+          if (!parsed || parsed.loggedIn !== true || !parsed.timestamp) { localStorage.removeItem(SESSION_KEY); return false; }
+          if (Date.now() - parsed.timestamp > 24 * 60 * 60 * 1000) { localStorage.removeItem(SESSION_KEY); return false; }
+          return true;
+        } catch { localStorage.removeItem(SESSION_KEY); return false; }
+      }
+      if (!hasValidSession()) { window.location.replace(LOGIN_PATH); throw new Error('Unauthorized'); }
+
+      let supabaseUrl = null, supabaseAnonKey = null;
+      const SHOPS_TABLE = 'shops';
+      const SHOP_PRODUCTS_TABLE = 'shop_products';
+      const PRODUCTS_TABLE = 'product';
+      const SHOP_IMAGES_BUCKET = 'shop-images';
+
+      const addShopForm = document.getElementById('addShopForm');
+      const shopForm = document.getElementById('shopForm');
+      const toggleFormBtn = document.getElementById('toggleFormBtn');
+      const cancelFormBtn = document.getElementById('cancelFormBtn');
+      const loadingState = document.getElementById('loadingState');
+      const errorState = document.getElementById('errorState');
+      const emptyState = document.getElementById('emptyState');
+      const shopList = document.getElementById('shopList');
+      const tableContainer = document.getElementById('tableContainer');
+      const tableBody = document.getElementById('tableBody');
+      const toast = document.getElementById('toast');
+      const imagePreview = document.getElementById('imagePreview');
+      const fileName = document.getElementById('fileName');
+      const shopImage = document.getElementById('shopImage');
+      const submitBtn = document.getElementById('submitBtn');
+      const deleteModal = document.getElementById('deleteModal');
+      const deleteMessage = document.getElementById('deleteMessage');
+      const modalCancelBtn = document.getElementById('modalCancelBtn');
+      const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+      // ASSIGN MODAL ELEMENTS
+      const assignModal = document.getElementById('assignModal');
+      const assignModalClose = document.getElementById('assignModalClose');
+      const assignShopName = document.getElementById('assignShopName');
+      const assignProductSelect = document.getElementById('assignProductSelect');
+      const assignExistingBtn = document.getElementById('assignExistingBtn');
+      const assignManualForm = document.getElementById('assignManualForm');
+      const assignManualSubmitBtn = document.getElementById('assignManualSubmitBtn');
+      const assignManualImage = document.getElementById('assignManualImage');
+      const assignFileName = document.getElementById('assignFileName');
+      const assignImagePreview = document.getElementById('assignImagePreview');
+      const assignModeBtns = document.querySelectorAll('.assign-mode-btn');
+
+      // SIDEBAR TOGGLE
+      const menuToggle = document.getElementById('menuToggle');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+      const logoutBtn = document.getElementById('logoutButton');
+
+      let allShops = [];
+      let allProducts = [];
+      let editingShopId = null;
+      let selectedShopImageFile = null;
+      let selectedAssignImageFile = null;
+      let deleteTargetId = null;
+      let deleteTargetName = null;
+      let activeAssignShopId = null;
+      let activeAssignMode = 'existing';
+
+      function toggleSidebar(open) {
+        if (open === undefined) open = !sidebar.classList.contains('open');
+        sidebar.classList.toggle('open', open);
+        sidebarOverlay.classList.toggle('open', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+      menuToggle.addEventListener('click', () => toggleSidebar());
+      sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+
+      function showToast(msg, type = 'success') {
+        toast.textContent = msg;
+        toast.className = `toast ${type}`;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+      }
+
+      function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+
+      async function fetchConfig() {
+        try {
+          const resp = await fetch('/api/config');
+          if (!resp.ok) throw new Error('Config failed');
+          const cfg = await resp.json();
+          supabaseUrl = cfg.supabaseUrl; 
+          supabaseAnonKey = cfg.supabaseAnonKey;
+          return true;
+        } catch { showToast('Failed to load config', 'error'); return false; }
+      }
+
+      async function uploadShopImage(file) {
+        const timestamp = Date.now();
+        const fileExt = file.name.split('.').pop();
+        const uniqueName = `shop-${timestamp}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+        const response = await fetch(`${supabaseUrl}/storage/v1/object/${SHOP_IMAGES_BUCKET}/${uniqueName}`, {
+          method: 'POST',
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': file.type },
+          body: file,
+        });
+        if (!response.ok) throw new Error('Upload failed');
+        return `${supabaseUrl}/storage/v1/object/public/${SHOP_IMAGES_BUCKET}/${uniqueName}`;
+      }
+
+      async function uploadProductImage(file) {
+        const timestamp = Date.now();
+        const fileExt = file.name.split('.').pop();
+        const uniqueName = `product-${timestamp}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+        const response = await fetch(`${supabaseUrl}/storage/v1/object/product/${uniqueName}`, {
+          method: 'POST',
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': file.type },
+          body: file,
+        });
+        if (!response.ok) throw new Error('Upload failed');
+        return `${supabaseUrl}/storage/v1/object/public/product/${uniqueName}`;
+      }
+
+      function showForm() {
+        addShopForm.classList.add('active');
+        toggleFormBtn.textContent = '✖ Close';
+        document.getElementById('shopName').focus();
+      }
+      function hideForm() {
+        addShopForm.classList.remove('active');
+        toggleFormBtn.textContent = '➕ Add Shop';
+        shopForm.reset();
+        selectedShopImageFile = null;
+        imagePreview.classList.remove('active');
+        imagePreview.src = '';
+        fileName.textContent = '';
+        editingShopId = null;
+        submitBtn.textContent = '💾 Save Shop';
+      }
+      toggleFormBtn.addEventListener('click', () => {
+        addShopForm.classList.contains('active') ? hideForm() : showForm();
+      });
+      cancelFormBtn.addEventListener('click', hideForm);
+
+      shopImage.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          selectedShopImageFile = file;
+          fileName.textContent = file.name;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            imagePreview.src = event.target.result;
+            imagePreview.classList.add('active');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          selectedShopImageFile = null;
+          fileName.textContent = '';
+          imagePreview.classList.remove('active');
+          imagePreview.src = '';
+        }
+      });
+
+      // ----- FETCH SHOPS -----
+      async function fetchShops() {
+        try {
+          showState('loading');
+          const response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?select=*&order=created_at.desc`, {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (!response.ok) throw new Error('Fetch failed');
+          const shops = await response.json();
+          allShops = shops;
+          if (!shops || shops.length === 0) { showState('empty'); updateStats([]); return; }
+          // Fetch product counts for each shop
+          for (let shop of shops) {
+            const countRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}?shop_id=eq.${shop.id}&select=id`, {
+              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+            });
+            if (countRes.ok) {
+              const countData = await countRes.json();
+              shop.product_count = countData.length;
+            } else {
+              shop.product_count = 0;
+            }
+          }
+          renderShops(shops);
+          updateStats(shops);
+          showState('table');
+        } catch { showState('error'); }
+      }
+
+      // ----- FETCH ALL PRODUCTS (for assignment dropdown) -----
+      async function fetchAllProducts() {
+        const response = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?select=id,title&order=id.desc`, {
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+        });
+        if (response.ok) {
+          allProducts = await response.json();
+        }
+      }
+
+      // ----- FETCH ALREADY ASSIGNED PRODUCTS -----
+      async function fetchAssignedProductIds(shopId) {
+        const response = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}?shop_id=eq.${shopId}&select=product_id`, {
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          return data.map(item => item.product_id);
+        }
+        return [];
+      }
+
+      function renderShops(shops) {
+        shopList.innerHTML = '';
+        shops.forEach(shop => {
+          const card = document.createElement('div');
+          card.className = 'shop-card';
+          card.setAttribute('data-id', shop.id);
+          const imgHtml = shop.image_url 
+            ? `<img src="${escapeHtml(shop.image_url)}" class="shop-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+            : '';
+          const placeholder = `<div class="shop-card-img-placeholder" style="${shop.image_url ? 'display:none;' : ''}">🏪</div>`;
+          card.innerHTML = `
+            ${imgHtml}${placeholder}
+            <div class="shop-card-info">
+              <div class="shop-card-name">${escapeHtml(shop.name || '—')}</div>
+              <div class="shop-card-detail">${escapeHtml(shop.location || '')}</div>
+              <div class="shop-card-detail">👤 ${escapeHtml(shop.proprietor || '')}</div>
+              <div class="shop-card-products">${shop.product_count || 0} products</div>
+            </div>
+            <div class="shop-card-actions">
+              <button class="btn-sm btn-manage-products" onclick="window.openAssignModal(${shop.id})">📦</button>
+              <button class="btn-sm btn-edit" onclick="window.startEditShop(${shop.id})">✏️</button>
+              <button class="btn-sm btn-delete" onclick="window.confirmDeleteShop(${shop.id}, '${escapeHtml(shop.name || 'this shop')}')">🗑️</button>
+            </div>
+          `;
+          shopList.appendChild(card);
+        });
+
+        tableBody.innerHTML = '';
+        shops.forEach(shop => {
+          const row = document.createElement('tr');
+          row.setAttribute('data-id', shop.id);
+          row.innerHTML = `
+            <td>${shop.image_url ? `<img src="${escapeHtml(shop.image_url)}" class="shop-thumb" onerror="this.parentElement.innerHTML='<div class=\\'no-image\\'>🏪</div>'">` : '<div class="no-image">🏪</div>'}</td>
+            <td class="cell-name">${escapeHtml(shop.name || '—')}</td>
+            <td class="cell-location">${escapeHtml(shop.location || '—')}</td>
+            <td class="cell-proprietor">${escapeHtml(shop.proprietor || '—')}</td>
+            <td><span class="products-badge">${shop.product_count || 0}</span></td>
+            <td class="actions-cell">
+              <button class="btn-sm btn-manage-products" onclick="window.openAssignModal(${shop.id})">📦</button>
+              <button class="btn-sm btn-edit" onclick="window.startEditShop(${shop.id})">✏️</button>
+              <button class="btn-sm btn-delete" onclick="window.confirmDeleteShop(${shop.id}, '${escapeHtml(shop.name || 'this shop')}')">🗑️</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      function updateStats(shops) {
+        document.getElementById('statTotal').textContent = shops.length;
+        const totalProducts = shops.reduce((sum, s) => sum + (s.product_count || 0), 0);
+        document.getElementById('statProducts').textContent = totalProducts;
+      }
+
+      function showState(state) {
+        loadingState.style.display = 'none';
+        errorState.style.display = 'none';
+        emptyState.style.display = 'none';
+        shopList.style.display = 'none';
+        tableContainer.style.display = 'none';
+        if (state === 'loading') loadingState.style.display = 'flex';
+        else if (state === 'error') errorState.style.display = 'flex';
+        else if (state === 'empty') emptyState.style.display = 'flex';
+        else if (state === 'table') {
+          if (window.innerWidth >= 768) tableContainer.style.display = 'block';
+          else shopList.style.display = 'flex';
+        }
+      }
+
+      // ----- CREATE / UPDATE SHOP -----
+      shopForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('shopName').value.trim();
+        const location = document.getElementById('shopLocation').value.trim();
+        const proprietor = document.getElementById('shopProprietor').value.trim();
+        
+        if (!name) { showToast('Shop name is required!', 'error'); return; }
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = '⏳ Saving...';
+        try {
+          let imageUrl = null;
+          if (selectedShopImageFile) {
+            imageUrl = await uploadShopImage(selectedShopImageFile);
+          }
+          
+          const body = { name, location, proprietor, image_url: imageUrl };
+          let response;
+          if (editingShopId) {
+            // Update existing
+            response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?id=eq.${editingShopId}`, {
+              method: 'PATCH',
+              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+              body: JSON.stringify(body),
+            });
+          } else {
+            // Create new
+            response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}`, {
+              method: 'POST',
+              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+              body: JSON.stringify(body),
+            });
+          }
+          if (!response.ok) throw new Error('Save failed');
+          showToast(editingShopId ? '✅ Shop updated!' : '✅ Shop added!');
+          shopForm.reset();
+          selectedShopImageFile = null;
+          imagePreview.classList.remove('active');
+          imagePreview.src = '';
+          fileName.textContent = '';
+          hideForm();
+          await fetchShops();
+        } catch (error) {
+          showToast('Failed to save shop: ' + error.message, 'error');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '💾 Save Shop';
+        }
+      });
+
+      window.startEditShop = function(shopId) {
+        const shop = allShops.find(s => s.id === shopId);
+        if (!shop) return;
+        editingShopId = shopId;
+        showForm();
+        document.getElementById('shopName').value = shop.name || '';
+        document.getElementById('shopLocation').value = shop.location || '';
+        document.getElementById('shopProprietor').value = shop.proprietor || '';
+        if (shop.image_url) {
+          imagePreview.src = shop.image_url;
+          imagePreview.classList.add('active');
+        } else {
+          imagePreview.classList.remove('active');
+          imagePreview.src = '';
+        }
+        submitBtn.textContent = '💾 Update Shop';
+        document.getElementById('shopName').focus();
+      };
+
+      // ----- DELETE SHOP -----
+      function showDeleteModal(shopId, shopName) {
+        deleteTargetId = shopId;
+        deleteTargetName = shopName;
+        deleteMessage.innerHTML = `Delete shop <strong>"${escapeHtml(shopName)}"</strong>?<br>All product assignments will also be removed.`;
+        deleteModal.style.display = 'flex';
+      }
+      function hideDeleteModal() {
+        deleteModal.style.display = 'none';
+        deleteTargetId = null;
+        deleteTargetName = null;
+      }
+      modalCancelBtn.addEventListener('click', hideDeleteModal);
+      deleteModal.addEventListener('click', (e) => { if (e.target === deleteModal) hideDeleteModal(); });
+
+      modalConfirmBtn.addEventListener('click', async () => {
+        if (!deleteTargetId) return;
+        modalConfirmBtn.disabled = true;
+        modalConfirmBtn.textContent = '⏳';
+        try {
+          // Delete shop (cascade will remove shop_products entries)
+          const response = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?id=eq.${deleteTargetId}`, {
+            method: 'DELETE',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (!response.ok) throw new Error('Delete failed');
+          allShops = allShops.filter(s => s.id !== deleteTargetId);
+          const row = document.querySelector(`tr[data-id="${deleteTargetId}"]`);
+          if (row) { row.style.opacity = '0'; setTimeout(() => row.remove(), 300); }
+          showToast(`🗑️ "${deleteTargetName}" deleted!`);
+          if (allShops.length === 0) showState('empty');
+          else fetchShops();
+        } catch (error) { showToast('Failed to delete: ' + error.message, 'error'); }
+        hideDeleteModal();
+        modalConfirmBtn.disabled = false;
+        modalConfirmBtn.textContent = 'Delete';
+      });
+
+      window.confirmDeleteShop = function(shopId, shopName) {
+        showDeleteModal(shopId, shopName);
+      };
+
+      // ----- ASSIGN PRODUCT MODAL -----
+      window.openAssignModal = async function(shopId) {
+        const shop = allShops.find(s => s.id === shopId);
+        if (!shop) return;
+        activeAssignShopId = shopId;
+        assignShopName.textContent = shop.name || 'Shop';
+        assignModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        await fetchAllProducts();
+        await populateAssignDropdown(shopId);
+        // Reset form
+        assignManualForm.reset();
+        selectedAssignImageFile = null;
+        assignImagePreview.classList.remove('active');
+        assignImagePreview.src = '';
+        assignFileName.textContent = '';
+        // Set default mode
+        setAssignMode('existing');
+      };
+
+      function closeAssignModal() {
+        assignModal.style.display = 'none';
+        document.body.style.overflow = '';
+        activeAssignShopId = null;
+      }
+      assignModalClose.addEventListener('click', closeAssignModal);
+      assignModal.addEventListener('click', (e) => { if (e.target === assignModal) closeAssignModal(); });
+
+      async function populateAssignDropdown(shopId) {
+        const assignedIds = await fetchAssignedProductIds(shopId);
+        assignProductSelect.innerHTML = '<option value="">— Choose a product —</option>';
+        allProducts.forEach(p => {
+          const option = document.createElement('option');
+          option.value = p.id;
+          option.textContent = p.title || 'Product #' + p.id;
+          if (assignedIds.includes(p.id)) {
+            option.disabled = true;
+            option.textContent += ' (already assigned)';
+          }
+          assignProductSelect.appendChild(option);
+        });
+      }
+
+      function setAssignMode(mode) {
+        activeAssignMode = mode;
+        assignModeBtns.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.mode === mode);
+        });
+        document.getElementById('assignExistingSection').classList.toggle('active', mode === 'existing');
+        document.getElementById('assignManualSection').classList.toggle('active', mode === 'manual');
+      }
+      assignModeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          setAssignMode(btn.dataset.mode);
+        });
+      });
+
+      // Assign existing product
+      assignExistingBtn.addEventListener('click', async () => {
+        const productId = parseInt(assignProductSelect.value);
+        if (!productId || !activeAssignShopId) {
+          showToast('Please select a product', 'error');
+          return;
+        }
+        assignExistingBtn.disabled = true;
+        assignExistingBtn.textContent = '⏳';
+        try {
+          const response = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}`, {
+            method: 'POST',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ shop_id: activeAssignShopId, product_id: productId })
+          });
+          if (!response.ok) throw new Error('Assign failed');
+          showToast('✅ Product assigned to shop!');
+          await populateAssignDropdown(activeAssignShopId);
+          await fetchShops();
+        } catch (error) {
+          showToast('Failed to assign: ' + error.message, 'error');
+        } finally {
+          assignExistingBtn.disabled = false;
+          assignExistingBtn.textContent = '➕ Assign Product';
+        }
+      });
+
+      // Assign manual product (creates new product globally + links to shop)
+      assignManualForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!activeAssignShopId) return;
+        const title = document.getElementById('assignManualTitle').value.trim();
+        const price = parseFloat(document.getElementById('assignManualPrice').value) || 0;
+        const category = document.getElementById('assignManualCategory').value;
+        const description = document.getElementById('assignManualDescription').value.trim();
+        
+        if (!title) { showToast('Title is required!', 'error'); return; }
+        if (!category) { showToast('Category is required!', 'error'); return; }
+        
+        assignManualSubmitBtn.disabled = true;
+        assignManualSubmitBtn.textContent = '⏳';
+        try {
+          let imageUrl = null;
+          if (selectedAssignImageFile) {
+            imageUrl = await uploadProductImage(selectedAssignImageFile);
+          }
+          // 1. Create product in global table
+          const productRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}`, {
+            method: 'POST',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+            body: JSON.stringify({ title, price, category, description, image_url: imageUrl }),
+          });
+          if (!productRes.ok) throw new Error('Product creation failed');
+          const [newProduct] = await productRes.json();
+          // 2. Link to shop
+          const linkRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}`, {
+            method: 'POST',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ shop_id: activeAssignShopId, product_id: newProduct.id })
+          });
+          if (!linkRes.ok) throw new Error('Linking failed');
+          showToast('✅ New product created and assigned!');
+          assignManualForm.reset();
+          selectedAssignImageFile = null;
+          assignImagePreview.classList.remove('active');
+          assignImagePreview.src = '';
+          assignFileName.textContent = '';
+          await populateAssignDropdown(activeAssignShopId);
+          await fetchShops();
+        } catch (error) {
+          showToast('Failed: ' + error.message, 'error');
+        } finally {
+          assignManualSubmitBtn.disabled = false;
+          assignManualSubmitBtn.textContent = '➕ Add & Assign';
+        }
+      });
+
+      // Manual product image preview
+      assignManualImage.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          selectedAssignImageFile = file;
+          assignFileName.textContent = file.name;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            assignImagePreview.src = event.target.result;
+            assignImagePreview.classList.add('active');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          selectedAssignImageFile = null;
+          assignFileName.textContent = '';
+          assignImagePreview.classList.remove('active');
+          assignImagePreview.src = '';
+        }
+      });
+
+      // ----- LOGOUT -----
+      function handleLogout() { localStorage.removeItem(SESSION_KEY); window.location.replace(LOGIN_PATH); }
+      logoutBtn.addEventListener('click', handleLogout);
+      setInterval(() => { if (!hasValidSession()) handleLogout(); }, 5000);
+
+      // ----- INIT -----
+      async function init() {
+        const configOk = await fetchConfig();
+        if (configOk) {
+          await fetchShops();
+        } else showState('error');
+      }
+
+      window.addEventListener('DOMContentLoaded', init);
+    })();
+  </script>
+</body>
+</html>
