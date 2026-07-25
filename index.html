@@ -254,6 +254,253 @@
       100% { opacity: 0.6; }
     }
 
+    /* ============================================== */
+    /* --- LIMITED OFFER SECTION (NEW) --- */
+    /* ============================================== */
+    .offer-section {
+      padding: 1rem 0 0.5rem;
+      border-bottom: 1px solid #eef2f6;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    .offer-section.visible { display: block; }
+    .offer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    .offer-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #dc2626;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .offer-title .badge {
+      background: #dc2626;
+      color: white;
+      font-size: 0.5rem;
+      padding: 0.05rem 0.4rem;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .offer-see-more {
+      background: none;
+      border: none;
+      color: #1f8b4c;
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .offer-see-more:hover { color: #0f6e3a; }
+
+    .offer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 0.8rem;
+    }
+    .offer-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #eef2f6;
+      transition: 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      position: relative;
+      cursor: pointer;
+    }
+    .offer-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+    }
+    .offer-card-image-frame {
+      position: relative;
+      width: 100%;
+      padding-bottom: 100%;
+      background: #f3f8f5;
+      overflow: hidden;
+    }
+    .offer-card-image-frame img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: 0.3s;
+    }
+    .offer-card:hover .offer-card-image-frame img { transform: scale(1.04); }
+    .offer-card-image-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      color: #2d7a4b;
+    }
+    .offer-card-discount-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #dc2626;
+      color: white;
+      font-size: 0.55rem;
+      font-weight: 700;
+      padding: 0.1rem 0.5rem;
+      border-radius: 30px;
+      box-shadow: 0 2px 8px rgba(220,38,38,0.25);
+      z-index: 2;
+    }
+    .offer-card-info {
+      padding: 0.5rem 0.6rem 0.7rem;
+    }
+    .offer-card-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1e2e2a;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .offer-card-prices {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.1rem 0 0.2rem;
+    }
+    .offer-card-old-price {
+      font-size: 0.65rem;
+      color: #9ca3af;
+      text-decoration: line-through;
+    }
+    .offer-card-old-price::before { content: '৳'; }
+    .offer-card-offer-price {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #0f6e3a;
+    }
+    .offer-card-offer-price::before { content: '৳'; }
+    .offer-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.3rem;
+      border-top: 1px solid #edf2ef;
+    }
+    .offer-add-btn {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.65rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .offer-add-btn:hover {
+      background: #b91c1c;
+      transform: scale(1.04);
+    }
+    .offer-add-btn:active { transform: scale(0.94); }
+
+    /* ============================================== */
+    /* --- OFFER SEE MORE OVERLAY (FULL SCREEN) --- */
+    /* ============================================== */
+    .offer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #f8faf8;
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+      animation: shopFadeIn 0.25s ease;
+    }
+    .offer-overlay.active { display: flex; }
+    @keyframes shopFadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .offer-overlay .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .offer-overlay-back-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1a2a3a;
+      cursor: pointer;
+      padding: 0.3rem 0.5rem;
+      border-radius: 30px;
+      transition: 0.15s;
+      align-items: center;
+      gap: 0.2rem;
+    }
+    .offer-overlay-back-btn:hover {
+      background: #f0f3f7;
+    }
+    .offer-overlay-back-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+    .offer-overlay-body {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.2rem;
+      width: 100%;
+      flex: 1;
+    }
+    .offer-overlay-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid #eef2f6;
+    }
+    .offer-overlay-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #dc2626;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .offer-overlay-count {
+      font-size: 0.8rem;
+      color: #4b6b5e;
+      font-weight: 400;
+    }
+    .offer-overlay-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 0.8rem;
+    }
+
     /* --- CATEGORY & PRODUCT GRID --- */
     .category-section { margin-bottom: 2.5rem; }
     .category-header { 
@@ -411,10 +658,6 @@
       animation: shopFadeIn 0.25s ease;
     }
     .shop-view-overlay.active { display: flex; }
-    @keyframes shopFadeIn {
-      from { opacity: 0; transform: scale(0.97); }
-      to { opacity: 1; transform: scale(1); }
-    }
     
     .shop-view-overlay .navbar {
       position: sticky;
@@ -522,7 +765,6 @@
       content: '📍 ';
     }
 
-    /* Products grid below */
     .shop-view-products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
@@ -893,6 +1135,8 @@
       }
       
       .products-grid { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 0.6rem; }
+      .offer-grid { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 0.6rem; }
+      .offer-overlay-grid { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 0.6rem; }
       .container { padding: 1rem; }
       .category-title { font-size: 1.1rem; }
       .simple-popup { bottom: 80px; padding: 0.6rem 1.4rem; font-size: 0.8rem; }
@@ -918,14 +1162,15 @@
       .shop-view-shop-proprietor { font-size: 0.8rem; }
       .shop-view-shop-location { font-size: 0.75rem; }
 
-      /* Show Back button on mobile inside Shop View */
-      .shop-view-back-btn {
-        display: flex;
-      }
+      .shop-view-back-btn { display: flex; }
+      .offer-overlay-back-btn { display: flex; }
+      .offer-overlay-title { font-size: 1.2rem; }
     }
 
     @media (max-width: 480px) {
       .products-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+      .offer-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+      .offer-overlay-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
       .product-title { font-size: 0.7rem; }
       .product-price { font-size: 0.8rem; }
       .add-to-cart-btn { font-size: 0.6rem; padding: 0.2rem 0.7rem; }
@@ -944,6 +1189,7 @@
       .shop-story-name { width: 60px; font-size: 0.5rem; }
       .shop-view-image-wrapper { width: 80px; height: 80px; }
       .shop-view-shop-name { font-size: 1rem; }
+      .offer-overlay-title { font-size: 1rem; }
     }
   </style>
 </head>
@@ -985,112 +1231,156 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ===== SHOP VIEW OVERLAY (Full-Screen Modal with Navbar) ===== -->
-  <div class="shop-view-overlay" id="shopViewOverlay">
-    <nav class="navbar" id="shopViewNavbar">
-      <div class="nav-container">
-        <a href="/" class="logo" id="shopViewLogo">
-          <img src="/assets/logo.png" alt="Batisha Online" class="logo-image">
-          <span class="logo-text">Batisha <span>online</span></span>
-        </a>
-        <div class="nav-links">
-          <a href="/" id="shopViewHome">Home</a>
-          <a href="/product/" id="shopViewProducts">Products</a>
-          <a href="/cart/" class="cart-pill">Cart <span id="shopViewCartCount">0</span></a>
-        </div>
-        <!-- Back button for mobile (hidden on desktop) -->
-        <button class="shop-view-back-btn" id="shopViewBackBtn">
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-          Back
-        </button>
+    <!-- ============================================== -->
+    <!-- ===== LIMITED OFFER SECTION (NEW) ===== -->
+    <!-- ============================================== -->
+    <div class="offer-section" id="offerSection">
+      <div class="offer-header">
+        <span class="offer-title">🔥 Limited Offer <span class="badge">Hot</span></span>
+        <button class="offer-see-more" id="offerSeeMoreBtn">See More →</button>
       </div>
-    </nav>
-    <div class="shop-view-body" id="shopViewBody">
-      <!-- TOP SECTION: Left Image, Right Info -->
-      <div class="shop-view-top" id="shopViewTop">
-        <div class="shop-view-image-wrapper" id="shopViewImageWrapper">
-          <img id="shopViewImage" src="" alt="Shop Image" style="display:none;">
-          <div class="placeholder" id="shopViewImagePlaceholder">🏪</div>
-        </div>
-        <div class="shop-view-info">
-          <div class="shop-view-shop-name" id="shopViewName">Shop Name</div>
-          <div class="shop-view-shop-proprietor" id="shopViewProprietor">Proprietor</div>
-          <div class="shop-view-shop-location" id="shopViewLocation">Location</div>
-        </div>
-      </div>
-      
-      <!-- BOTTOM SECTION: Full-width Products Grid -->
-      <div class="shop-view-products-grid" id="shopViewProductsGrid">
-        <!-- Products will be injected here with lazy loading -->
+      <div class="offer-grid" id="offerGrid">
+        <!-- Offer items will be injected by JS -->
       </div>
     </div>
-  </div>
+    <!-- ============================================== -->
 
-  <!-- ===== MAIN CONTENT ===== -->
-  <main class="container" id="mainContainer">
-    <div id="loadingState" style="text-align:center;padding:2rem;">
-      <div style="width:32px;height:32px;border:3px solid #e2ebe6;border-top-color:#1f8b4c;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto;"></div>
-      <p style="color:#4b6b5e;font-size:0.85rem;margin-top:0.5rem;">Loading products…</p>
-    </div>
-    <div id="errorState" style="display:none;text-align:center;padding:2rem;color:#991b1b;">
-      <p>Failed to load products. <button onclick="location.reload()" style="background:#1f8b4c;color:white;border:none;padding:0.2rem 0.8rem;border-radius:40px;font-weight:600;cursor:pointer;">Retry</button></p>
-    </div>
-    <div id="categoryContainer"></div>
-
-    <!-- Quick View Modal -->
-    <div class="quickview-overlay" id="quickViewOverlay">
-      <div class="quickview-modal">
-        <button class="quickview-close" id="quickViewClose">✕</button>
-        <img class="quickview-image" id="quickViewImage" src="" alt="Product Image">
-        <h2 class="quickview-title" id="quickViewTitle">Product Title</h2>
-        <p class="quickview-description" id="quickViewDescription">Product description goes here.</p>
-        <div class="quickview-price" id="quickViewPrice">0.00</div>
-        <div class="quickview-controls">
-          <div class="quickview-qty-wrapper">
-            <button class="quickview-qty-btn" id="quickViewDecrease" disabled>−</button>
-            <span class="quickview-qty-display" id="quickViewQty">1</span>
-            <button class="quickview-qty-btn" id="quickViewIncrease">+</button>
+    <!-- ===== SHOP VIEW OVERLAY (Full-Screen Modal with Navbar) ===== -->
+    <div class="shop-view-overlay" id="shopViewOverlay">
+      <nav class="navbar" id="shopViewNavbar">
+        <div class="nav-container">
+          <a href="/" class="logo" id="shopViewLogo">
+            <img src="/assets/logo.png" alt="Batisha Online" class="logo-image">
+            <span class="logo-text">Batisha <span>online</span></span>
+          </a>
+          <div class="nav-links">
+            <a href="/" id="shopViewHome">Home</a>
+            <a href="/product/" id="shopViewProducts">Products</a>
+            <a href="/cart/" class="cart-pill">Cart <span id="shopViewCartCount">0</span></a>
           </div>
-          <button class="quickview-add-btn" id="quickViewAddBtn">Add to Cart</button>
+          <!-- Back button for mobile (hidden on desktop) -->
+          <button class="shop-view-back-btn" id="shopViewBackBtn">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+      </nav>
+      <div class="shop-view-body" id="shopViewBody">
+        <div class="shop-view-top" id="shopViewTop">
+          <div class="shop-view-image-wrapper" id="shopViewImageWrapper">
+            <img id="shopViewImage" src="" alt="Shop Image" style="display:none;">
+            <div class="placeholder" id="shopViewImagePlaceholder">🏪</div>
+          </div>
+          <div class="shop-view-info">
+            <div class="shop-view-shop-name" id="shopViewName">Shop Name</div>
+            <div class="shop-view-shop-proprietor" id="shopViewProprietor">Proprietor</div>
+            <div class="shop-view-shop-location" id="shopViewLocation">Location</div>
+          </div>
+        </div>
+        
+        <div class="shop-view-products-grid" id="shopViewProductsGrid">
+          <!-- Products will be injected here with lazy loading -->
         </div>
       </div>
     </div>
-  </main>
 
-  <div id="simplePopup" class="simple-popup">
-    <span class="icon">✓</span> Added to cart
-  </div>
+    <!-- ============================================== -->
+    <!-- ===== OFFER SEE MORE OVERLAY (NEW) ===== -->
+    <!-- ============================================== -->
+    <div class="offer-overlay" id="offerOverlay">
+      <nav class="navbar" id="offerOverlayNavbar">
+        <div class="nav-container">
+          <a href="/" class="logo" id="offerOverlayLogo">
+            <img src="/assets/logo.png" alt="Batisha Online" class="logo-image">
+            <span class="logo-text">Batisha <span>online</span></span>
+          </a>
+          <div class="nav-links">
+            <a href="/" id="offerOverlayHome">Home</a>
+            <a href="/product/" id="offerOverlayProducts">Products</a>
+            <a href="/cart/" class="cart-pill">Cart <span id="offerOverlayCartCount">0</span></a>
+          </div>
+          <button class="offer-overlay-back-btn" id="offerOverlayBackBtn">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+      </nav>
+      <div class="offer-overlay-body" id="offerOverlayBody">
+        <div class="offer-overlay-header">
+          <span class="offer-overlay-title">🔥 Limited Offer <span class="offer-overlay-count" id="offerOverlayCount"></span></span>
+        </div>
+        <div class="offer-overlay-grid" id="offerOverlayGrid">
+          <!-- All offers will be injected by JS -->
+        </div>
+      </div>
+    </div>
+    <!-- ============================================== -->
 
-  <div class="toast-container" id="toastContainer"></div>
+    <!-- ===== MAIN CONTENT ===== -->
+    <main id="mainContainer">
+      <div id="loadingState" style="text-align:center;padding:2rem;">
+        <div style="width:32px;height:32px;border:3px solid #e2ebe6;border-top-color:#1f8b4c;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto;"></div>
+        <p style="color:#4b6b5e;font-size:0.85rem;margin-top:0.5rem;">Loading products…</p>
+      </div>
+      <div id="errorState" style="display:none;text-align:center;padding:2rem;color:#991b1b;">
+        <p>Failed to load products. <button onclick="location.reload()" style="background:#1f8b4c;color:white;border:none;padding:0.2rem 0.8rem;border-radius:40px;font-weight:600;cursor:pointer;">Retry</button></p>
+      </div>
+      <div id="categoryContainer"></div>
 
-  <!-- ===== MOBILE BOTTOM NAV ===== -->
-  <div class="mobile-bottom-nav">
-    <a href="/product/">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4 8 4 8-4zm0 0v10l-8 4-8-4V7l8 4 8-4z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-      <span class="nav-label">Products</span>
-    </a>
-    <a href="/" class="nav-home">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-      <span class="nav-label">Home</span>
-    </a>
-    <a href="/cart/">
-      <span class="nav-icon">
-        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="20" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-      <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
-    </a>
-  </div>
+      <!-- Quick View Modal -->
+      <div class="quickview-overlay" id="quickViewOverlay">
+        <div class="quickview-modal">
+          <button class="quickview-close" id="quickViewClose">✕</button>
+          <img class="quickview-image" id="quickViewImage" src="" alt="Product Image">
+          <h2 class="quickview-title" id="quickViewTitle">Product Title</h2>
+          <p class="quickview-description" id="quickViewDescription">Product description goes here.</p>
+          <div class="quickview-price" id="quickViewPrice">0.00</div>
+          <div class="quickview-controls">
+            <div class="quickview-qty-wrapper">
+              <button class="quickview-qty-btn" id="quickViewDecrease" disabled>−</button>
+              <span class="quickview-qty-display" id="quickViewQty">1</span>
+              <button class="quickview-qty-btn" id="quickViewIncrease">+</button>
+            </div>
+            <button class="quickview-add-btn" id="quickViewAddBtn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="simplePopup" class="simple-popup">
+      <span class="icon">✓</span> Added to cart
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ===== MOBILE BOTTOM NAV ===== -->
+    <div class="mobile-bottom-nav">
+      <a href="/product/">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4 8 4 8-4zm0 0v10l-8 4-8-4V7l8 4 8-4z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="nav-label">Products</span>
+      </a>
+      <a href="/" class="nav-home">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="nav-label">Home</span>
+      </a>
+      <a href="/cart/">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="20" cy="21" r="1" stroke="currentColor" stroke-width="2" fill="none"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="nav-label">Cart <span class="cart-badge" id="mobileCartCount">0</span></span>
+      </a>
+    </div>
 
   <script>
     (function() {
       'use strict';
       const TABLE_NAME = 'product';
+      const OFFERS_TABLE = 'offers';
       const SHOPS_TABLE = 'shops';
       const SHOP_PRODUCTS_TABLE = 'shop_products';
       const ANNOUNCE_TABLE = 'announcements';
@@ -1119,6 +1409,16 @@
       const shopViewProductsGrid = document.getElementById('shopViewProductsGrid');
       const shopViewCartCount = document.getElementById('shopViewCartCount');
       const shopViewBackBtn = document.getElementById('shopViewBackBtn');
+
+      // Offer Elements
+      const offerSection = document.getElementById('offerSection');
+      const offerGrid = document.getElementById('offerGrid');
+      const offerSeeMoreBtn = document.getElementById('offerSeeMoreBtn');
+      const offerOverlay = document.getElementById('offerOverlay');
+      const offerOverlayGrid = document.getElementById('offerOverlayGrid');
+      const offerOverlayCount = document.getElementById('offerOverlayCount');
+      const offerOverlayBackBtn = document.getElementById('offerOverlayBackBtn');
+      const offerOverlayCartCount = document.getElementById('offerOverlayCartCount');
 
       async function fetchConfig() {
         try {
@@ -1210,12 +1510,207 @@
         });
       }
 
+      // ==============================================
+      // ===== OFFERS LOGIC (NEW) =====
+      // ==============================================
+      async function fetchOffers() {
+        try {
+          const response = await fetch(`${supabaseUrl}/rest/v1/${OFFERS_TABLE}?select=*&is_active=eq.true&order=created_at.desc`, {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (!response.ok) throw new Error('Fetch failed');
+          const offers = await response.json();
+          if (offers && offers.length > 0) {
+            renderOffers(offers);
+            offerSection.classList.add('visible');
+          } else {
+            offerSection.classList.remove('visible');
+          }
+        } catch {
+          offerSection.classList.remove('visible');
+        }
+      }
+
+      function renderOffers(offers) {
+        // Show first 6 items on home page
+        const displayOffers = offers.slice(0, 6);
+        offerGrid.innerHTML = '';
+        displayOffers.forEach(offer => {
+          const card = createOfferCard(offer);
+          offerGrid.appendChild(card);
+        });
+
+        // Store all offers for the overlay
+        offerOverlay._allOffers = offers;
+      }
+
+      function createOfferCard(offer) {
+        const card = document.createElement('div');
+        card.className = 'offer-card';
+        card.dataset.id = offer.id;
+
+        const imgHtml = offer.image_url 
+          ? `<div class="offer-card-image-frame"><img src="${escapeHtml(offer.image_url)}" alt="${escapeHtml(offer.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'offer-card-image-placeholder\\'>🏷️</div>'"></div>`
+          : `<div class="offer-card-image-frame"><div class="offer-card-image-placeholder">🏷️</div></div>`;
+
+        const discount = offer.discount_percentage || Math.round(((offer.old_price - offer.offer_price) / offer.old_price) * 100);
+
+        card.innerHTML = `
+          ${imgHtml}
+          <span class="offer-card-discount-badge">-${discount}%</span>
+          <div class="offer-card-info">
+            <h3 class="offer-card-title">${escapeHtml(offer.title || 'No title')}</h3>
+            <div class="offer-card-prices">
+              <span class="offer-card-old-price">${parseFloat(offer.old_price || 0).toFixed(2)}</span>
+              <span class="offer-card-offer-price">${parseFloat(offer.offer_price || 0).toFixed(2)}</span>
+            </div>
+            <div class="offer-footer">
+              <span></span>
+              <button class="offer-add-btn" onclick="window.addOfferToCart(${offer.id}, '${escapeHtml(offer.title || 'Product')}', ${offer.offer_price || 0}, '${escapeHtml(offer.image_url || '')}')">Add</button>
+            </div>
+          </div>
+        `;
+
+        // Quick view on card click
+        card.addEventListener('click', function(e) {
+          if (e.target.closest('.offer-add-btn')) return;
+          window.openOfferQuickViewExternal(offer.id);
+        });
+
+        return card;
+      }
+
+      // Add offer to cart (uses offer_price instead of regular price)
+      window.addOfferToCart = function(id, title, price, imageUrl) {
+        let cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
+        const existing = cart.find(item => item.id === id);
+        if (existing) { existing.quantity += 1; } else { cart.push({ id, title, price, imageUrl, quantity: 1 }); }
+        localStorage.setItem('grocery_cart', JSON.stringify(cart)); 
+        updateCartCount(); 
+        updateShopViewCartCount();
+        updateOfferOverlayCartCount();
+        showSimplePopup();
+      };
+
+      // Open Offer Quick View
+      window.openOfferQuickViewExternal = function(offerId) {
+        const offers = offerOverlay._allOffers || [];
+        const offer = offers.find(o => o.id === offerId);
+        if (!offer) return;
+        
+        // Use the same Quick View modal but show offer details
+        const quickViewOverlay = document.getElementById('quickViewOverlay');
+        const quickViewImage = document.getElementById('quickViewImage');
+        const quickViewTitle = document.getElementById('quickViewTitle');
+        const quickViewDescription = document.getElementById('quickViewDescription');
+        const quickViewPrice = document.getElementById('quickViewPrice');
+        const quickViewQty = document.getElementById('quickViewQty');
+        const quickViewDecrease = document.getElementById('quickViewDecrease');
+        const quickViewIncrease = document.getElementById('quickViewIncrease');
+        const quickViewAddBtn = document.getElementById('quickViewAddBtn');
+
+        // Store offer data for Quick View
+        quickViewOverlay._currentOffer = offer;
+        quickViewOverlay._currentQty = 1;
+
+        quickViewImage.src = offer.image_url || '';
+        quickViewImage.alt = offer.title || 'Product';
+        if (!offer.image_url) {
+          quickViewImage.src = '';
+          quickViewImage.alt = 'No image';
+          quickViewImage.style.background = '#f8fbf9';
+        } else {
+          quickViewImage.style.background = '#f8fbf9';
+        }
+        quickViewTitle.textContent = `${offer.title || 'No title'} (Offer)`;
+        quickViewDescription.textContent = `${offer.description || ''} 🔥 Limited Offer!`;
+        quickViewPrice.textContent = parseFloat(offer.offer_price || 0).toFixed(2);
+        quickViewQty.textContent = '1';
+        quickViewDecrease.disabled = true;
+
+        // Override add button to use offer price
+        quickViewAddBtn.onclick = function() {
+          const qty = parseInt(quickViewQty.textContent) || 1;
+          for (let i = 0; i < qty; i++) {
+            window.addOfferToCart(
+              offer.id,
+              offer.title || 'Product',
+              offer.offer_price || 0,
+              offer.image_url || ''
+            );
+          }
+          const popup = document.getElementById('simplePopup');
+          if (popup) {
+            popup.innerHTML = `<span class="icon">✓</span> Added ${qty} × ${offer.title} (Offer) to cart`;
+            setTimeout(() => {
+              popup.innerHTML = `<span class="icon">✓</span> Added to cart`;
+            }, 1500);
+          }
+          quickViewOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        };
+
+        quickViewOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      };
+
+      // ---- OFFER SEE MORE OVERLAY ----
+      function openOfferOverlay() {
+        const offers = offerOverlay._allOffers || [];
+        if (offers.length === 0) return;
+
+        offerOverlayGrid.innerHTML = '';
+        offers.forEach(offer => {
+          const card = createOfferCard(offer);
+          offerOverlayGrid.appendChild(card);
+        });
+
+        offerOverlayCount.textContent = `(${offers.length} items)`;
+        offerOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        updateOfferOverlayCartCount();
+      }
+
+      function closeOfferOverlay() {
+        offerOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      offerSeeMoreBtn.addEventListener('click', openOfferOverlay);
+      offerOverlayBackBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeOfferOverlay();
+        window.location.href = '/';
+      });
+
+      document.getElementById('offerOverlayHome').addEventListener('click', (e) => {
+        e.preventDefault();
+        closeOfferOverlay();
+        window.location.href = '/';
+      });
+      document.getElementById('offerOverlayProducts').addEventListener('click', (e) => {
+        e.preventDefault();
+        closeOfferOverlay();
+        window.location.href = '/product/';
+      });
+      document.getElementById('offerOverlayLogo').addEventListener('click', (e) => {
+        e.preventDefault();
+        closeOfferOverlay();
+        window.location.href = '/';
+      });
+
+      function updateOfferOverlayCartCount() {
+        const cart = JSON.parse(localStorage.getItem('grocery_cart') || '[]');
+        const total = cart.reduce((sum, i) => sum + i.quantity, 0);
+        if (offerOverlayCartCount) offerOverlayCartCount.textContent = total;
+      }
+      // ==============================================
+
       // ----- SHOP VIEW (Full-Screen Modal) -----
       async function openShopView(shopId) {
         console.log("🛍️ Opening shop view for ID:", shopId);
         
         try {
-          // 1. Fetch shop details
           const shopRes = await fetch(`${supabaseUrl}/rest/v1/${SHOPS_TABLE}?id=eq.${shopId}&select=*`, {
             headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
           });
@@ -1231,7 +1726,6 @@
           }
           console.log("✅ Shop found:", shop.name);
 
-          // 2. Fetch assigned product IDs
           const linkRes = await fetch(`${supabaseUrl}/rest/v1/${SHOP_PRODUCTS_TABLE}?shop_id=eq.${shopId}&select=product_id`, {
             headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
           });
@@ -1260,7 +1754,6 @@
             }
           }
 
-          // 3. Populate profile (New layout)
           shopViewName.textContent = shop.name || 'Shop';
           shopViewProprietor.textContent = shop.proprietor || 'Proprietor';
           shopViewLocation.textContent = shop.location || 'Location not set';
@@ -1273,10 +1766,8 @@
             shopViewImagePlaceholder.style.display = 'flex';
           }
 
-          // 4. Sync cart count
           updateShopViewCartCount();
           
-          // 5. Show overlay
           shopViewOverlay.classList.add('active');
           document.body.style.overflow = 'hidden';
           console.log("✅ Shop view opened successfully");
@@ -1294,7 +1785,6 @@
           card.className = 'product-card';
           card.setAttribute('data-id', p.id);
           
-          // Lazy loading with skeleton
           const imgHtml = p.image_url 
             ? `<div class="product-image-frame"><img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'product-image-placeholder\\'>🥬</div>'"></div>`
             : `<div class="product-image-frame"><div class="product-image-placeholder">🥬</div></div>`;
@@ -1311,7 +1801,6 @@
             </div>
           `;
           
-          // Quick view on card click
           card.addEventListener('click', function(e) {
             if (e.target.closest('.add-to-cart-btn')) return;
             window.openQuickViewExternal(p.id);
@@ -1321,7 +1810,6 @@
         });
       }
 
-      // Close shop view via navbar links (Home or Products) or Back button
       function closeShopView() {
         shopViewOverlay.classList.remove('active');
         document.body.style.overflow = '';
@@ -1343,7 +1831,6 @@
         window.location.href = '/';
       });
       
-      // Mobile Back button
       shopViewBackBtn.addEventListener('click', (e) => {
         e.preventDefault();
         closeShopView();
@@ -1464,6 +1951,7 @@
         localStorage.setItem('grocery_cart', JSON.stringify(cart)); 
         updateCartCount(); 
         updateShopViewCartCount();
+        updateOfferOverlayCartCount();
         showSimplePopup();
       };
 
@@ -1473,6 +1961,7 @@
         if (cartCountSpan) cartCountSpan.textContent = total;
         if (mobileCartCountSpan) mobileCartCountSpan.textContent = total;
         updateShopViewCartCount();
+        updateOfferOverlayCartCount();
       }
 
       // ===== QUICK VIEW MODAL LOGIC =====
@@ -1520,6 +2009,8 @@
         quickViewOverlay.classList.remove('active');
         document.body.style.overflow = '';
         quickViewCurrentProduct = null;
+        // Reset offer override
+        quickViewAddBtn.onclick = null;
       }
 
       function updateQuickViewQty(newQty) {
@@ -1604,6 +2095,7 @@
         const ok = await fetchConfig(); 
         await fetchAnnouncement(); 
         await fetchShops();
+        await fetchOffers(); // <-- Fetch offers
         await fetchProducts(); 
       }
 
