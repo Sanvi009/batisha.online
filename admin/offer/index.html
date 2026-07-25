@@ -1152,22 +1152,25 @@
 
       // --- MASTER TOGGLE ---
       masterToggle.addEventListener('click', async () => {
-        const newState = !masterToggle.classList.contains('active');
-        masterToggle.classList.toggle('active', newState);
-        toggleStatus.textContent = newState ? 'ON' : 'OFF';
-        toggleStatus.classList.toggle('active', newState);
-        try {
-          // Update all offers' is_active to the new state
-          const response = await fetch(`${supabaseUrl}/rest/v1/${OFFERS_TABLE}`, {
-            method: 'PATCH',
-            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ is_active: newState })
-          });
-          if (!response.ok) throw new Error('Toggle failed');
-          showToast(newState ? '✅ Offers turned ON for users' : '⛔ Offers turned OFF for users');
-          await fetchOffers();
-        } catch { showToast('Failed to toggle', 'error'); }
-      });
+  const newState = !masterToggle.classList.contains('active');
+  masterToggle.classList.toggle('active', newState);
+  toggleStatus.textContent = newState ? 'ON' : 'OFF';
+  toggleStatus.classList.toggle('active', newState);
+  try {
+    // ✅ FIX: Added ?id=gt.0 to target all rows
+    const response = await fetch(`${supabaseUrl}/rest/v1/${OFFERS_TABLE}?id=gt.0`, {
+      method: 'PATCH',
+      headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ is_active: newState })
+    });
+    if (!response.ok) throw new Error('Toggle failed');
+    showToast(newState ? '✅ Offers turned ON for users' : '⛔ Offers turned OFF for users');
+    await fetchOffers();
+  } catch (error) {
+    console.error(error);
+    showToast('Failed to toggle', 'error');
+  }
+});
 
       // --- ADD OFFER FORM TOGGLE ---
       function showForm() {
