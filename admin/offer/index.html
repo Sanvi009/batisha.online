@@ -608,6 +608,39 @@
     .toast.success { background: #1f8b4c; }
     .toast.error { background: #dc2626; }
 
+    /* ----- CONFIRMATION MODAL ----- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      animation: fadeIn 0.2s ease;
+      padding: 1rem;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+    .modal-box {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.5rem 1.2rem;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    }
+    .modal-icon { font-size: 2.5rem; margin-bottom: 0.3rem; }
+    .modal-title { font-size: 1rem; font-weight: 700; color: #1a1f36; margin-bottom: 0.2rem; }
+    .modal-message { color: #6b7a86; font-size: 0.8rem; margin-bottom: 1rem; }
+    .modal-actions { display: flex; gap: 0.5rem; justify-content: center; }
+    .btn-danger { background: #dc2626; color: white; padding: 0.4rem 1rem; border-radius: 30px; font-weight: 600; font-size: 0.75rem; border: none; cursor: pointer; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-secondary { background: #f3f6f8; color: #1a1f36; border: 1px solid #e4eaf0; padding: 0.4rem 1rem; border-radius: 30px; font-weight: 600; font-size: 0.75rem; cursor: pointer; }
+    .btn-secondary:hover { background: #e8edf2; }
+
     /* ----- DESKTOP OVERRIDES ----- */
     @media (min-width: 768px) {
       .header { padding: 0.7rem 1.5rem; }
@@ -812,23 +845,33 @@
         <button class="offer-tab" data-tab="new">✏️ Add New</button>
       </div>
 
-      <!-- TAB 1: FROM EXISTING -->
+      <!-- TAB 1: FROM EXISTING (FIXED UI) -->
       <div class="offer-panel active" id="panelExisting">
         <div class="form-grid">
-          <div class="tiny-card-search">
+          <!-- SEARCH -->
+          <div class="tiny-card-search" style="grid-column:1/-1;">
             <input type="text" id="existingSearch" placeholder="Search products...">
             <button class="btn-submit" id="existingSearchBtn" style="flex:none;padding:0.3rem 0.8rem;font-size:0.65rem;">Search</button>
           </div>
-          <div class="tiny-grid" id="existingGrid"></div>
-          <div id="existingSelectedInfo" style="display:none;background:#f0fdf4;padding:0.5rem;border-radius:8px;border:1px solid #bbf7d0;font-size:0.75rem;margin-bottom:0.4rem;"></div>
-          <div class="form-group">
+
+          <!-- PRICE INPUTS (MOVED UP) -->
+          <div class="form-group" style="grid-column:1/-1;margin-bottom:0.4rem;">
             <label>Offer Price (৳) OR Discount (%)</label>
-            <div style="display:flex;gap:0.5rem;">
-              <input type="number" id="existingOfferPrice" class="form-input" placeholder="Offer Price" step="0.01" style="flex:1;">
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+              <input type="number" id="existingOfferPrice" class="form-input" placeholder="Offer Price (e.g. 450)" step="0.01" style="flex:1;min-width:120px;">
               <span style="display:flex;align-items:center;color:#6b7a86;font-size:0.7rem;">OR</span>
-              <input type="number" id="existingDiscount" class="form-input" placeholder="Discount %" step="0.01" style="flex:1;">
+              <input type="number" id="existingDiscount" class="form-input" placeholder="Discount % (e.g. 25)" step="0.01" style="flex:1;min-width:120px;">
             </div>
+            <span style="font-size:0.6rem;color:#6b7a86;margin-top:0.2rem;">Enter either the new price or the discount percentage. The other will auto-calculate.</span>
           </div>
+
+          <!-- SELECTED PRODUCT INFO -->
+          <div id="existingSelectedInfo" style="display:none;background:#f0fdf4;padding:0.5rem;border-radius:8px;border:1px solid #bbf7d0;font-size:0.75rem;margin-bottom:0.4rem;grid-column:1/-1;"></div>
+
+          <!-- PRODUCT GRID -->
+          <div class="tiny-grid" id="existingGrid" style="grid-column:1/-1;"></div>
+
+          <!-- SUBMIT BUTTONS -->
           <div class="form-actions" style="grid-column:1/-1;">
             <button class="btn-submit" id="existingSubmitBtn">💾 Add Offer</button>
             <button type="button" class="btn-cancel-form" id="cancelFormBtn">✖ Cancel</button>
@@ -912,6 +955,19 @@
         </table>
       </div>
     </div>
+
+    <!-- CONFIRMATION DELETE MODAL -->
+    <div id="deleteConfirmModal" class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-icon">⚠️</div>
+        <h3 class="modal-title">Delete Offer?</h3>
+        <p class="modal-message" id="deleteModalMessage">This action cannot be undone.</p>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="deleteModalCancel">Cancel</button>
+          <button class="btn-danger" id="deleteModalConfirm">Delete</button>
+        </div>
+      </div>
+    </div>
   </main>
 
   <div id="toast" class="toast"></div>
@@ -987,10 +1043,17 @@
       const saveToGlobal = document.getElementById('saveToGlobal');
       const newSubmitBtn = document.getElementById('newSubmitBtn');
 
+      // Delete Modal Elements
+      const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+      const deleteModalMessage = document.getElementById('deleteModalMessage');
+      const deleteModalCancel = document.getElementById('deleteModalCancel');
+      const deleteModalConfirm = document.getElementById('deleteModalConfirm');
+
       let allOffers = [];
       let allProductsCache = [];
       let selectedGlobalProduct = null;
       let selectedNewImageFile = null;
+      let pendingDeleteId = null;
 
       function toggleSidebar(open) {
         if (open === undefined) open = !sidebar.classList.contains('open');
@@ -1065,7 +1128,7 @@
           renderOffers(allOffers);
           updateStats();
           showState('table');
-          // Sync master toggle with first row's is_active (all offers share same master status)
+          // Sync master toggle with first row's is_active
           if (allOffers.length > 0) {
             const isActive = allOffers[0].is_active === true;
             masterToggle.classList.toggle('active', isActive);
@@ -1098,7 +1161,7 @@
               <span class="offer-card-source">${offer.is_temporary ? 'Temporary' : 'Global'}</span>
             </div>
             <div class="offer-card-actions">
-              <button class="btn-sm btn-delete" onclick="window.deleteOffer(${offer.id})">🗑️</button>
+              <button class="btn-sm btn-delete" onclick="window.promptDeleteOffer(${offer.id}, '${escapeHtml(offer.title || 'this offer')}')">🗑️</button>
             </div>
           `;
           offerList.appendChild(card);
@@ -1117,7 +1180,7 @@
             <td><span class="offer-tag">-${discount}%</span></td>
             <td>${offer.is_temporary ? 'Temporary' : 'Global'}</td>
             <td class="actions-cell">
-              <button class="btn-sm btn-delete" onclick="window.deleteOffer(${offer.id})">🗑️</button>
+              <button class="btn-sm btn-delete" onclick="window.promptDeleteOffer(${offer.id}, '${escapeHtml(offer.title || 'this offer')}')">🗑️</button>
             </td>
           `;
           tableBody.appendChild(row);
@@ -1152,31 +1215,29 @@
 
       // --- MASTER TOGGLE ---
       masterToggle.addEventListener('click', async () => {
-  const newState = !masterToggle.classList.contains('active');
-  masterToggle.classList.toggle('active', newState);
-  toggleStatus.textContent = newState ? 'ON' : 'OFF';
-  toggleStatus.classList.toggle('active', newState);
-  try {
-    // ✅ FIX: Added ?id=gt.0 to target all rows
-    const response = await fetch(`${supabaseUrl}/rest/v1/${OFFERS_TABLE}?id=gt.0`, {
-      method: 'PATCH',
-      headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ is_active: newState })
-    });
-    if (!response.ok) throw new Error('Toggle failed');
-    showToast(newState ? '✅ Offers turned ON for users' : '⛔ Offers turned OFF for users');
-    await fetchOffers();
-  } catch (error) {
-    console.error(error);
-    showToast('Failed to toggle', 'error');
-  }
-});
+        const newState = !masterToggle.classList.contains('active');
+        masterToggle.classList.toggle('active', newState);
+        toggleStatus.textContent = newState ? 'ON' : 'OFF';
+        toggleStatus.classList.toggle('active', newState);
+        try {
+          const response = await fetch(`${supabaseUrl}/rest/v1/${OFFERS_TABLE}?id=gt.0`, {
+            method: 'PATCH',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ is_active: newState })
+          });
+          if (!response.ok) throw new Error('Toggle failed');
+          showToast(newState ? '✅ Offers turned ON for users' : '⛔ Offers turned OFF for users');
+          await fetchOffers();
+        } catch (error) {
+          console.error(error);
+          showToast('Failed to toggle', 'error');
+        }
+      });
 
       // --- ADD OFFER FORM TOGGLE ---
       function showForm() {
         addOfferForm.classList.add('active');
         toggleFormBtn.textContent = '✖ Close';
-        // Reset form state
         selectedGlobalProduct = null;
         existingSelectedInfo.style.display = 'none';
         existingGrid.innerHTML = '';
@@ -1187,7 +1248,6 @@
         newFileName.textContent = '';
         newImagePreview.classList.remove('active');
         newImagePreview.src = '';
-        // Load existing products for tab 1
         loadExistingProducts();
       }
       function hideForm() {
@@ -1359,7 +1419,6 @@
           }
           let globalProductId = null;
           if (saveGlobal) {
-            // Create global product first
             const prodRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}`, {
               method: 'POST',
               headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
@@ -1369,7 +1428,6 @@
             const [newProduct] = await prodRes.json();
             globalProductId = newProduct.id;
           }
-          // Create offer
           const offerBody = {
             product_id: globalProductId || null,
             title,
@@ -1395,14 +1453,26 @@
         newSubmitBtn.textContent = '💾 Add Offer';
       });
 
-      // --- DELETE OFFER ---
-      window.deleteOffer = async function(offerId) {
-        if (!confirm('Delete this offer?')) return;
+      // --- DELETE OFFER (WITH MODAL) ---
+      window.promptDeleteOffer = function(offerId, title) {
+        pendingDeleteId = offerId;
+        deleteModalMessage.textContent = `Are you sure you want to delete "${title}"? This action cannot be undone.`;
+        deleteConfirmModal.style.display = 'flex';
+      };
+
+      deleteModalCancel.addEventListener('click', () => {
+        deleteConfirmModal.style.display = 'none';
+        pendingDeleteId = null;
+      });
+
+      deleteModalConfirm.addEventListener('click', async () => {
+        if (!pendingDeleteId) return;
+        const offerId = pendingDeleteId;
+        deleteModalConfirm.disabled = true;
+        deleteModalConfirm.textContent = '⏳';
         try {
           const offer = allOffers.find(o => o.id === offerId);
-          if (!offer) return;
-          // If temporary, delete image too
-          if (offer.is_temporary && offer.image_url) {
+          if (offer && offer.is_temporary && offer.image_url) {
             await deleteOfferImage(offer.image_url);
           }
           const response = await fetch(`${supabaseUrl}/rest/v1/${OFFERS_TABLE}?id=eq.${offerId}`, {
@@ -1412,8 +1482,14 @@
           if (!response.ok) throw new Error('Delete failed');
           showToast('🗑️ Offer deleted!');
           await fetchOffers();
-        } catch { showToast('Failed to delete offer', 'error'); }
-      };
+        } catch (error) {
+          showToast('Failed to delete offer', 'error');
+        }
+        deleteConfirmModal.style.display = 'none';
+        deleteModalConfirm.disabled = false;
+        deleteModalConfirm.textContent = 'Delete';
+        pendingDeleteId = null;
+      });
 
       // --- LOGOUT ---
       function handleLogout() { localStorage.removeItem(SESSION_KEY); window.location.replace(LOGIN_PATH); }
