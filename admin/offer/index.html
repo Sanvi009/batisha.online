@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Offers · Batisha admin</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f5f7fa;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1a1f36;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    /* ----- HEADER (Mobile-First) ----- */
+    .header {
+      background: #ffffff;
+      border-bottom: 1px solid #e8edf2;
+      padding: 0.6rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      width: 100%;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      color: #1a1f36;
+    }
+    .logo-image {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+    .logo-text {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .logo-text span { font-weight: 400; color: #4b6b5e; font-size: 0.65rem; }
+    .page-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1a1f36;
+      white-space: nowrap;
+    }
+
+    /* ----- HAMBURGER MENU ----- */
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #1a1f36;
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      transition: 0.2s;
+      line-height: 1;
+    }
+    .menu-toggle:hover { background: #f0f3f7; }
+
+    /* ----- SIDEBAR (Slide-out) ----- */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.open {
+      display: block;
+      opacity: 1;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 260px;
+      height: 100%;
+      background: #ffffff;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.08);
+      z-index: 201;
+      transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      padding: 1.5rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .sidebar.open {
+      left: 0;
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #1a1f36;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e8edf2;
+    }
+    .sidebar-logo .logo-image {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      border-radius: 6px;
+    }
+    .sidebar-logo .logo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .sidebar-logo .logo-text span { font-weight: 400; color: #4b6b5e; font-size: 0.7rem; }
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .sidebar-nav a {
+      text-decoration: none;
+      color: #4b5f6b;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .sidebar-nav a:hover { background: #f0f3f7; color: #1a1f36; }
+    .sidebar-nav a.active { color: #1f8b4c; background: #f0f8f2; }
+    .sidebar-nav a .icon { font-size: 1.1rem; }
+    .sidebar-footer {
+      margin-top: auto;
+      border-top: 1px solid #e8edf2;
+      padding-top: 1rem;
+    }
+    .sidebar-footer .btn-logout {
+      width: 100%;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      padding: 0.6rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .sidebar-footer .btn-logout:hover { background: #fee2e2; }
+
+    /* ----- STATS BAR (Mobile-First) ----- */
+    .stats-bar {
+      background: #ffffff;
+      border-bottom: 1px solid #e8edf2;
+      padding: 0.5rem 0.8rem;
+      width: 100%;
+      overflow: hidden;
+    }
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .stats-inner::-webkit-scrollbar { display: none; }
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      color: #4b5f6b;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .stat-item .num {
+      font-weight: 700;
+      color: #1a1f36;
+      font-size: 0.8rem;
+    }
+    .stat-item .num.green { color: #1f8b4c; }
+    .stat-item .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2px; }
+    .stat-divider { width: 1px; height: 18px; background: #e8edf2; flex-shrink: 0; }
+
+    /* ----- MAIN CONTENT ----- */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.8rem;
+      width: 100%;
+    }
+
+    /* ----- STATE CONTAINERS ----- */
+    .state-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1rem;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e8edf2;
+      text-align: center;
+      width: 100%;
+    }
+    .state-container .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .state-container h3 { font-size: 0.95rem; color: #1a1f36; }
+    .state-container p { color: #6b7a86; font-size: 0.8rem; margin-top: 0.2rem; }
+    .spinner {
+      width: 28px; height: 28px;
+      border: 3px solid #e2ebe6;
+      border-top-color: #1f8b4c;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-bottom: 0.8rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ----- FORM CONTAINER ----- */
+    .form-container {
+      background: #ffffff;
+      border: 1px solid #e8edf2;
+      border-radius: 12px;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      display: none;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      width: 100%;
+    }
+    .form-container.active { display: block; animation: slideDown 0.25s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .form-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a1f36;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .form-group label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #1a1f36;
+    }
+    .form-input {
+      background: #f8fbf9;
+      border: 1px solid #e4ece8;
+      color: #1a1f36;
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+      transition: 0.15s;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+    .form-input:focus {
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31, 139, 76, 0.08);
+      background: #ffffff;
+    }
+    textarea.form-input { resize: vertical; min-height: 50px; }
+    select.form-input {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7a86' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.8rem center;
+      padding-right: 2.5rem;
+    }
+    .file-upload-wrapper { position: relative; }
+    .file-upload-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f8fbf9;
+      border: 2px dashed #e4ece8;
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      cursor: pointer;
+      transition: 0.15s;
+      color: #4b5f6b;
+      font-size: 0.8rem;
+    }
+    .file-upload-label:hover { border-color: #1f8b4c; color: #1f8b4c; }
+    .file-upload-label input[type="file"] { display: none; }
+    .image-preview {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-top: 0.3rem;
+      display: none;
+      border: 1px solid #e8edf2;
+      background: #f8fbf9;
+    }
+    .image-preview.active { display: block; }
+
+    .form-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+    .btn-submit {
+      background: #1f8b4c;
+      color: white;
+      padding: 0.45rem 1rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      border: none;
+      cursor: pointer;
+      transition: 0.15s;
+      flex: 1;
+    }
+    .btn-submit:hover { background: #0f6e3a; }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-cancel-form {
+      background: #f3f6f8;
+      color: #1a1f36;
+      border: 1px solid #e4eaf0;
+      padding: 0.45rem 1rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: 0.15s;
+      flex: 1;
+    }
+    .btn-cancel-form:hover { background: #e8edf2; }
+
+    /* ----- MASTER TOGGLE ----- */
+    .toggle-panel {
+      background: #ffffff;
+      border: 1px solid #e8edf2;
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .toggle-panel .left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .toggle-panel .left .label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1a1f36;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: #d1d5db;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.2s;
+      flex-shrink: 0;
+    }
+    .toggle-switch.active { background: #1f8b4c; }
+    .toggle-switch .knob {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .toggle-switch.active .knob { left: 22px; }
+    .toggle-status {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #4b5f6b;
+    }
+    .toggle-status.active { color: #1f8b4c; }
+
+    /* ----- OFFER LIST (Mobile Cards) ----- */
+    .offer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      width: 100%;
+    }
+    .offer-card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e8edf2;
+      padding: 0.7rem;
+      transition: 0.15s;
+      width: 100%;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+    .offer-card:active { transform: scale(0.99); }
+    .offer-card-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #f8fbf9;
+      border: 1px solid #e8edf2;
+      flex-shrink: 0;
+    }
+    .offer-card-img-placeholder {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: #f3f8f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #2d7a4b;
+      flex-shrink: 0;
+      border: 1px solid #e8edf2;
+    }
+    .offer-card-info { flex: 1; min-width: 0; }
+    .offer-card-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #1a1f36;
+    }
+    .offer-card-prices {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+    }
+    .offer-card-old-price {
+      color: #9ca3af;
+      text-decoration: line-through;
+    }
+    .offer-card-offer-price {
+      font-weight: 700;
+      color: #1f8b4c;
+    }
+    .offer-card-offer-price::before { content: '৳'; }
+    .offer-card-discount {
+      background: #fef2f2;
+      color: #dc2626;
+      font-size: 0.55rem;
+      padding: 0.05rem 0.4rem;
+      border-radius: 12px;
+      font-weight: 600;
+      border: 1px solid #fecaca;
+    }
+    .offer-card-source {
+      font-size: 0.5rem;
+      background: #f0f5fc;
+      color: #1e3a5f;
+      padding: 0.05rem 0.4rem;
+      border-radius: 12px;
+      display: inline-block;
+      border: 1px solid #dde5ed;
+      margin-top: 0.1rem;
+    }
+    .offer-card-actions {
+      display: flex;
+      gap: 0.15rem;
+      flex-shrink: 0;
+    }
+    .btn-sm {
+      padding: 0.15rem 0.5rem;
+      border-radius: 30px;
+      font-size: 0.55rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: 0.15s;
+      white-space: nowrap;
+    }
+    .btn-delete { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .btn-delete:hover { background: #fee2e2; }
+
+    /* ----- TABLE (Desktop fallback) ----- */
+    .table-container {
+      display: none;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e8edf2;
+      overflow: hidden;
+      width: 100%;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .table-wrapper { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    thead { background: #f8fbf9; border-bottom: 1px solid #e8edf2; }
+    th {
+      padding: 0.6rem 0.7rem;
+      text-align: left;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #4b5f6b;
+      font-weight: 600;
+    }
+    td {
+      padding: 0.5rem 0.7rem;
+      border-bottom: 1px solid #f0f3f7;
+      font-size: 0.75rem;
+      color: #1a1f36;
+      vertical-align: middle;
+    }
+    tbody tr:hover { background: #f8fbf9; }
+    tbody tr:last-child td { border-bottom: none; }
+    .actions-cell { display: flex; gap: 0.15rem; flex-wrap: wrap; }
+    .offer-thumb {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: #f8fbf9;
+      border: 1px solid #e8edf2;
+    }
+    .no-image {
+      width: 36px;
+      height: 36px;
+      background: #f3f8f5;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      border: 1px solid #e8edf2;
+    }
+    .offer-tag { font-size: 0.55rem; background: #fef2f2; color: #dc2626; padding: 0.05rem 0.4rem; border-radius: 12px; }
+
+    /* ----- TOAST ----- */
+    .toast {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.35rem 0.9rem;
+      border-radius: 30px;
+      font-weight: 500;
+      font-size: 0.75rem;
+      z-index: 3000;
+      display: none;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      animation: toastIn 0.3s ease;
+      white-space: nowrap;
+      max-width: 90%;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(15px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    .toast.success { background: #1f8b4c; }
+    .toast.error { background: #dc2626; }
+
+    /* ----- DESKTOP OVERRIDES ----- */
+    @media (min-width: 768px) {
+      .header { padding: 0.7rem 1.5rem; }
+      .stats-bar { padding: 0.5rem 1.5rem; }
+      .main { padding: 1.5rem; }
+      .form-container { padding: 1.5rem; }
+      .form-grid { grid-template-columns: 1fr 1fr; }
+      .offer-card { padding: 1rem; }
+      .offer-list { display: none !important; }
+      .table-container { display: block !important; }
+      .logo-image { width: 48px; height: 48px; }
+      .logo-text { font-size: 1.1rem; }
+      .page-title { font-size: 1rem; }
+      .menu-toggle { display: none; }
+      .sidebar-overlay, .sidebar { display: none !important; }
+    }
+
+    @media (max-width: 767px) {
+      .offer-list { display: flex !important; }
+      .table-container { display: none !important; }
+      .header { padding: 0.5rem 0.8rem; }
+      .stats-bar { padding: 0.4rem 0.8rem; }
+      .stats-inner { gap: 0.5rem; }
+      .stat-item { font-size: 0.6rem; }
+      .stat-item .num { font-size: 0.75rem; }
+      .main { padding: 0.7rem; }
+      .page-title { font-size: 0.85rem; }
+      .logo-text { font-size: 0.9rem; }
+      .logo-image { width: 36px; height: 36px; }
+      .toast { font-size: 0.7rem; padding: 0.3rem 0.8rem; bottom: 0.8rem; }
+      .offer-card-img { width: 44px; height: 44px; }
+      .offer-card-img-placeholder { width: 44px; height: 44px; }
+      .form-container { padding: 0.6rem; }
+      .form-grid { gap: 0.5rem; }
+      .sidebar { width: 240px; left: -240px; }
+    }
+
+    @media (max-width: 480px) {
+      .offer-card { padding: 0.5rem; }
+      .offer-card-title { font-size: 0.7rem; }
+      .btn-sm { font-size: 0.5rem; padding: 0.1rem 0.4rem; }
+      .logo-image { width: 32px; height: 32px; }
+      .logo-text { font-size: 0.85rem; }
+      .menu-toggle { font-size: 1.4rem; }
+    }
+
+    /* ----- TABS INSIDE FORM ----- */
+    .offer-tabs {
+      display: flex;
+      gap: 0.3rem;
+      margin-bottom: 0.6rem;
+    }
+    .offer-tab {
+      padding: 0.25rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      border: 1px solid #e4eaf0;
+      background: white;
+      color: #4b5f6b;
+      cursor: pointer;
+      transition: 0.15s;
+      flex: 1;
+      text-align: center;
+    }
+    .offer-tab.active {
+      background: #1f8b4c;
+      color: white;
+      border-color: #1f8b4c;
+    }
+    .offer-tab:hover:not(.active) { background: #f0f3f7; }
+    .offer-panel { display: none; }
+    .offer-panel.active { display: block; }
+
+    /* ----- TINY GRID FOR EXISTING PRODUCTS ----- */
+    .tiny-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+    }
+    .tiny-card {
+      background: #ffffff;
+      border: 2px solid #e8edf2;
+      border-radius: 10px;
+      padding: 0.4rem;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.15s ease;
+      position: relative;
+    }
+    .tiny-card:hover { border-color: #b8cee0; }
+    .tiny-card.selected {
+      border-color: #1f8b4c;
+      background: #f0fdf4;
+      box-shadow: 0 0 0 2px rgba(31,139,76,0.15);
+    }
+    .tiny-card-image {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: contain;
+      background: #f8fbf9;
+      border-radius: 6px;
+    }
+    .tiny-card-title {
+      font-size: 0.55rem;
+      font-weight: 600;
+      color: #1a1f36;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tiny-card-price {
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: #1f8b4c;
+    }
+    .tiny-card-price::before { content: '৳'; }
+    .tiny-card-search {
+      display: flex;
+      gap: 0.3rem;
+      margin-bottom: 0.4rem;
+    }
+    .tiny-card-search input {
+      flex: 1;
+      padding: 0.3rem 0.6rem;
+      border: 1px solid #e4ece8;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      background: #f8fbf9;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <a href="/" class="logo">
+          <img src="/assets/logo.png" alt="Batisha" class="logo-image">
+          <span class="logo-text">Batisha <span>online</span></span>
+        </a>
+        <span class="page-title">🏷️ Offers</span>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+    </div>
+  </header>
+
+  <!-- SIDEBAR OVERLAY & MENU -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="sidebar" id="sidebar">
+    <a href="/" class="sidebar-logo">
+      <img src="/assets/logo.png" alt="Batisha" class="logo-image">
+      <span class="logo-text">Batisha <span>online</span></span>
+    </a>
+    <nav class="sidebar-nav">
+      <a href="/admin/dashboard"><span class="icon">📊</span> Products</a>
+      <a href="/admin/orders"><span class="icon">📦</span> Orders</a>
+      <a href="/admin/shop"><span class="icon">🏪</span> Shops</a>
+      <a href="/admin/offer" class="active"><span class="icon">🏷️</span> Offers</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="logoutButton">🚪 Logout</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item"><span class="num" id="statTotal">0</span><span class="label">Total</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="num green" id="statActive">0</span><span class="label">Active</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="num" id="statGlobal">0</span><span class="label">Global</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat-item"><span class="num" id="statTemp">0</span><span class="label">Temporary</span></div>
+    </div>
+  </div>
+
+  <main class="main">
+    
+    <!-- MASTER TOGGLE -->
+    <div class="toggle-panel">
+      <div class="left">
+        <div class="toggle-switch" id="masterToggle">
+          <div class="knob"></div>
+        </div>
+        <span class="label">Offer Section</span>
+        <span class="toggle-status" id="toggleStatus">OFF</span>
+      </div>
+      <span style="font-size:0.65rem;color:#6b7a86;">Controls visibility on home page</span>
+    </div>
+
+    <div style="margin-bottom:0.8rem;display:flex;gap:0.4rem;flex-wrap:wrap;">
+      <button class="btn-submit" id="toggleFormBtn" style="flex:none;padding:0.45rem 1rem;font-size:0.75rem;">➕ Add Offer</button>
+    </div>
+
+    <div id="addOfferForm" class="form-container">
+      <h2 class="form-title">🏷️ Add New Offer</h2>
+      
+      <div class="offer-tabs">
+        <button class="offer-tab active" data-tab="existing">📦 From Existing</button>
+        <button class="offer-tab" data-tab="new">✏️ Add New</button>
+      </div>
+
+      <!-- TAB 1: FROM EXISTING -->
+      <div class="offer-panel active" id="panelExisting">
+        <div class="form-grid">
+          <div class="tiny-card-search">
+            <input type="text" id="existingSearch" placeholder="Search products...">
+            <button class="btn-submit" id="existingSearchBtn" style="flex:none;padding:0.3rem 0.8rem;font-size:0.65rem;">Search</button>
+          </div>
+          <div class="tiny-grid" id="existingGrid"></div>
+          <div id="existingSelectedInfo" style="display:none;background:#f0fdf4;padding:0.5rem;border-radius:8px;border:1px solid #bbf7d0;font-size:0.75rem;margin-bottom:0.4rem;"></div>
+          <div class="form-group">
+            <label>Offer Price (৳) OR Discount (%)</label>
+            <div style="display:flex;gap:0.5rem;">
+              <input type="number" id="existingOfferPrice" class="form-input" placeholder="Offer Price" step="0.01" style="flex:1;">
+              <span style="display:flex;align-items:center;color:#6b7a86;font-size:0.7rem;">OR</span>
+              <input type="number" id="existingDiscount" class="form-input" placeholder="Discount %" step="0.01" style="flex:1;">
+            </div>
+          </div>
+          <div class="form-actions" style="grid-column:1/-1;">
+            <button class="btn-submit" id="existingSubmitBtn">💾 Add Offer</button>
+            <button type="button" class="btn-cancel-form" id="cancelFormBtn">✖ Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: ADD NEW -->
+      <div class="offer-panel" id="panelNew">
+        <form id="newOfferForm" class="form-grid">
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" id="newTitle" class="form-input" placeholder="Product name" required>
+          </div>
+          <div class="form-group">
+            <label>Category *</label>
+            <select id="newCategory" class="form-input" required>
+              <option value="">Select category</option>
+              <option value="electronics">Electronics</option>
+              <option value="grocery">Grocery</option>
+              <option value="medicine">Medicine</option>
+              <option value="vegetables">Vegetables</option>
+              <option value="fruits">Fruits</option>
+              <option value="bakery">Bakery Items</option>
+              <option value="others">Others</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="newDescription" class="form-input" placeholder="Product description..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Original Price (৳) *</label>
+            <input type="number" id="newOldPrice" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Offer Price (৳) OR Discount (%) *</label>
+            <div style="display:flex;gap:0.5rem;">
+              <input type="number" id="newOfferPrice" class="form-input" placeholder="Offer Price" step="0.01" style="flex:1;">
+              <span style="display:flex;align-items:center;color:#6b7a86;font-size:0.7rem;">OR</span>
+              <input type="number" id="newDiscount" class="form-input" placeholder="Discount %" step="0.01" style="flex:1;">
+            </div>
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Product Image</label>
+            <div class="file-upload-wrapper">
+              <label class="file-upload-label" for="newImage">
+                📁 Choose Image
+                <input type="file" id="newImage" accept="image/*">
+              </label>
+              <span id="newFileName" style="color:#6b7a86;font-size:0.7rem;margin-left:0.3rem;"></span>
+            </div>
+            <img id="newImagePreview" class="image-preview" src="" alt="Preview">
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label style="display:flex;align-items:center;gap:0.5rem;">
+              <input type="checkbox" id="saveToGlobal" style="width:16px;height:16px;accent-color:#1f8b4c;">
+              Save to Global Product List?
+            </label>
+            <span style="font-size:0.65rem;color:#6b7a86;">If checked, this product will be added to the main product table.</span>
+          </div>
+          <div class="form-actions" style="grid-column:1/-1;">
+            <button type="submit" class="btn-submit" id="newSubmitBtn">💾 Add Offer</button>
+            <button type="button" class="btn-cancel-form" id="cancelFormBtn2">✖ Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="loadingState" class="state-container"><div class="spinner"></div><h3>Loading offers...</h3></div>
+    <div id="errorState" class="state-container"><div class="icon">❌</div><h3>Failed to load offers</h3><p>Please try again</p><button class="btn-sm" style="background:#1f8b4c;color:white;padding:0.2rem 0.8rem;border-radius:30px;border:none;cursor:pointer;margin-top:0.5rem;" onclick="location.reload()">Retry</button></div>
+    <div id="emptyState" class="state-container"><div class="icon">🏷️</div><h3>No offers yet</h3><p>Add your first offer to get started</p></div>
+
+    <div id="offerList" class="offer-list"></div>
+
+    <div id="tableContainer" class="table-container">
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Image</th><th>Title</th><th>Old Price</th><th>Offer Price</th><th>Discount</th><th>Source</th><th>Actions</th></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const SESSION_KEY = 'grocery_admin_session';
+      const LOGIN_PATH = '/admin';
+      function hasValidSession() {
+        try {
+          const data = localStorage.getItem(SESSION_KEY);
+          if (!data) return false;
+          const parsed = JSON.parse(data);
+          if (!parsed || parsed.loggedIn !== true || !parsed.timestamp) { localStorage.removeItem(SESSION_KEY); return false; }
+          if (Date.now() - parsed.timestamp > 24 * 60 * 60 * 1000) { localStorage.removeItem(SESSION_KEY); return false; }
+          return true;
+        } catch { localStorage.removeItem(SESSION_KEY); return false; }
+      }
+      if (!hasValidSession()) { window.location.replace(LOGIN_PATH); throw new Error('Unauthorized'); }
+
+      let supabaseUrl = null, supabaseAnonKey = null;
+      const OFFERS_TABLE = 'offers';
+      const PRODUCTS_TABLE = 'product';
+      const OFFER_BUCKET = 'offer-images';
+
+      const menuToggle = document.getElementById('menuToggle');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+      const logoutBtn = document.getElementById('logoutButton');
+      const toast = document.getElementById('toast');
+
+      const addOfferForm = document.getElementById('addOfferForm');
+      const toggleFormBtn = document.getElementById('toggleFormBtn');
+      const cancelFormBtn = document.getElementById('cancelFormBtn');
+      const cancelFormBtn2 = document.getElementById('cancelFormBtn2');
+      const offerList = document.getElementById('offerList');
+      const tableContainer = document.getElementById('tableContainer');
+      const tableBody = document.getElementById('tableBody');
+      const loadingState = document.getElementById('loadingState');
+      const errorState = document.getElementById('errorState');
+      const emptyState = document.getElementById('emptyState');
+
+      const masterToggle = document.getElementById('masterToggle');
+      const toggleStatus = document.getElementById('toggleStatus');
+
+      // Tabs
+      const offerTabs = document.querySelectorAll('.offer-tab');
+      const panelExisting = document.getElementById('panelExisting');
+      const panelNew = document.getElementById('panelNew');
+
+      // Existing tab elements
+      const existingGrid = document.getElementById('existingGrid');
+      const existingSearch = document.getElementById('existingSearch');
+      const existingSearchBtn = document.getElementById('existingSearchBtn');
+      const existingSelectedInfo = document.getElementById('existingSelectedInfo');
+      const existingOfferPrice = document.getElementById('existingOfferPrice');
+      const existingDiscount = document.getElementById('existingDiscount');
+      const existingSubmitBtn = document.getElementById('existingSubmitBtn');
+
+      // New tab elements
+      const newOfferForm = document.getElementById('newOfferForm');
+      const newTitle = document.getElementById('newTitle');
+      const newCategory = document.getElementById('newCategory');
+      const newDescription = document.getElementById('newDescription');
+      const newOldPrice = document.getElementById('newOldPrice');
+      const newOfferPrice = document.getElementById('newOfferPrice');
+      const newDiscount = document.getElementById('newDiscount');
+      const newImage = document.getElementById('newImage');
+      const newFileName = document.getElementById('newFileName');
+      const newImagePreview = document.getElementById('newImagePreview');
+      const saveToGlobal = document.getElementById('saveToGlobal');
+      const newSubmitBtn = document.getElementById('newSubmitBtn');
+
+      let allOffers = [];
+      let allProductsCache = [];
+      let selectedGlobalProduct = null;
+      let selectedNewImageFile = null;
+
+      function toggleSidebar(open) {
+        if (open === undefined) open = !sidebar.classList.contains('open');
+        sidebar.classList.toggle('open', open);
+        sidebarOverlay.classList.toggle('open', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+      menuToggle.addEventListener('click', () => toggleSidebar());
+      sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+
+      function showToast(msg, type = 'success') {
+        toast.textContent = msg;
+        toast.className = `toast ${type}`;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+      }
+
+      function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+
+      async function fetchConfig() {
+        try {
+          const resp = await fetch('/api/config');
+          if (!resp.ok) throw new Error('Config failed');
+          const cfg = await resp.json();
+          supabaseUrl = cfg.supabaseUrl; 
+          supabaseAnonKey = cfg.supabaseAnonKey;
+          return true;
+        } catch { showToast('Failed to load config', 'error'); return false; }
+      }
+
+      async function uploadOfferImage(file) {
+        const timestamp = Date.now();
+        const fileExt = file.name.split('.').pop();
+        const uniqueName = `offer-${timestamp}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+        const response = await fetch(`${supabaseUrl}/storage/v1/object/${OFFER_BUCKET}/${uniqueName}`, {
+          method: 'POST',
+          headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': file.type },
+          body: file,
+        });
+        if (!response.ok) throw new Error('Upload failed');
+        return `${supabaseUrl}/storage/v1/object/public/${OFFER_BUCKET}/${uniqueName}`;
+      }
+
+      async function deleteOfferImage(imageUrl) {
+        if (!imageUrl) return true;
+        try {
+          const url = new URL(imageUrl);
+          const pathParts = url.pathname.split('/');
+          const bucketIndex = pathParts.indexOf(OFFER_BUCKET);
+          if (bucketIndex !== -1 && bucketIndex < pathParts.length - 1) {
+            const filePath = pathParts.slice(bucketIndex + 1).join('/');
+            const response = await fetch(`${supabaseUrl}/storage/v1/object/${OFFER_BUCKET}/${filePath}`, {
+              method: 'DELETE',
+              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+            });
+            if (!response.ok) console.warn('Image deletion warning:', await response.text());
+          }
+          return true;
+        } catch { return true; }
+      }
+
+      // --- FETCH OFFERS ---
+      async function fetchOffers() {
+        try {
+          showState('loading');
+          const response = await fetch(`${supabaseUrl}/rest/v1/${OFFERS_TABLE}?select=*&order=created_at.desc`, {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (!response.ok) throw new Error('Fetch failed');
+          allOffers = await response.json();
+          if (!allOffers || allOffers.length === 0) { showState('empty'); updateStats(); return; }
+          renderOffers(allOffers);
+          updateStats();
+          showState('table');
+          // Sync master toggle with first row's is_active (all offers share same master status)
+          if (allOffers.length > 0) {
+            const isActive = allOffers[0].is_active === true;
+            masterToggle.classList.toggle('active', isActive);
+            toggleStatus.textContent = isActive ? 'ON' : 'OFF';
+            toggleStatus.classList.toggle('active', isActive);
+          }
+        } catch { showState('error'); }
+      }
+
+      function renderOffers(offers) {
+        offerList.innerHTML = '';
+        offers.forEach(offer => {
+          const card = document.createElement('div');
+          card.className = 'offer-card';
+          card.dataset.id = offer.id;
+          const imgHtml = offer.image_url 
+            ? `<img src="${escapeHtml(offer.image_url)}" class="offer-card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+            : '';
+          const placeholder = `<div class="offer-card-img-placeholder" style="${offer.image_url ? 'display:none;' : ''}">🏷️</div>`;
+          const discount = offer.discount_percentage || Math.round(((offer.old_price - offer.offer_price) / offer.old_price) * 100);
+          card.innerHTML = `
+            ${imgHtml}${placeholder}
+            <div class="offer-card-info">
+              <div class="offer-card-title">${escapeHtml(offer.title || '—')}</div>
+              <div class="offer-card-prices">
+                <span class="offer-card-old-price">৳${parseFloat(offer.old_price).toFixed(2)}</span>
+                <span class="offer-card-offer-price">${parseFloat(offer.offer_price).toFixed(2)}</span>
+                <span class="offer-card-discount">-${discount}%</span>
+              </div>
+              <span class="offer-card-source">${offer.is_temporary ? 'Temporary' : 'Global'}</span>
+            </div>
+            <div class="offer-card-actions">
+              <button class="btn-sm btn-delete" onclick="window.deleteOffer(${offer.id})">🗑️</button>
+            </div>
+          `;
+          offerList.appendChild(card);
+        });
+
+        tableBody.innerHTML = '';
+        offers.forEach(offer => {
+          const row = document.createElement('tr');
+          row.dataset.id = offer.id;
+          const discount = offer.discount_percentage || Math.round(((offer.old_price - offer.offer_price) / offer.old_price) * 100);
+          row.innerHTML = `
+            <td>${offer.image_url ? `<img src="${escapeHtml(offer.image_url)}" class="offer-thumb" onerror="this.parentElement.innerHTML='<div class=\\'no-image\\'>🏷️</div>'">` : '<div class="no-image">🏷️</div>'}</td>
+            <td>${escapeHtml(offer.title || '—')}</td>
+            <td>৳${parseFloat(offer.old_price).toFixed(2)}</td>
+            <td style="color:#1f8b4c;font-weight:700;">৳${parseFloat(offer.offer_price).toFixed(2)}</td>
+            <td><span class="offer-tag">-${discount}%</span></td>
+            <td>${offer.is_temporary ? 'Temporary' : 'Global'}</td>
+            <td class="actions-cell">
+              <button class="btn-sm btn-delete" onclick="window.deleteOffer(${offer.id})">🗑️</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      function updateStats() {
+        const total = allOffers.length;
+        const active = allOffers.filter(o => o.is_active === true).length;
+        const global = allOffers.filter(o => o.is_temporary === false).length;
+        const temp = allOffers.filter(o => o.is_temporary === true).length;
+        document.getElementById('statTotal').textContent = total;
+        document.getElementById('statActive').textContent = active;
+        document.getElementById('statGlobal').textContent = global;
+        document.getElementById('statTemp').textContent = temp;
+      }
+
+      function showState(state) {
+        loadingState.style.display = 'none';
+        errorState.style.display = 'none';
+        emptyState.style.display = 'none';
+        offerList.style.display = 'none';
+        tableContainer.style.display = 'none';
+        if (state === 'loading') loadingState.style.display = 'flex';
+        else if (state === 'error') errorState.style.display = 'flex';
+        else if (state === 'empty') emptyState.style.display = 'flex';
+        else if (state === 'table') {
+          if (window.innerWidth >= 768) tableContainer.style.display = 'block';
+          else offerList.style.display = 'flex';
+        }
+      }
+
+      // --- MASTER TOGGLE ---
+      masterToggle.addEventListener('click', async () => {
+        const newState = !masterToggle.classList.contains('active');
+        masterToggle.classList.toggle('active', newState);
+        toggleStatus.textContent = newState ? 'ON' : 'OFF';
+        toggleStatus.classList.toggle('active', newState);
+        try {
+          // Update all offers' is_active to the new state
+          const response = await fetch(`${supabaseUrl}/rest/v1/${OFFERS_TABLE}`, {
+            method: 'PATCH',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ is_active: newState })
+          });
+          if (!response.ok) throw new Error('Toggle failed');
+          showToast(newState ? '✅ Offers turned ON for users' : '⛔ Offers turned OFF for users');
+          await fetchOffers();
+        } catch { showToast('Failed to toggle', 'error'); }
+      });
+
+      // --- ADD OFFER FORM TOGGLE ---
+      function showForm() {
+        addOfferForm.classList.add('active');
+        toggleFormBtn.textContent = '✖ Close';
+        // Reset form state
+        selectedGlobalProduct = null;
+        existingSelectedInfo.style.display = 'none';
+        existingGrid.innerHTML = '';
+        existingOfferPrice.value = '';
+        existingDiscount.value = '';
+        newOfferForm.reset();
+        selectedNewImageFile = null;
+        newFileName.textContent = '';
+        newImagePreview.classList.remove('active');
+        newImagePreview.src = '';
+        // Load existing products for tab 1
+        loadExistingProducts();
+      }
+      function hideForm() {
+        addOfferForm.classList.remove('active');
+        toggleFormBtn.textContent = '➕ Add Offer';
+      }
+      toggleFormBtn.addEventListener('click', () => {
+        addOfferForm.classList.contains('active') ? hideForm() : showForm();
+      });
+      cancelFormBtn.addEventListener('click', hideForm);
+      cancelFormBtn2.addEventListener('click', hideForm);
+
+      // --- TABS ---
+      offerTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          offerTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const panelId = tab.dataset.tab === 'existing' ? 'panelExisting' : 'panelNew';
+          document.querySelectorAll('.offer-panel').forEach(p => p.classList.remove('active'));
+          document.getElementById(panelId).classList.add('active');
+          if (tab.dataset.tab === 'existing') loadExistingProducts();
+        });
+      });
+
+      // --- EXISTING PRODUCTS GRID ---
+      async function loadExistingProducts() {
+        try {
+          const response = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}?select=*&order=id.desc`, {
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (!response.ok) throw new Error('Fetch failed');
+          allProductsCache = await response.json();
+          renderExistingGrid(allProductsCache);
+        } catch { showToast('Failed to load products', 'error'); }
+      }
+
+      function renderExistingGrid(products) {
+        existingGrid.innerHTML = '';
+        products.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'tiny-card';
+          if (selectedGlobalProduct && selectedGlobalProduct.id === p.id) card.classList.add('selected');
+          const imgHtml = p.image_url 
+            ? `<img src="${escapeHtml(p.image_url)}" class="tiny-card-image" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+            : '';
+          card.innerHTML = `
+            ${imgHtml}
+            <div class="tiny-card-title">${escapeHtml(p.title || '—')}</div>
+            <div class="tiny-card-price">${parseFloat(p.price || 0).toFixed(2)}</div>
+          `;
+          card.addEventListener('click', () => {
+            selectedGlobalProduct = p;
+            existingSelectedInfo.style.display = 'block';
+            existingSelectedInfo.innerHTML = `Selected: <strong>${escapeHtml(p.title)}</strong> (Original Price: ৳${parseFloat(p.price).toFixed(2)})`;
+            renderExistingGrid(allProductsCache);
+          });
+          existingGrid.appendChild(card);
+        });
+      }
+
+      existingSearchBtn.addEventListener('click', () => {
+        const q = existingSearch.value.trim().toLowerCase();
+        if (!q) { renderExistingGrid(allProductsCache); return; }
+        const filtered = allProductsCache.filter(p => 
+          (p.title && p.title.toLowerCase().includes(q)) || 
+          (p.description && p.description.toLowerCase().includes(q))
+        );
+        renderExistingGrid(filtered);
+      });
+      existingSearch.addEventListener('keyup', (e) => { if (e.key === 'Enter') existingSearchBtn.click(); });
+
+      // --- EXISTING SUBMIT ---
+      existingSubmitBtn.addEventListener('click', async () => {
+        if (!selectedGlobalProduct) { showToast('Please select a product first', 'error'); return; }
+        const priceInput = parseFloat(existingOfferPrice.value);
+        const discountInput = parseFloat(existingDiscount.value);
+        if (isNaN(priceInput) && isNaN(discountInput)) { showToast('Please enter Offer Price or Discount %', 'error'); return; }
+        let offerPrice, discountPercent;
+        const oldPrice = selectedGlobalProduct.price;
+        if (!isNaN(priceInput) && priceInput > 0) {
+          offerPrice = priceInput;
+          discountPercent = Math.round(((oldPrice - offerPrice) / oldPrice) * 100);
+        } else if (!isNaN(discountInput) && discountInput > 0) {
+          discountPercent = discountInput;
+          offerPrice = oldPrice - (oldPrice * (discountPercent / 100));
+        } else {
+          showToast('Invalid price or discount', 'error'); return;
+        }
+        if (offerPrice < 0) { showToast('Offer price cannot be negative', 'error'); return; }
+        existingSubmitBtn.disabled = true;
+        existingSubmitBtn.textContent = '⏳';
+        try {
+          const body = {
+            product_id: selectedGlobalProduct.id,
+            title: selectedGlobalProduct.title,
+            description: selectedGlobalProduct.description,
+            image_url: selectedGlobalProduct.image_url,
+            category: selectedGlobalProduct.category,
+            old_price: oldPrice,
+            offer_price: offerPrice,
+            is_temporary: false,
+            is_active: true
+          };
+          const response = await fetch(`${supabaseUrl}/rest/v1/${OFFERS_TABLE}`, {
+            method: 'POST',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+            body: JSON.stringify(body)
+          });
+          if (!response.ok) throw new Error('Failed to add offer');
+          showToast('✅ Offer added from existing product!');
+          hideForm();
+          await fetchOffers();
+        } catch { showToast('Failed to add offer', 'error'); }
+        existingSubmitBtn.disabled = false;
+        existingSubmitBtn.textContent = '💾 Add Offer';
+      });
+
+      // --- NEW PRODUCT IMAGE UPLOAD ---
+      newImage.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          selectedNewImageFile = file;
+          newFileName.textContent = file.name;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            newImagePreview.src = event.target.result;
+            newImagePreview.classList.add('active');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          selectedNewImageFile = null;
+          newFileName.textContent = '';
+          newImagePreview.classList.remove('active');
+          newImagePreview.src = '';
+        }
+      });
+
+      // --- NEW SUBMIT ---
+      newOfferForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = newTitle.value.trim();
+        const category = newCategory.value;
+        const description = newDescription.value.trim();
+        const oldPrice = parseFloat(newOldPrice.value) || 0;
+        const priceInput = parseFloat(newOfferPrice.value);
+        const discountInput = parseFloat(newDiscount.value);
+        if (!title) { showToast('Title is required', 'error'); return; }
+        if (!category) { showToast('Category is required', 'error'); return; }
+        if (oldPrice <= 0) { showToast('Original price must be greater than 0', 'error'); return; }
+        if (isNaN(priceInput) && isNaN(discountInput)) { showToast('Please enter Offer Price or Discount %', 'error'); return; }
+        let offerPrice, discountPercent;
+        if (!isNaN(priceInput) && priceInput > 0) {
+          offerPrice = priceInput;
+          discountPercent = Math.round(((oldPrice - offerPrice) / oldPrice) * 100);
+        } else if (!isNaN(discountInput) && discountInput > 0) {
+          discountPercent = discountInput;
+          offerPrice = oldPrice - (oldPrice * (discountPercent / 100));
+        } else {
+          showToast('Invalid price or discount', 'error'); return;
+        }
+        if (offerPrice < 0) { showToast('Offer price cannot be negative', 'error'); return; }
+        const saveGlobal = saveToGlobal.checked;
+        newSubmitBtn.disabled = true;
+        newSubmitBtn.textContent = '⏳';
+        try {
+          let imageUrl = null;
+          if (selectedNewImageFile) {
+            imageUrl = await uploadOfferImage(selectedNewImageFile);
+          }
+          let globalProductId = null;
+          if (saveGlobal) {
+            // Create global product first
+            const prodRes = await fetch(`${supabaseUrl}/rest/v1/${PRODUCTS_TABLE}`, {
+              method: 'POST',
+              headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+              body: JSON.stringify({ title, description, price: oldPrice, category, image_url: imageUrl })
+            });
+            if (!prodRes.ok) throw new Error('Failed to create global product');
+            const [newProduct] = await prodRes.json();
+            globalProductId = newProduct.id;
+          }
+          // Create offer
+          const offerBody = {
+            product_id: globalProductId || null,
+            title,
+            description,
+            image_url: imageUrl,
+            category,
+            old_price: oldPrice,
+            offer_price: offerPrice,
+            is_temporary: !saveGlobal,
+            is_active: true
+          };
+          const offerRes = await fetch(`${supabaseUrl}/rest/v1/${OFFERS_TABLE}`, {
+            method: 'POST',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+            body: JSON.stringify(offerBody)
+          });
+          if (!offerRes.ok) throw new Error('Failed to add offer');
+          showToast('✅ New offer added!');
+          hideForm();
+          await fetchOffers();
+        } catch { showToast('Failed to add offer', 'error'); }
+        newSubmitBtn.disabled = false;
+        newSubmitBtn.textContent = '💾 Add Offer';
+      });
+
+      // --- DELETE OFFER ---
+      window.deleteOffer = async function(offerId) {
+        if (!confirm('Delete this offer?')) return;
+        try {
+          const offer = allOffers.find(o => o.id === offerId);
+          if (!offer) return;
+          // If temporary, delete image too
+          if (offer.is_temporary && offer.image_url) {
+            await deleteOfferImage(offer.image_url);
+          }
+          const response = await fetch(`${supabaseUrl}/rest/v1/${OFFERS_TABLE}?id=eq.${offerId}`, {
+            method: 'DELETE',
+            headers: { 'apikey': supabaseAnonKey, 'Authorization': `Bearer ${supabaseAnonKey}` }
+          });
+          if (!response.ok) throw new Error('Delete failed');
+          showToast('🗑️ Offer deleted!');
+          await fetchOffers();
+        } catch { showToast('Failed to delete offer', 'error'); }
+      };
+
+      // --- LOGOUT ---
+      function handleLogout() { localStorage.removeItem(SESSION_KEY); window.location.replace(LOGIN_PATH); }
+      logoutBtn.addEventListener('click', handleLogout);
+      setInterval(() => { if (!hasValidSession()) handleLogout(); }, 5000);
+
+      // --- INIT ---
+      async function init() {
+        const configOk = await fetchConfig();
+        if (configOk) {
+          await fetchOffers();
+        } else showState('error');
+      }
+
+      window.addEventListener('DOMContentLoaded', init);
+    })();
+  </script>
+</body>
+</html>
