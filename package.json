@@ -1,0 +1,16 @@
+{
+  "name": "batisha-online",
+  "version": "1.0.0",
+  "description": "Batisha Online - Grocery E-commerce Platform",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "bcryptjs": "^3.0.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "author": "",
+  "license": "ISC"
+}
