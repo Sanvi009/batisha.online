@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offers — Merchant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .top-nav .nav-links a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-links a:hover { color: #1a1f36; }
+    .top-nav .nav-links a.active { color: #1f8b4c; }
+    .top-nav .logout-btn {
+      padding: 0.3rem 1rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1.5rem 0 1rem;
+    }
+    .page-header h1 { font-size: 1.6rem; font-weight: 700; }
+    .page-header .btn-add {
+      padding: 0.5rem 1.2rem;
+      background: #1f8b4c;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .page-header .btn-add:hover { background: #0f6e3a; }
+
+    .offer-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e8edf2;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .offer-card .image {
+      width: 64px; height: 64px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #f8fbf9;
+      border: 1px solid #e8edf2;
+      flex-shrink: 0;
+    }
+    .offer-card .info { flex: 1; }
+    .offer-card .info .title { font-weight: 600; font-size: 0.95rem; }
+    .offer-card .info .desc { font-size: 0.8rem; color: #6b7a86; }
+    .offer-card .info .prices {
+      margin-top: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .offer-card .info .prices .old {
+      color: #9ca3af;
+      text-decoration: line-through;
+      font-size: 0.8rem;
+    }
+    .offer-card .info .prices .new {
+      color: #dc2626;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .offer-card .info .prices .discount {
+      background: #fef2f2;
+      color: #dc2626;
+      padding: 0.05rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .offer-card .info .expiry {
+      font-size: 0.7rem;
+      color: #6b7a86;
+      margin-top: 0.1rem;
+    }
+    .offer-card .actions {
+      display: flex;
+      gap: 0.3rem;
+      flex-shrink: 0;
+    }
+    .offer-card .actions button {
+      padding: 0.2rem 0.8rem;
+      border: none;
+      border-radius: 30px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-edit { background: #f0f5fc; color: #1e3a5f; border: 1px solid #dde5ed; }
+    .btn-edit:hover { background: #e4edf7; }
+    .btn-delete { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .btn-delete:hover { background: #fee2e2; }
+
+    .loader { text-align: center; padding: 2rem; color: #6b7a86; }
+    .loader .spinner {
+      display: inline-block; width: 24px; height: 24px;
+      border: 3px solid #e2ebe6; border-top-color: #1f8b4c;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty { text-align: center; padding: 2rem; color: #6b7a86; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      max-width: 520px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+    .modal .form-group { margin-bottom: 0.8rem; }
+    .modal .form-group label {
+      display: block; font-weight: 600; font-size: 0.75rem; margin-bottom: 0.2rem;
+    }
+    .modal .form-group input, .modal .form-group select, .modal .form-group textarea {
+      width: 100%; padding: 0.4rem 0.6rem;
+      border: 1px solid #e4ece8; border-radius: 8px;
+      font-size: 0.85rem; font-family: inherit;
+      background: #f8fbf9; outline: none;
+    }
+    .modal .form-group input:focus, .modal .form-group select:focus, .modal .form-group textarea:focus {
+      border-color: #1f8b4c; box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
+    }
+    .modal .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .modal .actions {
+      display: flex; gap: 0.5rem; margin-top: 1rem;
+    }
+    .modal .actions button {
+      padding: 0.4rem 1rem; border: none; border-radius: 30px;
+      font-weight: 600; font-size: 0.75rem; cursor: pointer; flex: 1;
+    }
+    .modal .actions .btn-cancel { background: #f3f6f8; color: #1a1f36; border: 1px solid #e4eaf0; }
+    .modal .actions .btn-save { background: #1f8b4c; color: white; }
+    .modal .error-msg { color: #dc2626; font-size: 0.8rem; margin-top: 0.5rem; display: none; }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.5rem 0;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex; flex-direction: column; align-items: center;
+      text-decoration: none; color: #4b5f6b;
+      font-size: 0.6rem; font-weight: 500; gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-links { display: none; }
+      .bottom-nav { display: flex; }
+      .container { padding: 1rem; }
+      .offer-card { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="brand">🛍️ <span>Merchant</span></div>
+    <div class="nav-links">
+      <a href="/merchant/dashboard/">Dashboard</a>
+      <a href="/merchant/orders/">Orders</a>
+      <a href="/merchant/products/">Products</a>
+      <a href="/merchant/add-product/">Add Product</a>
+      <a href="/merchant/offers/" class="active">Offers</a>
+      <a href="/merchant/profile/">Profile</a>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>🏷️ Offers</h1>
+      <button class="btn-add" id="openCreateModal">+ Create Offer</button>
+    </div>
+
+    <div id="offersList">
+      <div class="loader"><div class="spinner"></div><p>Loading offers...</p></div>
+    </div>
+  </div>
+
+  <!-- Create / Edit Modal -->
+  <div class="modal-overlay" id="offerModal">
+    <div class="modal">
+      <h2 id="modalTitle">Create Offer</h2>
+      <form id="offerForm">
+        <input type="hidden" id="offerId" />
+        <div class="form-group">
+          <label for="offerTitle">Title *</label>
+          <input type="text" id="offerTitle" required />
+        </div>
+        <div class="form-group">
+          <label for="offerDescription">Description</label>
+          <textarea id="offerDescription" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="offerImage">Image URL</label>
+          <input type="text" id="offerImage" placeholder="https://..." />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="offerOldPrice">Original Price (৳) *</label>
+            <input type="number" id="offerOldPrice" step="0.01" required />
+          </div>
+          <div class="form-group">
+            <label for="offerNewPrice">Offer Price (৳) *</label>
+            <input type="number" id="offerNewPrice" step="0.01" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="offerExpiry">Expires At *</label>
+          <input type="datetime-local" id="offerExpiry" required />
+        </div>
+        <div class="form-group">
+          <label for="offerProduct">Link to Product (optional)</label>
+          <select id="offerProduct">
+            <option value="">None (manual offer)</option>
+          </select>
+        </div>
+        <div class="error-msg" id="offerError"></div>
+        <div class="actions">
+          <button type="button" class="btn-cancel" id="modalCancel">Cancel</button>
+          <button type="submit" class="btn-save" id="modalSave">Save Offer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/merchant/dashboard/"><span class="icon">📊</span> Dashboard</a>
+    <a href="/merchant/orders/"><span class="icon">📦</span> Orders</a>
+    <a href="/merchant/products/"><span class="icon">📋</span> Products</a>
+    <a href="/merchant/profile/"><span class="icon">👤</span> Profile</a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('merchant_token');
+    if (!token) { window.location.href = '/merchant/'; }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('merchant_token');
+      window.location.href = '/merchant/';
+    });
+
+    let editingOfferId = null;
+    let shopProducts = [];
+
+    // ===== Load offers =====
+    async function loadOffers() {
+      try {
+        const res = await fetch('/api/offers?action=list', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem('merchant_token');
+            window.location.href = '/merchant/';
+            return;
+          }
+          throw new Error('Failed to load offers');
+        }
+        const data = await res.json();
+        const offers = data.offers || [];
+
+        const container = document.getElementById('offersList');
+        if (offers.length === 0) {
+          container.innerHTML = `<div class="empty">📭 No offers created yet.</div>`;
+          return;
+        }
+
+        container.innerHTML = '';
+        offers.forEach(o => {
+          const card = document.createElement('div');
+          card.className = 'offer-card';
+          const img = o.image_url || '/assets/placeholder.png';
+          const expires = new Date(o.expires_at).toLocaleDateString();
+          card.innerHTML = `
+            <img src="${img}" class="image" onerror="this.src='/assets/placeholder.png'" />
+            <div class="info">
+              <div class="title">${o.title}</div>
+              <div class="desc">${o.description || ''}</div>
+              <div class="prices">
+                <span class="old">৳${parseFloat(o.old_price).toFixed(2)}</span>
+                <span class="new">৳${parseFloat(o.offer_price).toFixed(2)}</span>
+                <span class="discount">-${o.discount_percent}%</span>
+              </div>
+              <div class="expiry">Expires: ${expires}</div>
+            </div>
+            <div class="actions">
+              <button class="btn-edit" data-id="${o.id}">✏️ Edit</button>
+              <button class="btn-delete" data-id="${o.id}">🗑️ Delete</button>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+
+        // Edit handlers
+        document.querySelectorAll('.btn-edit').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const offer = offers.find(o => o.id === id);
+            if (offer) openEditModal(offer);
+          });
+        });
+
+        // Delete handlers
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            if (!confirm('Delete this offer?')) return;
+            const id = btn.dataset.id;
+            try {
+              const res = await fetch('/api/offers?action=delete', {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ offer_id: id })
+              });
+              if (res.ok) loadOffers();
+              else {
+                const data = await res.json();
+                alert(data.error || 'Failed to delete');
+              }
+            } catch (err) { alert('Error deleting offer'); }
+          });
+        });
+      } catch (err) {
+        console.error(err);
+        document.getElementById('offersList').innerHTML = `<div class="empty">⚠️ Error loading offers.</div>`;
+      }
+    }
+
+    // ===== Load shop products for dropdown =====
+    async function loadShopProducts() {
+      try {
+        const res = await fetch('/api/products?action=shop-list', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          shopProducts = data.products || [];
+          const select = document.getElementById('offerProduct');
+          select.innerHTML = '<option value="">None (manual offer)</option>';
+          shopProducts.forEach(sp => {
+            const p = sp.products;
+            if (p) {
+              const opt = document.createElement('option');
+              opt.value = p.id;
+              opt.textContent = `${p.title} (৳${p.price})`;
+              select.appendChild(opt);
+            }
+          });
+        }
+      } catch (err) { console.error('Shop products error:', err); }
+    }
+
+    // ===== Open create modal =====
+    document.getElementById('openCreateModal').addEventListener('click', () => {
+      editingOfferId = null;
+      document.getElementById('modalTitle').textContent = 'Create Offer';
+      document.getElementById('offerForm').reset();
+      document.getElementById('offerId').value = '';
+      document.getElementById('offerError').style.display = 'none';
+      document.getElementById('offerModal').classList.add('active');
+    });
+
+    // ===== Open edit modal =====
+    function openEditModal(offer) {
+      editingOfferId = offer.id;
+      document.getElementById('modalTitle').textContent = 'Edit Offer';
+      document.getElementById('offerId').value = offer.id;
+      document.getElementById('offerTitle').value = offer.title;
+      document.getElementById('offerDescription').value = offer.description || '';
+      document.getElementById('offerImage').value = offer.image_url || '';
+      document.getElementById('offerOldPrice').value = offer.old_price;
+      document.getElementById('offerNewPrice').value = offer.offer_price;
+      document.getElementById('offerExpiry').value = offer.expires_at.slice(0, 16);
+      document.getElementById('offerError').style.display = 'none';
+      // Pre-select product if linked
+      const select = document.getElementById('offerProduct');
+      if (offer.product_id) {
+        for (let opt of select.options) {
+          if (opt.value === offer.product_id) { opt.selected = true; break; }
+        }
+      }
+      document.getElementById('offerModal').classList.add('active');
+    }
+
+    // ===== Modal controls =====
+    document.getElementById('modalCancel').addEventListener('click', () => {
+      document.getElementById('offerModal').classList.remove('active');
+    });
+    document.getElementById('offerModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) document.getElementById('offerModal').classList.remove('active');
+    });
+
+    // ===== Submit offer =====
+    document.getElementById('offerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errorEl = document.getElementById('offerError');
+      errorEl.style.display = 'none';
+
+      const offerId = document.getElementById('offerId').value;
+      const title = document.getElementById('offerTitle').value.trim();
+      const description = document.getElementById('offerDescription').value.trim();
+      const image_url = document.getElementById('offerImage').value.trim() || null;
+      const old_price = parseFloat(document.getElementById('offerOldPrice').value);
+      const offer_price = parseFloat(document.getElementById('offerNewPrice').value);
+      const expires_at = document.getElementById('offerExpiry').value;
+      const product_id = document.getElementById('offerProduct').value || null;
+
+      if (!title || isNaN(old_price) || isNaN(offer_price) || !expires_at) {
+        errorEl.textContent = 'Title, prices, and expiry are required.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      const saveBtn = document.getElementById('modalSave');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+
+      const isEdit = !!offerId;
+      const action = isEdit ? 'update' : 'create';
+      const method = isEdit ? 'PUT' : 'POST';
+      const body = isEdit
+        ? { offer_id: offerId, title, description, image_url, old_price, offer_price, expires_at }
+        : { title, description, image_url, old_price, offer_price, expires_at, product_id };
+
+      try {
+        const res = await fetch(`/api/offers?action=${action}`, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('offerModal').classList.remove('active');
+          loadOffers();
+        } else {
+          errorEl.textContent = data.error || 'Failed to save offer.';
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.textContent = 'Connection error.';
+        errorEl.style.display = 'block';
+      }
+
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Offer';
+    });
+
+    // ===== Init =====
+    async function init() {
+      await loadShopProducts();
+      loadOffers();
+    }
+    init();
+  </script>
+</body>
+</html>
