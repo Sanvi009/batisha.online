@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products — Merchant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .top-nav .nav-links a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-links a:hover { color: #1a1f36; }
+    .top-nav .nav-links a.active { color: #1f8b4c; }
+    .top-nav .logout-btn {
+      padding: 0.3rem 1rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1.5rem 0 1rem;
+    }
+    .page-header h1 { font-size: 1.6rem; font-weight: 700; }
+    .page-header .btn-add {
+      padding: 0.5rem 1.2rem;
+      background: #1f8b4c;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.15s;
+    }
+    .page-header .btn-add:hover { background: #0f6e3a; }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e8edf2;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .product-card .image {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #f8fbf9;
+      border: 1px solid #e8edf2;
+      flex-shrink: 0;
+    }
+    .product-card .info { flex: 1; }
+    .product-card .info .title { font-weight: 600; font-size: 0.95rem; }
+    .product-card .info .desc { font-size: 0.8rem; color: #6b7a86; }
+    .product-card .info .price {
+      font-weight: 700;
+      color: #1f8b4c;
+      margin-top: 0.2rem;
+    }
+    .product-card .info .category {
+      font-size: 0.6rem;
+      background: #f0f5fc;
+      color: #1e3a5f;
+      padding: 0.05rem 0.5rem;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 0.1rem;
+    }
+    .product-card .actions {
+      display: flex;
+      gap: 0.3rem;
+      flex-shrink: 0;
+    }
+    .product-card .actions button {
+      padding: 0.2rem 0.8rem;
+      border: none;
+      border-radius: 30px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-edit { background: #f0f5fc; color: #1e3a5f; border: 1px solid #dde5ed; }
+    .btn-edit:hover { background: #e4edf7; }
+    .btn-delete { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .btn-delete:hover { background: #fee2e2; }
+
+    .loader { text-align: center; padding: 2rem; color: #6b7a86; }
+    .loader .spinner {
+      display: inline-block;
+      width: 24px; height: 24px;
+      border: 3px solid #e2ebe6;
+      border-top-color: #1f8b4c;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty { text-align: center; padding: 2rem; color: #6b7a86; }
+
+    /* Edit modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      max-width: 500px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+    .modal .form-group { margin-bottom: 0.8rem; }
+    .modal .form-group label { display: block; font-weight: 600; font-size: 0.75rem; margin-bottom: 0.2rem; }
+    .modal .form-group input, .modal .form-group select {
+      width: 100%;
+      padding: 0.4rem 0.6rem;
+      border: 1px solid #e4ece8;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: #f8fbf9;
+      outline: none;
+    }
+    .modal .form-group input:focus, .modal .form-group select:focus {
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
+    }
+    .modal .actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .modal .actions button {
+      padding: 0.4rem 1rem;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      flex: 1;
+    }
+    .modal .actions .btn-cancel { background: #f3f6f8; color: #1a1f36; border: 1px solid #e4eaf0; }
+    .modal .actions .btn-save { background: #1f8b4c; color: white; }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.5rem 0;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 0.6rem;
+      font-weight: 500;
+      gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-links { display: none; }
+      .bottom-nav { display: flex; }
+      .container { padding: 1rem; }
+      .product-card { flex-wrap: wrap; }
+    }
+    @media (max-width: 480px) {
+      .product-card .image { width: 48px; height: 48px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="brand">🛍️ <span>Merchant</span></div>
+    <div class="nav-links">
+      <a href="/merchant/dashboard/">Dashboard</a>
+      <a href="/merchant/orders/">Orders</a>
+      <a href="/merchant/products/" class="active">Products</a>
+      <a href="/merchant/add-product/">Add Product</a>
+      <a href="/merchant/offers/">Offers</a>
+      <a href="/merchant/profile/">Profile</a>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>📋 Products</h1>
+      <a href="/merchant/add-product/" class="btn-add">+ Add Product</a>
+    </div>
+
+    <div id="productsList">
+      <div class="loader">
+        <div class="spinner"></div>
+        <p>Loading products...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <h2>Edit Product</h2>
+      <form id="editForm">
+        <input type="hidden" id="editShopProductId" />
+        <div class="form-group">
+          <label for="editTitle">Title</label>
+          <input type="text" id="editTitle" required />
+        </div>
+        <div class="form-group">
+          <label for="editDescription">Description</label>
+          <input type="text" id="editDescription" />
+        </div>
+        <div class="form-group">
+          <label for="editPrice">Price (৳)</label>
+          <input type="number" id="editPrice" step="0.01" required />
+        </div>
+        <div class="form-group">
+          <label for="editCategory">Category</label>
+          <select id="editCategory"></select>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn-cancel" id="editCancelBtn">Cancel</button>
+          <button type="submit" class="btn-save" id="editSaveBtn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/merchant/dashboard/">
+      <span class="icon">📊</span> Dashboard
+    </a>
+    <a href="/merchant/orders/">
+      <span class="icon">📦</span> Orders
+    </a>
+    <a href="/merchant/products/" class="active">
+      <span class="icon">📋</span> Products
+    </a>
+    <a href="/merchant/profile/">
+      <span class="icon">👤</span> Profile
+    </a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('merchant_token');
+    if (!token) {
+      window.location.href = '/merchant/';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('merchant_token');
+      window.location.href = '/merchant/';
+    });
+
+    let categories = [];
+
+    async function loadCategories() {
+      try {
+        const res = await fetch('/api/feed?action=categories');
+        const data = await res.json();
+        categories = data.categories || [];
+      } catch (err) {
+        console.error('Failed to load categories:', err);
+      }
+    }
+
+    async function loadProducts() {
+      try {
+        const res = await fetch('/api/products?action=shop-list', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem('merchant_token');
+            window.location.href = '/merchant/';
+            return;
+          }
+          throw new Error('Failed to load products');
+        }
+
+        const data = await res.json();
+        const products = data.products || [];
+
+        const container = document.getElementById('productsList');
+        if (products.length === 0) {
+          container.innerHTML = `<div class="empty">📭 No products yet. Add your first product!</div>`;
+          return;
+        }
+
+        container.innerHTML = '';
+        products.forEach(sp => {
+          const p = sp.products;
+          const card = document.createElement('div');
+          card.className = 'product-card';
+
+          const imageUrl = p.image_url || '/assets/placeholder.png';
+          const displayPrice = sp.custom_price || p.price;
+          const categoryName = p.categories?.name || 'Uncategorized';
+
+          card.innerHTML = `
+            <img src="${imageUrl}" class="image" onerror="this.src='/assets/placeholder.png'" />
+            <div class="info">
+              <div class="title">${p.title}</div>
+              <div class="desc">${p.description || ''}</div>
+              <div class="price">৳${parseFloat(displayPrice).toFixed(2)}</div>
+              <div class="category">${categoryName}</div>
+            </div>
+            <div class="actions">
+              <button class="btn-edit" data-id="${sp.id}">✏️ Edit</button>
+              <button class="btn-delete" data-id="${sp.id}">🗑️ Remove</button>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+
+        // Edit buttons
+        document.querySelectorAll('.btn-edit').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const spId = btn.dataset.id;
+            const sp = products.find(p => p.id === spId);
+            if (sp) {
+              openEditModal(sp);
+            }
+          });
+        });
+
+        // Delete buttons
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            if (!confirm('Remove this product from your shop? (Global product stays)')) return;
+            const spId = btn.dataset.id;
+            try {
+              const res = await fetch('/api/products?action=delete', {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ shopProductId: spId })
+              });
+              if (res.ok) {
+                loadProducts();
+              } else {
+                const data = await res.json();
+                alert(data.error || 'Failed to remove');
+              }
+            } catch (err) {
+              alert('Error removing product');
+            }
+          });
+        });
+
+      } catch (err) {
+        console.error('Products error:', err);
+        document.getElementById('productsList').innerHTML = `<div class="empty">⚠️ Error loading products.</div>`;
+      }
+    }
+
+    // Edit Modal
+    const editModal = document.getElementById('editModal');
+    const editForm = document.getElementById('editForm');
+    const editCancelBtn = document.getElementById('editCancelBtn');
+    const editSaveBtn = document.getElementById('editSaveBtn');
+
+    function openEditModal(sp) {
+      const p = sp.products;
+      document.getElementById('editShopProductId').value = sp.id;
+      document.getElementById('editTitle').value = p.title;
+      document.getElementById('editDescription').value = p.description || '';
+      document.getElementById('editPrice').value = sp.custom_price || p.price;
+
+      // Populate categories
+      const catSelect = document.getElementById('editCategory');
+      catSelect.innerHTML = '';
+      categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat.id;
+        opt.textContent = cat.name;
+        if (p.category_id === cat.id) opt.selected = true;
+        catSelect.appendChild(opt);
+      });
+
+      editModal.classList.add('active');
+    }
+
+    editCancelBtn.addEventListener('click', () => {
+      editModal.classList.remove('active');
+    });
+
+    editModal.addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) editModal.classList.remove('active');
+    });
+
+    editForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const shopProductId = document.getElementById('editShopProductId').value;
+      const title = document.getElementById('editTitle').value.trim();
+      const description = document.getElementById('editDescription').value.trim();
+      const price = parseFloat(document.getElementById('editPrice').value);
+      const category_id = document.getElementById('editCategory').value;
+
+      if (!title || isNaN(price)) {
+        alert('Title and price are required.');
+        return;
+      }
+
+      editSaveBtn.disabled = true;
+      editSaveBtn.textContent = 'Saving...';
+
+      try {
+        const res = await fetch('/api/products?action=update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            shopProductId,
+            title,
+            description,
+            price,
+            category_id: category_id || null
+          })
+        });
+
+        if (res.ok) {
+          editModal.classList.remove('active');
+          loadProducts();
+        } else {
+          const data = await res.json();
+          alert(data.error || 'Failed to update');
+        }
+      } catch (err) {
+        alert('Error updating product');
+      }
+
+      editSaveBtn.disabled = false;
+      editSaveBtn.textContent = 'Save';
+    });
+
+    // Init
+    async function init() {
+      await loadCategories();
+      loadProducts();
+    }
+
+    init();
+  </script>
+</body>
+</html>
