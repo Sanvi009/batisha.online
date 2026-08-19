@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Merchant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+    
+    /* Top Nav */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .top-nav .nav-links a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-links a:hover { color: #1a1f36; }
+    .top-nav .nav-links a.active { color: #1f8b4c; }
+    .top-nav .logout-btn {
+      padding: 0.3rem 1rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    
+    /* Page Header */
+    .page-header { margin: 1.5rem 0 1rem; }
+    .page-header h1 { font-size: 1.6rem; font-weight: 700; }
+    .page-header p { color: #6b7a86; }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.2rem;
+      border: 1px solid #e8edf2;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .stat-card .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: #6b7a86;
+      font-weight: 600;
+    }
+    .stat-card .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-top: 0.2rem;
+    }
+    .stat-card .value.green { color: #1f8b4c; }
+    .stat-card .value.orange { color: #f59e0b; }
+    
+    /* Quick Links */
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .quick-link {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e8edf2;
+      text-decoration: none;
+      color: #1a1f36;
+      transition: 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .quick-link:hover {
+      border-color: #1f8b4c;
+      box-shadow: 0 2px 8px rgba(31,139,76,0.06);
+    }
+    .quick-link .icon { font-size: 1.4rem; }
+    .quick-link .text { font-weight: 600; }
+
+    /* Loader */
+    .loader {
+      text-align: center;
+      padding: 2rem;
+      color: #6b7a86;
+    }
+    .loader .spinner {
+      display: inline-block;
+      width: 24px; height: 24px;
+      border: 3px solid #e2ebe6;
+      border-top-color: #1f8b4c;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Mobile Bottom Nav */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.5rem 0;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 0.6rem;
+      font-weight: 500;
+      gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-links { display: none; }
+      .bottom-nav { display: flex; }
+      .container { padding: 1rem; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="brand">🛍️ <span>Merchant</span></div>
+    <div class="nav-links">
+      <a href="/merchant/dashboard/" class="active">Dashboard</a>
+      <a href="/merchant/orders/">Orders</a>
+      <a href="/merchant/products/">Products</a>
+      <a href="/merchant/add-product/">Add Product</a>
+      <a href="/merchant/offers/">Offers</a>
+      <a href="/merchant/profile/">Profile</a>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <p>Overview of your shop activity</p>
+    </div>
+
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="label">Total Products</div>
+        <div class="value" id="totalProducts">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Total Orders</div>
+        <div class="value" id="totalOrders">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Pending</div>
+        <div class="value orange" id="pendingOrders">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Delivered</div>
+        <div class="value green" id="deliveredOrders">—</div>
+      </div>
+    </div>
+
+    <div class="quick-links">
+      <a href="/merchant/orders/" class="quick-link">
+        <span class="icon">📦</span>
+        <span class="text">Manage Orders</span>
+      </a>
+      <a href="/merchant/add-product/" class="quick-link">
+        <span class="icon">➕</span>
+        <span class="text">Add Product</span>
+      </a>
+      <a href="/merchant/offers/" class="quick-link">
+        <span class="icon">🏷️</span>
+        <span class="text">Create Offer</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/merchant/dashboard/" class="active">
+      <span class="icon">📊</span> Dashboard
+    </a>
+    <a href="/merchant/orders/">
+      <span class="icon">📦</span> Orders
+    </a>
+    <a href="/merchant/products/">
+      <span class="icon">📋</span> Products
+    </a>
+    <a href="/merchant/profile/">
+      <span class="icon">👤</span> Profile
+    </a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('merchant_token');
+    if (!token) {
+      window.location.href = '/merchant/';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('merchant_token');
+      window.location.href = '/merchant/';
+    });
+
+    async function loadDashboard() {
+      try {
+        const res = await fetch('/api/merchant?action=dashboard', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem('merchant_token');
+            window.location.href = '/merchant/';
+            return;
+          }
+          throw new Error('Failed to load');
+        }
+
+        const data = await res.json();
+        const stats = data.stats;
+
+        document.getElementById('totalProducts').textContent = stats.total_products || 0;
+        document.getElementById('totalOrders').textContent = stats.total_orders || 0;
+        document.getElementById('pendingOrders').textContent = stats.pending || 0;
+        document.getElementById('deliveredOrders').textContent = stats.delivered || 0;
+
+      } catch (err) {
+        console.error('Dashboard error:', err);
+      }
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>
