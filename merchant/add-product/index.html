@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Product — Merchant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .top-nav .nav-links a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-links a:hover { color: #1a1f36; }
+    .top-nav .nav-links a.active { color: #1f8b4c; }
+    .top-nav .logout-btn {
+      padding: 0.3rem 1rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .page-header { margin: 1.5rem 0 1rem; }
+    .page-header h1 { font-size: 1.6rem; font-weight: 700; }
+    .page-header p { color: #6b7a86; }
+
+    .form-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e8edf2;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #e8edf2;
+      padding-bottom: 0.5rem;
+    }
+    .tabs button {
+      padding: 0.5rem 1.2rem;
+      border: none;
+      background: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #6b7a86;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.15s;
+    }
+    .tabs button.active {
+      background: #e8f5e9;
+      color: #1f8b4c;
+    }
+    .tabs button:hover:not(.active) { background: #f0f3f7; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #1a1f36;
+      margin-bottom: 0.2rem;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #e4ece8;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: #f8fbf9;
+      outline: none;
+      transition: 0.15s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
+      background: white;
+    }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+
+    .file-upload-wrapper { position: relative; }
+    .file-upload-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f8fbf9;
+      border: 2px dashed #e4ece8;
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      cursor: pointer;
+      transition: 0.15s;
+      color: #4b5f6b;
+      font-size: 0.8rem;
+    }
+    .file-upload-label:hover { border-color: #1f8b4c; color: #1f8b4c; }
+    .file-upload-label input[type="file"] { display: none; }
+    .image-preview {
+      width: 80px; height: 80px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      display: none;
+      border: 1px solid #e8edf2;
+      background: #f8fbf9;
+    }
+    .image-preview.active { display: block; }
+
+    .btn-primary {
+      padding: 0.6rem 1.5rem;
+      background: #1f8b4c;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-primary:hover { background: #0f6e3a; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary {
+      padding: 0.6rem 1.5rem;
+      background: #f3f6f8;
+      color: #1a1f36;
+      border: 1px solid #e4eaf0;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-secondary:hover { background: #e8edf2; }
+
+    .error-msg { color: #dc2626; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+    .success-msg { color: #16a34a; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+
+    .global-list {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #e8edf2;
+      border-radius: 8px;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .global-item {
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid #f0f3f7;
+      cursor: pointer;
+      transition: 0.15s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .global-item:hover { background: #f0f8f2; }
+    .global-item.selected { background: #e8f5e9; border-left: 3px solid #1f8b4c; }
+    .global-item .title { font-weight: 500; font-size: 0.85rem; }
+    .global-item .price { color: #1f8b4c; font-weight: 600; font-size: 0.85rem; }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.5rem 0;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 0.6rem;
+      font-weight: 500;
+      gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-links { display: none; }
+      .bottom-nav { display: flex; }
+      .container { padding: 1rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="brand">🛍️ <span>Merchant</span></div>
+    <div class="nav-links">
+      <a href="/merchant/dashboard/">Dashboard</a>
+      <a href="/merchant/orders/">Orders</a>
+      <a href="/merchant/products/">Products</a>
+      <a href="/merchant/add-product/" class="active">Add Product</a>
+      <a href="/merchant/offers/">Offers</a>
+      <a href="/merchant/profile/">Profile</a>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>➕ Add / Import Product</h1>
+      <p>Add a new product or import from the global catalog</p>
+    </div>
+
+    <div class="form-card">
+      <div class="tabs">
+        <button class="active" data-tab="manual">➕ Add New</button>
+        <button data-tab="import">📦 Import from Global</button>
+      </div>
+
+      <!-- ===== TAB 1: MANUAL ADD ===== -->
+      <div class="tab-panel active" id="panel-manual">
+        <form id="manualForm">
+          <div class="form-group">
+            <label for="manualTitle">Product Title *</label>
+            <input type="text" id="manualTitle" required />
+          </div>
+          <div class="form-group">
+            <label for="manualDescription">Description</label>
+            <textarea id="manualDescription"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="manualPrice">Price (৳) *</label>
+              <input type="number" id="manualPrice" step="0.01" required />
+            </div>
+            <div class="form-group">
+              <label for="manualCategory">Category *</label>
+              <select id="manualCategory" required>
+                <option value="">Select category</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="manualImage">Product Image</label>
+            <div class="file-upload-wrapper">
+              <label class="file-upload-label" for="manualImage">
+                📁 Choose Image
+                <input type="file" id="manualImage" accept="image/*" />
+              </label>
+            </div>
+            <img id="manualImagePreview" class="image-preview" />
+          </div>
+          <div class="error-msg" id="manualError"></div>
+          <div class="success-msg" id="manualSuccess">✅ Product added successfully!</div>
+          <button type="submit" class="btn-primary" id="manualSubmitBtn">Add Product</button>
+        </form>
+      </div>
+
+      <!-- ===== TAB 2: IMPORT FROM GLOBAL ===== -->
+      <div class="tab-panel" id="panel-import">
+        <form id="importForm">
+          <div class="form-group">
+            <label>Search Global Products</label>
+            <input type="text" id="importSearch" placeholder="Type to search..." style="margin-bottom: 0.5rem;" />
+            <div class="global-list" id="globalList">
+              <div style="text-align:center;color:#6b7a86;padding:1rem;">Loading global products...</div>
+            </div>
+          </div>
+          <div class="form-group" id="importSelectedInfo" style="display:none;">
+            <label>Selected Product</label>
+            <div style="background:#f8fbf9;padding:0.5rem 0.8rem;border-radius:8px;border:1px solid #e4ece8;">
+              <strong id="importSelectedTitle">—</strong>
+              <span id="importSelectedPrice" style="color:#1f8b4c;margin-left:0.5rem;"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="importCustomPrice">Custom Price (optional)</label>
+            <input type="number" id="importCustomPrice" step="0.01" placeholder="Leave empty to use global price" />
+          </div>
+          <div class="error-msg" id="importError"></div>
+          <div class="success-msg" id="importSuccess">✅ Product imported successfully!</div>
+          <button type="submit" class="btn-primary" id="importSubmitBtn" disabled>Import to Shop</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/merchant/dashboard/">
+      <span class="icon">📊</span> Dashboard
+    </a>
+    <a href="/merchant/orders/">
+      <span class="icon">📦</span> Orders
+    </a>
+    <a href="/merchant/products/">
+      <span class="icon">📋</span> Products
+    </a>
+    <a href="/merchant/profile/">
+      <span class="icon">👤</span> Profile
+    </a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('merchant_token');
+    if (!token) {
+      window.location.href = '/merchant/';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('merchant_token');
+      window.location.href = '/merchant/';
+    });
+
+    let categories = [];
+    let selectedGlobalProduct = null;
+    let selectedManualFile = null;
+    let selectedImportFile = null;
+
+    // ===== TABS =====
+    document.querySelectorAll('.tabs button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+        if (btn.dataset.tab === 'import') loadGlobalProducts();
+      });
+    });
+
+    // ===== LOAD CATEGORIES =====
+    async function loadCategories() {
+      try {
+        const res = await fetch('/api/feed?action=categories');
+        const data = await res.json();
+        categories = data.categories || [];
+
+        ['manualCategory'].forEach(id => {
+          const select = document.getElementById(id);
+          select.innerHTML = '<option value="">Select category</option>';
+          categories.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.name;
+            select.appendChild(opt);
+          });
+        });
+      } catch (err) {
+        console.error('Categories error:', err);
+      }
+    }
+
+    // ===== MANUAL IMAGE UPLOAD =====
+    document.getElementById('manualImage').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        selectedManualFile = file;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const preview = document.getElementById('manualImagePreview');
+          preview.src = ev.target.result;
+          preview.classList.add('active');
+        };
+        reader.readAsDataURL(file);
+      } else {
+        selectedManualFile = null;
+        document.getElementById('manualImagePreview').classList.remove('active');
+      }
+    });
+
+    // ===== MANUAL SUBMIT =====
+    document.getElementById('manualForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('manualTitle').value.trim();
+      const description = document.getElementById('manualDescription').value.trim();
+      const price = parseFloat(document.getElementById('manualPrice').value);
+      const category_id = document.getElementById('manualCategory').value;
+      const file = selectedManualFile;
+
+      const errorEl = document.getElementById('manualError');
+      const successEl = document.getElementById('manualSuccess');
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+
+      if (!title || !price || !category_id) {
+        errorEl.textContent = 'Title, price, and category are required.';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      const submitBtn = document.getElementById('manualSubmitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Adding...';
+
+      try {
+        let image_url = null;
+        if (file) {
+          const formData = new FormData();
+          formData.append('file', file);
+          const uploadRes = await fetch('/api/upload?bucket=product-images', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: formData,
+          });
+          const uploadData = await uploadRes.json();
+          if (uploadData.url) image_url = uploadData.url;
+        }
+
+        const res = await fetch('/api/products?action=create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            title,
+            description: description || null,
+            price,
+            image_url,
+            category_id: category_id || null,
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          successEl.style.display = 'block';
+          document.getElementById('manualForm').reset();
+          document.getElementById('manualImagePreview').classList.remove('active');
+          selectedManualFile = null;
+          setTimeout(() => successEl.style.display = 'none', 3000);
+        } else {
+          errorEl.textContent = data.error || 'Failed to add product.';
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.textContent = 'Connection error. Please try again.';
+        errorEl.style.display = 'block';
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Add Product';
+    });
+
+    // ===== LOAD GLOBAL PRODUCTS (Import tab) =====
+    async function loadGlobalProducts() {
+      const list = document.getElementById('globalList');
+      list.innerHTML = '<div style="text-align:center;color:#6b7a86;padding:1rem;">Loading...</div>';
+
+      try {
+        const res = await fetch('/api/products?action=global-list&limit=100');
+        const data = await res.json();
+        const products = data.products || [];
+
+        if (products.length === 0) {
+          list.innerHTML = '<div style="text-align:center;color:#6b7a86;padding:1rem;">No global products found.</div>';
+          return;
+        }
+
+        list.innerHTML = '';
+        products.forEach(p => {
+          const item = document.createElement('div');
+          item.className = 'global-item';
+          item.dataset.id = p.id;
+          item.innerHTML = `
+            <span class="title">${p.title}</span>
+            <span class="price">৳${parseFloat(p.price).toFixed(2)}</span>
+          `;
+          item.addEventListener('click', () => {
+            document.querySelectorAll('.global-item').forEach(el => el.classList.remove('selected'));
+            item.classList.add('selected');
+            selectedGlobalProduct = p;
+            document.getElementById('importSelectedInfo').style.display = 'block';
+            document.getElementById('importSelectedTitle').textContent = p.title;
+            document.getElementById('importSelectedPrice').textContent = `৳${parseFloat(p.price).toFixed(2)}`;
+            document.getElementById('importSubmitBtn').disabled = false;
+          });
+          list.appendChild(item);
+        });
+      } catch (err) {
+        list.innerHTML = '<div style="text-align:center;color:#dc2626;padding:1rem;">Error loading global products.</div>';
+      }
+    }
+
+    // ===== IMPORT SEARCH =====
+    let searchTimeout;
+    document.getElementById('importSearch').addEventListener('input', () => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        loadGlobalProducts();
+      }, 300);
+    });
+
+    // ===== IMPORT SUBMIT =====
+    document.getElementById('importForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!selectedGlobalProduct) return;
+
+      const errorEl = document.getElementById('importError');
+      const successEl = document.getElementById('importSuccess');
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+
+      const customPrice = parseFloat(document.getElementById('importCustomPrice').value) || null;
+
+      const submitBtn = document.getElementById('importSubmitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Importing...';
+
+      try {
+        const res = await fetch('/api/products?action=import', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            product_id: selectedGlobalProduct.id,
+            custom_price: customPrice,
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          successEl.style.display = 'block';
+          selectedGlobalProduct = null;
+          document.getElementById('importSelectedInfo').style.display = 'none';
+          document.getElementById('importSubmitBtn').disabled = true;
+          document.querySelectorAll('.global-item').forEach(el => el.classList.remove('selected'));
+          setTimeout(() => successEl.style.display = 'none', 3000);
+        } else {
+          errorEl.textContent = data.error || 'Failed to import.';
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.textContent = 'Connection error. Please try again.';
+        errorEl.style.display = 'block';
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Import to Shop';
+    });
+
+    // ===== INIT =====
+    loadCategories();
+  </script>
+</body>
+</html>
