@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merchant Login — Batisha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+    .card h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .card p.sub {
+      color: #6b7a86;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #1a1f36;
+      margin-bottom: 0.2rem;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #e4ece8;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #f8fbf9;
+      outline: none;
+      transition: 0.15s;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
+      background: white;
+    }
+    .form-group textarea { resize: vertical; min-height: 50px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .btn-primary {
+      width: 100%;
+      padding: 0.7rem;
+      background: #1f8b4c;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.15s;
+      margin-top: 0.5rem;
+    }
+    .btn-primary:hover { background: #0f6e3a; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .toggle-text {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #6b7a86;
+      margin-top: 1rem;
+    }
+    .toggle-text button {
+      background: none;
+      border: none;
+      color: #1f8b4c;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: inherit;
+    }
+    .error-msg { color: #dc2626; text-align: center; margin-top: 0.8rem; font-size: 0.85rem; display: none; }
+    .success-msg { color: #16a34a; text-align: center; margin-top: 0.8rem; font-size: 0.85rem; display: none; }
+    .hidden { display: none !important; }
+    @media (max-width: 480px) {
+      .card { padding: 1.5rem 1.2rem; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 id="pageTitle">Merchant Login</h1>
+    <p class="sub" id="pageSub">Access your shop dashboard</p>
+
+    <form id="authForm">
+      <!-- Always visible -->
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="01XXXXXXXXX" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required />
+      </div>
+
+      <!-- Merchant‑only fields (hidden on login) -->
+      <div id="merchantFields" class="hidden">
+        <div class="form-group">
+          <label for="full_name">Full Name</label>
+          <input type="text" id="full_name" placeholder="Your full name" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email (optional)</label>
+          <input type="email" id="email" placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="shop_name">Shop Name</label>
+          <input type="text" id="shop_name" placeholder="Your shop name" />
+        </div>
+        <div class="form-group">
+          <label for="proprietor_name">Proprietor Name</label>
+          <input type="text" id="proprietor_name" placeholder="Owner's full name" />
+        </div>
+        <div class="form-group">
+          <label for="address">Shop Address</label>
+          <textarea id="address" placeholder="Shop address"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="shop_image">Shop Profile Image (optional)</label>
+          <input type="file" id="shop_image" accept="image/*" />
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary" id="submitBtn">Login</button>
+    </form>
+
+    <div class="error-msg" id="errorMsg">Error</div>
+    <div class="success-msg" id="successMsg">Success</div>
+
+    <div class="toggle-text">
+      <span id="toggleLabel">Don't have a merchant account?</span>
+      <button id="toggleBtn">Create Account</button>
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('merchant_token');
+    if (token) {
+      fetch('/api/auth?action=verify', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.user.role === 'merchant') {
+          window.location.href = '/merchant/dashboard/';
+        } else {
+          localStorage.removeItem('merchant_token');
+        }
+      })
+      .catch(() => localStorage.removeItem('merchant_token'));
+    }
+
+    let isLoginMode = true;
+
+    const toggleBtn = document.getElementById('toggleBtn');
+    const toggleLabel = document.getElementById('toggleLabel');
+    const pageTitle = document.getElementById('pageTitle');
+    const pageSub = document.getElementById('pageSub');
+    const merchantFields = document.getElementById('merchantFields');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const successMsg = document.getElementById('successMsg');
+    const authForm = document.getElementById('authForm');
+
+    toggleBtn.addEventListener('click', () => {
+      isLoginMode = !isLoginMode;
+      errorMsg.style.display = 'none';
+      successMsg.style.display = 'none';
+
+      if (isLoginMode) {
+        pageTitle.textContent = 'Merchant Login';
+        pageSub.textContent = 'Access your shop dashboard';
+        toggleLabel.textContent = "Don't have a merchant account?";
+        toggleBtn.textContent = 'Create Account';
+        submitBtn.textContent = 'Login';
+        merchantFields.classList.add('hidden');
+        document.getElementById('full_name').removeAttribute('required');
+        document.getElementById('shop_name').removeAttribute('required');
+        document.getElementById('proprietor_name').removeAttribute('required');
+        document.getElementById('address').removeAttribute('required');
+      } else {
+        pageTitle.textContent = 'Create Merchant Account';
+        pageSub.textContent = 'Register your shop with Batisha';
+        toggleLabel.textContent = 'Already have an account?';
+        toggleBtn.textContent = 'Login';
+        submitBtn.textContent = 'Register';
+        merchantFields.classList.remove('hidden');
+        document.getElementById('full_name').setAttribute('required', 'required');
+        document.getElementById('shop_name').setAttribute('required', 'required');
+        document.getElementById('proprietor_name').setAttribute('required', 'required');
+        document.getElementById('address').setAttribute('required', 'required');
+      }
+    });
+
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.style.display = 'none';
+      successMsg.style.display = 'none';
+
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!phone || !password) {
+        errorMsg.textContent = 'Phone and password are required.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = isLoginMode ? 'Logging in...' : 'Registering...';
+
+      const action = isLoginMode ? 'login' : 'register';
+      const body = { phone, password };
+
+      if (!isLoginMode) {
+        body.full_name = document.getElementById('full_name').value.trim();
+        body.email = document.getElementById('email').value.trim() || null;
+        body.role = 'merchant';
+        body.shop_name = document.getElementById('shop_name').value.trim();
+        body.proprietor_name = document.getElementById('proprietor_name').value.trim();
+        body.address = document.getElementById('address').value.trim();
+
+        // Optional image upload – we'll handle later
+        const file = document.getElementById('shop_image').files[0];
+        if (file) {
+          // For now, we'll skip image upload (add later)
+        }
+      }
+
+      try {
+        const res = await fetch('/api/auth?action=' + action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem('merchant_token', data.token);
+          successMsg.textContent = isLoginMode ? 'Login successful! Redirecting...' : 'Account created! Redirecting...';
+          successMsg.style.display = 'block';
+          setTimeout(() => {
+            window.location.href = '/merchant/dashboard/';
+          }, 1000);
+        } else {
+          errorMsg.textContent = data.error || 'Something went wrong.';
+          errorMsg.style.display = 'block';
+        }
+      } catch (err) {
+        errorMsg.textContent = 'Connection error. Please try again.';
+        errorMsg.style.display = 'block';
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = isLoginMode ? 'Login' : 'Register';
+    });
+  </script>
+</body>
+</html>
