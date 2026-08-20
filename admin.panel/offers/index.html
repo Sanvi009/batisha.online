@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offers — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .top-nav .nav-links a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-links a:hover { color: #1a1f36; }
+    .top-nav .nav-links a.active { color: #1f8b4c; }
+    .top-nav .logout-btn {
+      padding: 0.3rem 1rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .page-header { margin: 1.5rem 0 1rem; }
+    .page-header h1 { font-size: 1.6rem; font-weight: 700; }
+    .page-header p { color: #6b7a86; }
+
+    .offer-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e8edf2;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .offer-card .image {
+      width: 64px; height: 64px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #f8fbf9;
+      border: 1px solid #e8edf2;
+      flex-shrink: 0;
+    }
+    .offer-card .info { flex: 1; min-width: 200px; }
+    .offer-card .info .title { font-weight: 600; font-size: 0.95rem; }
+    .offer-card .info .shop-name {
+      font-size: 0.8rem;
+      color: #1f8b4c;
+      font-weight: 500;
+    }
+    .offer-card .info .desc { font-size: 0.75rem; color: #6b7a86; }
+    .offer-card .info .prices {
+      margin-top: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .offer-card .info .prices .old {
+      color: #9ca3af;
+      text-decoration: line-through;
+      font-size: 0.8rem;
+    }
+    .offer-card .info .prices .new {
+      color: #dc2626;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .offer-card .info .prices .discount {
+      background: #fef2f2;
+      color: #dc2626;
+      padding: 0.05rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .offer-card .info .expiry {
+      font-size: 0.7rem;
+      color: #6b7a86;
+      margin-top: 0.1rem;
+    }
+    .offer-card .actions {
+      display: flex;
+      gap: 0.3rem;
+      flex-shrink: 0;
+    }
+    .offer-card .actions button {
+      padding: 0.2rem 0.8rem;
+      border: none;
+      border-radius: 30px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-delete {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .btn-delete:hover { background: #fee2e2; }
+
+    .loader { text-align: center; padding: 2rem; color: #6b7a86; }
+    .loader .spinner {
+      display: inline-block;
+      width: 24px; height: 24px;
+      border: 3px solid #e2ebe6;
+      border-top-color: #1f8b4c;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty { text-align: center; padding: 2rem; color: #6b7a86; }
+
+    .load-more {
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .load-more button {
+      padding: 0.4rem 1.2rem;
+      background: #f3f6f8;
+      border: 1px solid #e4eaf0;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .load-more button:hover { background: #e8edf2; }
+    .load-more button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.5rem 0;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 0.6rem;
+      font-weight: 500;
+      gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-links { display: none; }
+      .bottom-nav { display: flex; }
+      .container { padding: 1rem; }
+      .offer-card { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="brand">📊 <span>Admin</span></div>
+    <div class="nav-links">
+      <a href="/admin.panel/dashboard/">Dashboard</a>
+      <a href="/admin.panel/users/">Users</a>
+      <a href="/admin.panel/merchants/">Merchants</a>
+      <a href="/admin.panel/orders/">Orders</a>
+      <a href="/admin.panel/offers/" class="active">Offers</a>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>🏷️ All Offers</h1>
+      <p>View every offer created by merchants</p>
+    </div>
+
+    <div id="offersList">
+      <div class="loader">
+        <div class="spinner"></div>
+        <p>Loading offers...</p>
+      </div>
+    </div>
+
+    <div class="load-more" id="loadMoreWrap" style="display:none;">
+      <button id="loadMoreBtn">Load More</button>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/admin.panel/dashboard/"><span class="icon">📊</span> Dashboard</a>
+    <a href="/admin.panel/users/"><span class="icon">👤</span> Users</a>
+    <a href="/admin.panel/merchants/"><span class="icon">🏪</span> Merchants</a>
+    <a href="/admin.panel/orders/"><span class="icon">📦</span> Orders</a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('admin_token');
+    if (!token) {
+      window.location.href = '/admin.panel/';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('admin_token');
+      window.location.href = '/admin.panel/';
+    });
+
+    let offset = 0;
+    const limit = 20;
+    let hasMore = true;
+    let loading = false;
+
+    async function loadOffers(reset = false) {
+      if (loading || (!hasMore && !reset)) return;
+      loading = true;
+      if (reset) {
+        offset = 0;
+        hasMore = true;
+        document.getElementById('offersList').innerHTML = `
+          <div class="loader">
+            <div class="spinner"></div>
+            <p>Loading offers...</p>
+          </div>
+        `;
+        document.getElementById('loadMoreWrap').style.display = 'none';
+      }
+
+      try {
+        const res = await fetch(`/api/admin?action=offers&limit=${limit}&offset=${offset}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem('admin_token');
+            window.location.href = '/admin.panel/';
+            return;
+          }
+          throw new Error('Failed to load offers');
+        }
+
+        const data = await res.json();
+        const offers = data.offers || [];
+
+        if (reset) {
+          document.getElementById('offersList').innerHTML = '';
+        }
+
+        if (offers.length === 0 && reset) {
+          document.getElementById('offersList').innerHTML = `<div class="empty">📭 No offers found.</div>`;
+          document.getElementById('loadMoreWrap').style.display = 'none';
+          loading = false;
+          return;
+        }
+
+        offers.forEach(o => {
+          const card = document.createElement('div');
+          card.className = 'offer-card';
+
+          const img = o.image_url || '/assets/placeholder.png';
+          const shop = o.shops || { shop_name: 'Unknown' };
+          const expires = new Date(o.expires_at).toLocaleDateString();
+
+          card.innerHTML = `
+            <img src="${img}" class="image" onerror="this.src='/assets/placeholder.png'" />
+            <div class="info">
+              <div class="title">${o.title}</div>
+              <div class="shop-name">🏪 ${shop.shop_name}</div>
+              <div class="desc">${o.description || ''}</div>
+              <div class="prices">
+                <span class="old">৳${parseFloat(o.old_price).toFixed(2)}</span>
+                <span class="new">৳${parseFloat(o.offer_price).toFixed(2)}</span>
+                <span class="discount">-${o.discount_percent}%</span>
+              </div>
+              <div class="expiry">Expires: ${expires}</div>
+            </div>
+            <div class="actions">
+              <button class="btn-delete" data-id="${o.id}">🗑️ Delete</button>
+            </div>
+          `;
+
+          document.getElementById('offersList').appendChild(card);
+        });
+
+        hasMore = data.hasMore;
+        offset += offers.length;
+        document.getElementById('loadMoreWrap').style.display = hasMore ? 'block' : 'none';
+
+      } catch (err) {
+        console.error(err);
+        if (reset) {
+          document.getElementById('offersList').innerHTML = `<div class="empty">⚠️ Error loading offers.</div>`;
+        }
+      }
+
+      loading = false;
+    }
+
+    // ===== Delete Offer =====
+    document.getElementById('offersList').addEventListener('click', async (e) => {
+      const btn = e.target.closest('.btn-delete');
+      if (!btn) return;
+
+      if (!confirm('Delete this offer permanently?')) return;
+
+      const offerId = btn.dataset.id;
+
+      try {
+        const res = await fetch('/api/offers?action=delete', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ offer_id: offerId })
+        });
+
+        if (res.ok) {
+          loadOffers(true);
+        } else {
+          const data = await res.json();
+          alert(data.error || 'Failed to delete offer.');
+        }
+      } catch (err) {
+        alert('Error deleting offer.');
+      }
+    });
+
+    // ===== Load More =====
+    document.getElementById('loadMoreBtn').addEventListener('click', () => loadOffers());
+
+    // ===== Init =====
+    loadOffers(true);
+  </script>
+</body>
+</html>
