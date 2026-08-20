@@ -31,15 +31,42 @@ export default async function handler(req, res) {
   const { action } = req.query;
 
   // ============================================================
-  // GET SHOP DETAILS (Public)
+  // GET SHOP DETAILS (Public, or Merchant's own shop)
   // ============================================================
   if (action === 'detail') {
     const { shop_id } = req.query;
 
+    // If merchant is logged in and no shop_id provided, fetch their own shop
     if (!shop_id) {
-      return res.status(400).json({ error: 'Shop ID required' });
+      if (!userId || userRole !== 'merchant') {
+        return res.status(400).json({ error: 'Shop ID required' });
+      }
+
+      const { data: shop, error } = await supabaseAdmin
+        .from('shops')
+        .select(`
+          id,
+          merchant_id,
+          shop_name,
+          proprietor_name,
+          phone,
+          address,
+          image_url,
+          rating_cache,
+          created_at,
+          profiles:merchant_id (full_name, phone)
+        `)
+        .eq('merchant_id', userId)
+        .single();
+
+      if (error || !shop) {
+        return res.status(404).json({ error: 'Shop not found' });
+      }
+
+      return res.status(200).json({ shop });
     }
 
+    // Public shop detail by ID
     const { data: shop, error } = await supabaseAdmin
       .from('shops')
       .select(`
