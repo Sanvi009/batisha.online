@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merchants — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .top-nav .nav-links a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-links a:hover { color: #1a1f36; }
+    .top-nav .nav-links a.active { color: #1f8b4c; }
+    .top-nav .logout-btn {
+      padding: 0.3rem 1rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 1.5rem 0 1rem;
+    }
+    .page-header h1 { font-size: 1.6rem; font-weight: 700; }
+    .page-header .controls {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .page-header .controls input {
+      padding: 0.4rem 0.8rem;
+      border: 1px solid #e4ece8;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: #f8fbf9;
+      outline: none;
+      transition: 0.15s;
+    }
+    .page-header .controls input:focus {
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
+    }
+
+    .merchant-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e8edf2;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+    .merchant-card .info { flex: 1; min-width: 200px; }
+    .merchant-card .info .name { font-weight: 600; font-size: 0.95rem; }
+    .merchant-card .info .shop-name {
+      font-weight: 600;
+      color: #1f8b4c;
+      font-size: 0.9rem;
+    }
+    .merchant-card .info .detail { font-size: 0.8rem; color: #6b7a86; }
+    .merchant-card .info .badge {
+      display: inline-block;
+      font-size: 0.6rem;
+      padding: 0.05rem 0.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .badge-banned { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .badge-active { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .merchant-card .actions {
+      display: flex;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+    .merchant-card .actions button {
+      padding: 0.2rem 0.8rem;
+      border: none;
+      border-radius: 30px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-ban { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .btn-ban:hover { background: #fee2e2; }
+    .btn-unban { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .btn-unban:hover { background: #dcfce7; }
+    .btn-delete { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .btn-delete:hover { background: #fee2e2; }
+
+    .loader { text-align: center; padding: 2rem; color: #6b7a86; }
+    .loader .spinner {
+      display: inline-block;
+      width: 24px; height: 24px;
+      border: 3px solid #e2ebe6;
+      border-top-color: #1f8b4c;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty { text-align: center; padding: 2rem; color: #6b7a86; }
+
+    .load-more {
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .load-more button {
+      padding: 0.4rem 1.2rem;
+      background: #f3f6f8;
+      border: 1px solid #e4eaf0;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .load-more button:hover { background: #e8edf2; }
+    .load-more button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.5rem 0;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 0.6rem;
+      font-weight: 500;
+      gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-links { display: none; }
+      .bottom-nav { display: flex; }
+      .container { padding: 1rem; }
+      .merchant-card { flex-direction: column; align-items: stretch; }
+      .merchant-card .actions { justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="brand">📊 <span>Admin</span></div>
+    <div class="nav-links">
+      <a href="/admin.panel/dashboard/">Dashboard</a>
+      <a href="/admin.panel/users/">Users</a>
+      <a href="/admin.panel/merchants/" class="active">Merchants</a>
+      <a href="/admin.panel/orders/">Orders</a>
+      <a href="/admin.panel/offers/">Offers</a>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>🏪 Merchants</h1>
+      <div class="controls">
+        <input type="text" id="searchInput" placeholder="Search by name or shop..." />
+      </div>
+    </div>
+
+    <div id="merchantsList">
+      <div class="loader">
+        <div class="spinner"></div>
+        <p>Loading merchants...</p>
+      </div>
+    </div>
+
+    <div class="load-more" id="loadMoreWrap" style="display:none;">
+      <button id="loadMoreBtn">Load More</button>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/admin.panel/dashboard/"><span class="icon">📊</span> Dashboard</a>
+    <a href="/admin.panel/users/"><span class="icon">👤</span> Users</a>
+    <a href="/admin.panel/merchants/" class="active"><span class="icon">🏪</span> Merchants</a>
+    <a href="/admin.panel/orders/"><span class="icon">📦</span> Orders</a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('admin_token');
+    if (!token) {
+      window.location.href = '/admin.panel/';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('admin_token');
+      window.location.href = '/admin.panel/';
+    });
+
+    let offset = 0;
+    const limit = 20;
+    let hasMore = true;
+    let loading = false;
+    let searchQuery = '';
+
+    async function loadMerchants(reset = false) {
+      if (loading || (!hasMore && !reset)) return;
+      loading = true;
+      if (reset) {
+        offset = 0;
+        hasMore = true;
+        document.getElementById('merchantsList').innerHTML = `
+          <div class="loader">
+            <div class="spinner"></div>
+            <p>Loading merchants...</p>
+          </div>
+        `;
+        document.getElementById('loadMoreWrap').style.display = 'none';
+      }
+
+      try {
+        let url = `/api/admin?action=merchants&limit=${limit}&offset=${offset}`;
+        if (searchQuery) {
+          url += `&search=${encodeURIComponent(searchQuery)}`;
+        }
+
+        const res = await fetch(url, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem('admin_token');
+            window.location.href = '/admin.panel/';
+            return;
+          }
+          throw new Error('Failed to load merchants');
+        }
+
+        const data = await res.json();
+        const merchants = data.merchants || [];
+
+        if (reset) {
+          document.getElementById('merchantsList').innerHTML = '';
+        }
+
+        if (merchants.length === 0 && reset) {
+          document.getElementById('merchantsList').innerHTML = `<div class="empty">📭 No merchants found.</div>`;
+          document.getElementById('loadMoreWrap').style.display = 'none';
+          loading = false;
+          return;
+        }
+
+        merchants.forEach(m => {
+          const card = document.createElement('div');
+          card.className = 'merchant-card';
+          card.dataset.id = m.id;
+
+          const shop = m.shops || {};
+          const badgeClass = m.is_banned ? 'badge-banned' : 'badge-active';
+          const badgeText = m.is_banned ? 'Banned' : 'Active';
+
+          card.innerHTML = `
+            <div class="info">
+              <div class="name">${m.full_name}</div>
+              <div class="shop-name">🏪 ${shop.shop_name || 'No shop'}</div>
+              <div class="detail">📞 ${m.phone}</div>
+              <div class="detail">📧 ${m.email || '—'}</div>
+              <div class="detail">
+                <span class="badge ${badgeClass}">${badgeText}</span>
+                ${m.is_banned ? `<span style="font-size:0.7rem;color:#6b7a86;margin-left:0.5rem;">${m.ban_reason || ''}</span>` : ''}
+              </div>
+            </div>
+            <div class="actions">
+              ${m.is_banned
+                ? `<button class="btn-unban" data-id="${m.id}">Unban</button>`
+                : `<button class="btn-ban" data-id="${m.id}">Ban</button>`
+              }
+              <button class="btn-delete" data-id="${m.id}">Delete</button>
+            </div>
+          `;
+
+          document.getElementById('merchantsList').appendChild(card);
+        });
+
+        hasMore = data.hasMore;
+        offset += merchants.length;
+        document.getElementById('loadMoreWrap').style.display = hasMore ? 'block' : 'none';
+
+      } catch (err) {
+        console.error(err);
+        if (reset) {
+          document.getElementById('merchantsList').innerHTML = `<div class="empty">⚠️ Error loading merchants.</div>`;
+        }
+      }
+
+      loading = false;
+    }
+
+    // ===== Search =====
+    let searchTimeout;
+    document.getElementById('searchInput').addEventListener('input', () => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        searchQuery = document.getElementById('searchInput').value.trim();
+        loadMerchants(true);
+      }, 300);
+    });
+
+    // ===== Load More =====
+    document.getElementById('loadMoreBtn').addEventListener('click', () => loadMerchants());
+
+    // ===== Ban / Unban / Delete =====
+    document.getElementById('merchantsList').addEventListener('click', async (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+
+      const merchantId = btn.dataset.id;
+
+      // Ban
+      if (btn.classList.contains('btn-ban')) {
+        const reason = prompt('Reason for ban:');
+        if (!reason) return;
+        try {
+          const res = await fetch('/api/admin?action=merchant-ban', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ merchant_id: merchantId, reason })
+          });
+          if (res.ok) loadMerchants(true);
+          else alert('Failed to ban merchant.');
+        } catch (err) { alert('Error banning merchant.'); }
+        return;
+      }
+
+      // Unban
+      if (btn.classList.contains('btn-unban')) {
+        if (!confirm('Unban this merchant?')) return;
+        try {
+          const res = await fetch('/api/admin?action=merchant-ban', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ merchant_id: merchantId, reason: null })
+          });
+          if (res.ok) loadMerchants(true);
+          else alert('Failed to unban merchant.');
+        } catch (err) { alert('Error unbanning merchant.'); }
+        return;
+      }
+
+      // Delete
+      if (btn.classList.contains('btn-delete')) {
+        if (!confirm('⚠️ Delete this merchant permanently? This cannot be undone.')) return;
+        try {
+          const res = await fetch('/api/admin?action=merchant-delete', {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ merchant_id: merchantId })
+          });
+          if (res.ok) loadMerchants(true);
+          else alert('Failed to delete merchant.');
+        } catch (err) { alert('Error deleting merchant.'); }
+        return;
+      }
+    });
+
+    // ===== Init =====
+    loadMerchants(true);
+  </script>
+</body>
+</html>
