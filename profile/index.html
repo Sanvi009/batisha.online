@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — Batisha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 1rem 1rem 2rem; }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1.2rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-icons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .top-nav .nav-icons a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 1.2rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-icons a:hover { color: #1a1f36; }
+    .top-nav .logout-btn {
+      padding: 0.2rem 0.8rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    .page-header { margin: 1rem 0 1.2rem; }
+    .page-header h1 { font-size: 1.4rem; font-weight: 700; }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.2rem;
+      border-bottom: 1px solid #e8edf2;
+      padding-bottom: 0.3rem;
+      flex-wrap: wrap;
+    }
+    .tabs button {
+      padding: 0.4rem 1.2rem;
+      border: none;
+      background: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #6b7a86;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.15s;
+    }
+    .tabs button.active {
+      background: #e8f5e9;
+      color: #1f8b4c;
+    }
+    .tabs button:hover:not(.active) { background: #f0f3f7; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Profile Edit */
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block; font-weight: 600; font-size: 0.75rem;
+      text-transform: uppercase; color: #1a1f36; margin-bottom: 0.2rem;
+    }
+    .form-group input {
+      width: 100%; padding: 0.5rem 0.8rem;
+      border: 1px solid #e4ece8; border-radius: 8px;
+      font-size: 0.85rem; font-family: inherit;
+      background: #f8fbf9; outline: none; transition: 0.15s;
+    }
+    .form-group input:focus {
+      border-color: #1f8b4c; box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
+    }
+    .btn-save {
+      padding: 0.4rem 1.2rem;
+      background: #1f8b4c; color: white;
+      border: none; border-radius: 30px; font-weight: 600; font-size: 0.85rem;
+      cursor: pointer; transition: 0.15s;
+    }
+    .btn-save:hover { background: #0f6e3a; }
+    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Address Book */
+    .address-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .address-item {
+      background: white; border-radius: 8px; padding: 0.8rem 1rem;
+      border: 1px solid #e8edf2; display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .address-item .info { flex: 1; min-width: 150px; }
+    .address-item .info .name { font-weight: 600; }
+    .address-item .info .detail { font-size: 0.8rem; color: #6b7a86; }
+    .address-item .actions { display: flex; gap: 0.3rem; }
+    .address-item .actions button {
+      padding: 0.15rem 0.6rem; border: none; border-radius: 30px;
+      font-size: 0.6rem; font-weight: 600; cursor: pointer; transition: 0.15s;
+    }
+    .btn-edit-addr { background: #f0f5fc; color: #1e3a5f; border: 1px solid #dde5ed; }
+    .btn-edit-addr:hover { background: #e4edf7; }
+    .btn-del-addr { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .btn-del-addr:hover { background: #fee2e2; }
+    .btn-add-addr {
+      padding: 0.4rem 1.2rem; background: #1f8b4c; color: white;
+      border: none; border-radius: 30px; font-weight: 600; font-size: 0.85rem;
+      cursor: pointer; transition: 0.15s; margin-top: 0.5rem;
+    }
+    .btn-add-addr:hover { background: #0f6e3a; }
+
+    /* Orders */
+    .order-item {
+      background: white; border-radius: 8px; padding: 0.8rem 1rem;
+      border: 1px solid #e8edf2; margin-bottom: 0.5rem;
+    }
+    .order-item .header {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+    }
+    .order-item .order-id { font-weight: 600; font-size: 0.9rem; }
+    .order-item .status {
+      padding: 0.05rem 0.6rem; border-radius: 30px; font-size: 0.6rem;
+      font-weight: 600; text-transform: uppercase;
+    }
+    .status-pending { background: #fefce8; color: #a16207; border: 1px solid #fde68a; }
+    .status-processing { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+    .status-packed { background: #f0fdf4; color: #0f6e3a; border: 1px solid #bbf7d0; }
+    .status-ready { background: #f0fdf4; color: #0f6e3a; border: 1px solid #bbf7d0; }
+    .status-out_for_delivery { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+    .status-delivered { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
+    .status-cancelled { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .order-item .body { margin-top: 0.3rem; font-size: 0.8rem; color: #6b7a86; }
+    .order-item .body .total { font-weight: 700; color: #1f8b4c; margin-top: 0.2rem; }
+
+    /* Reviews */
+    .review-item {
+      background: white; border-radius: 8px; padding: 0.8rem 1rem;
+      border: 1px solid #e8edf2; margin-bottom: 0.5rem;
+    }
+    .review-item .header {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+    }
+    .review-item .product { font-weight: 600; }
+    .review-item .rating { color: #f59e0b; font-weight: 600; }
+    .review-item .comment { font-size: 0.85rem; color: #1a1f36; margin-top: 0.2rem; }
+    .review-item .date { font-size: 0.7rem; color: #6b7a86; }
+
+    .review-form {
+      background: white; border-radius: 8px; padding: 0.8rem 1rem;
+      border: 1px solid #e8edf2; margin-bottom: 0.8rem;
+    }
+    .review-form select, .review-form textarea {
+      width: 100%; padding: 0.4rem 0.6rem;
+      border: 1px solid #e4ece8; border-radius: 8px;
+      font-size: 0.85rem; font-family: inherit; background: #f8fbf9;
+      outline: none; margin-bottom: 0.5rem;
+    }
+    .review-form select:focus, .review-form textarea:focus {
+      border-color: #1f8b4c; box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
+    }
+    .review-form textarea { resize: vertical; min-height: 50px; }
+    .review-form .btn-submit {
+      padding: 0.3rem 1rem; background: #1f8b4c; color: white;
+      border: none; border-radius: 30px; font-weight: 600; font-size: 0.8rem;
+      cursor: pointer; transition: 0.15s;
+    }
+    .review-form .btn-submit:hover { background: #0f6e3a; }
+
+    .loader { text-align: center; padding: 2rem; color: #6b7a86; }
+    .loader .spinner {
+      display: inline-block; width: 24px; height: 24px;
+      border: 3px solid #e2ebe6; border-top-color: #1f8b4c;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty { text-align: center; padding: 2rem; color: #6b7a86; }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.4rem 0 0.6rem;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex; flex-direction: column; align-items: center;
+      text-decoration: none; color: #4b5f6b;
+      font-size: 0.55rem; font-weight: 500; gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-icons a { font-size: 1rem; }
+      .bottom-nav { display: flex; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="brand">🛒 <span>Batisha</span></div>
+    <div class="nav-icons">
+      <a href="/feed/" title="Home">🏠</a>
+      <a href="/offers/" title="Offers">🏷️</a>
+      <a href="/cart/" title="Cart">🛒</a>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>👤 My Profile</h1>
+    </div>
+
+    <div class="tabs">
+      <button class="active" data-tab="edit">✏️ Edit Profile</button>
+      <button data-tab="addresses">📬 Addresses</button>
+      <button data-tab="orders">📦 Orders</button>
+      <button data-tab="reviews">⭐ Reviews</button>
+    </div>
+
+    <!-- TAB 1: Edit Profile -->
+    <div class="tab-panel active" id="panel-edit">
+      <form id="profileForm">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email (optional)</label>
+          <input type="email" id="email" />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" readonly style="background:#f0f0f0;cursor:not-allowed;" />
+        </div>
+        <div class="error-msg" id="profileError" style="color:#dc2626;font-size:0.85rem;display:none;"></div>
+        <div class="success-msg" id="profileSuccess" style="color:#16a34a;font-size:0.85rem;display:none;">✅ Profile updated!</div>
+        <button type="submit" class="btn-save">Save Changes</button>
+      </form>
+    </div>
+
+    <!-- TAB 2: Addresses -->
+    <div class="tab-panel" id="panel-addresses">
+      <div class="address-list" id="addressList">
+        <div class="loader"><div class="spinner"></div></div>
+      </div>
+      <button class="btn-add-addr" id="addAddressBtn">+ Add Address</button>
+    </div>
+
+    <!-- TAB 3: Orders -->
+    <div class="tab-panel" id="panel-orders">
+      <div id="ordersList">
+        <div class="loader"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- TAB 4: Reviews -->
+    <div class="tab-panel" id="panel-reviews">
+      <div id="reviewsList">
+        <div class="loader"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/feed/"><span class="icon">🏠</span> Home</a>
+    <a href="/offers/"><span class="icon">🏷️</span> Offers</a>
+    <a href="/cart/"><span class="icon">🛒</span> Cart</a>
+    <a href="/profile/" class="active"><span class="icon">👤</span> Profile</a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('user_token');
+    if (!token) {
+      window.location.href = '/';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('user_token');
+      window.location.href = '/';
+    });
+
+    let userId = null;
+
+    // ===== Tabs =====
+    document.querySelectorAll('.tabs button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+        if (btn.dataset.tab === 'addresses') loadAddresses();
+        if (btn.dataset.tab === 'orders') loadOrders();
+        if (btn.dataset.tab === 'reviews') loadReviews();
+      });
+    });
+
+    // ===== Edit Profile =====
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/profile?action=get', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        const profile = data.profile;
+        userId = profile.id;
+
+        document.getElementById('fullName').value = profile.full_name || '';
+        document.getElementById('email').value = profile.email || '';
+        document.getElementById('phone').value = profile.phone || '';
+      } catch (err) {
+        console.error('Profile error:', err);
+      }
+    }
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      const errorEl = document.getElementById('profileError');
+      const successEl = document.getElementById('profileSuccess');
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/profile?action=update', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ full_name: fullName, email: email || null })
+        });
+        const data = await res.json();
+        if (data.success) {
+          successEl.style.display = 'block';
+          setTimeout(() => successEl.style.display = 'none', 3000);
+        } else {
+          errorEl.textContent = data.error || 'Failed to update.';
+          errorEl.style.display = 'block';
+        }
+      } catch (err) {
+        errorEl.textContent = 'Connection error.';
+        errorEl.style.display = 'block';
+      }
+    });
+
+    // ===== Addresses =====
+    async function loadAddresses() {
+      const list = document.getElementById('addressList');
+      list.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+
+      try {
+        const res = await fetch('/api/profile?action=address-list', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        const addresses = data.addresses || [];
+
+        if (addresses.length === 0) {
+          list.innerHTML = '<div class="empty">📭 No addresses saved.</div>';
+          return;
+        }
+
+        list.innerHTML = '';
+        addresses.forEach(addr => {
+          const div = document.createElement('div');
+          div.className = 'address-item';
+          div.dataset.id = addr.id;
+          div.innerHTML = `
+            <div class="info">
+              <div class="name">${addr.name}</div>
+              <div class="detail">📞 ${addr.phone}</div>
+              <div class="detail">📍 ${addr.address}</div>
+            </div>
+            <div class="actions">
+              <button class="btn-edit-addr" data-id="${addr.id}">✏️</button>
+              <button class="btn-del-addr" data-id="${addr.id}">🗑️</button>
+            </div>
+          `;
+          list.appendChild(div);
+        });
+
+        // Edit address
+        document.querySelectorAll('.btn-edit-addr').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const addr = addresses.find(a => a.id === id);
+            if (!addr) return;
+            const newName = prompt('Name:', addr.name);
+            if (!newName) return;
+            const newPhone = prompt('Phone:', addr.phone);
+            if (!newPhone) return;
+            const newAddress = prompt('Address:', addr.address);
+            if (!newAddress) return;
+            updateAddress(id, newName, newPhone, newAddress);
+          });
+        });
+
+        // Delete address
+        document.querySelectorAll('.btn-del-addr').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (!confirm('Delete this address?')) return;
+            deleteAddress(btn.dataset.id);
+          });
+        });
+
+      } catch (err) {
+        list.innerHTML = '<div class="empty">⚠️ Error loading addresses.</div>';
+      }
+    }
+
+    async function updateAddress(id, name, phone, address) {
+      try {
+        const res = await fetch('/api/profile?action=address-update', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ address_id: id, name, phone, address })
+        });
+        if (res.ok) loadAddresses();
+        else alert('Failed to update address.');
+      } catch (err) {
+        alert('Error updating address.');
+      }
+    }
+
+    async function deleteAddress(id) {
+      try {
+        const res = await fetch('/api/profile?action=address-delete', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ address_id: id })
+        });
+        if (res.ok) loadAddresses();
+        else alert('Failed to delete address.');
+      } catch (err) {
+        alert('Error deleting address.');
+      }
+    }
+
+    document.getElementById('addAddressBtn').addEventListener('click', async () => {
+      const name = prompt('Full name:');
+      if (!name) return;
+      const phone = prompt('Phone number:');
+      if (!phone) return;
+      const address = prompt('Delivery address:');
+      if (!address) return;
+
+      try {
+        const res = await fetch('/api/profile?action=address-add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ name, phone, address })
+        });
+        if (res.ok) loadAddresses();
+        else alert('Failed to add address.');
+      } catch (err) {
+        alert('Error adding address.');
+      }
+    });
+
+    // ===== Orders =====
+    async function loadOrders() {
+      const list = document.getElementById('ordersList');
+      list.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+
+      try {
+        const res = await fetch('/api/orders?action=my-orders', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        const orders = data.orders || [];
+
+        if (orders.length === 0) {
+          list.innerHTML = '<div class="empty">📭 No orders yet.</div>';
+          return;
+        }
+
+        list.innerHTML = '';
+        orders.forEach(o => {
+          const div = document.createElement('div');
+          div.className = 'order-item';
+          const statusClass = `status-${o.status}`;
+          const shop = o.shops || { shop_name: 'Unknown' };
+
+          let itemsHtml = '';
+          if (o.order_items && o.order_items.length > 0) {
+            itemsHtml = o.order_items.map(item => {
+              const name = item.products?.title || item.offers?.title || 'Unknown';
+              return `${name} × ${item.quantity}`;
+            }).join(', ');
+          }
+
+          div.innerHTML = `
+            <div class="header">
+              <span class="order-id">#${o.id}</span>
+              <span class="shop">🏪 ${shop.shop_name}</span>
+              <span class="status ${statusClass}">${o.status.replace(/_/g, ' ')}</span>
+            </div>
+            <div class="body">
+              <div>${itemsHtml || 'No items'}</div>
+              <div class="total">Total: ৳${parseFloat(o.total_price).toFixed(2)}</div>
+              ${o.special_note ? `<div style="font-size:0.7rem;color:#6b7a86;">📝 ${o.special_note}</div>` : ''}
+            </div>
+          `;
+          list.appendChild(div);
+        });
+      } catch (err) {
+        list.innerHTML = '<div class="empty">⚠️ Error loading orders.</div>';
+      }
+    }
+
+    // ===== Reviews =====
+    async function loadReviews() {
+      const list = document.getElementById('reviewsList');
+      list.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+
+      try {
+        // First get delivered orders with items
+        const ordersRes = await fetch('/api/orders?action=my-orders', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const ordersData = await ordersRes.json();
+        const orders = ordersData.orders || [];
+
+        const deliveredOrders = orders.filter(o => o.status === 'delivered');
+
+        if (deliveredOrders.length === 0) {
+          list.innerHTML = '<div class="empty">📭 No delivered orders to review yet.</div>';
+          return;
+        }
+
+        // Get existing reviews for this user
+        const reviewsRes = await fetch('/api/reviews?action=list&user_id=${userId}', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const reviewsData = await reviewsRes.json();
+        const existingReviews = reviewsData.reviews || [];
+
+        const reviewedProductIds = existingReviews.map(r => r.product_id);
+
+        // Find deliverable items not yet reviewed
+        const reviewableItems = [];
+        deliveredOrders.forEach(o => {
+          if (o.order_items) {
+            o.order_items.forEach(item => {
+              const productId = item.products?.id || item.offers?.id;
+              if (productId && !reviewedProductIds.includes(productId)) {
+                reviewableItems.push({
+                  order_item_id: item.id,
+                  product_id: productId,
+                  title: item.products?.title || item.offers?.title || 'Unknown',
+                  image_url: item.products?.image_url || item.offers?.image_url || '',
+                });
+              }
+            });
+          }
+        });
+
+        // Show existing reviews
+        let html = '';
+        existingReviews.forEach(r => {
+          html += `
+            <div class="review-item">
+              <div class="header">
+                <span class="product">${r.products?.title || 'Unknown'}</span>
+                <span class="rating">⭐ ${r.rating}</span>
+                <span class="date">${new Date(r.created_at).toLocaleDateString()}</span>
+              </div>
+              <div class="comment">${r.comment || ''}</div>
+            </div>
+          `;
+        });
+
+        // Show review forms for unreviewed delivered items
+        if (reviewableItems.length > 0) {
+          html += `<div style="margin-top:1rem;font-weight:600;color:#1a1f36;">✏️ Write a review</div>`;
+          reviewableItems.forEach(item => {
+            html += `
+              <div class="review-form" data-order-item-id="${item.order_item_id}" data-product-id="${item.product_id}">
+                <div style="font-weight:500;font-size:0.9rem;">${item.title}</div>
+                <select class="review-rating">
+                  <option value="5">⭐ 5</option>
+                  <option value="4">⭐ 4</option>
+                  <option value="3">⭐ 3</option>
+                  <option value="2">⭐ 2</option>
+                  <option value="1">⭐ 1</option>
+                </select>
+                <textarea class="review-comment" placeholder="Share your experience..."></textarea>
+                <button class="btn-submit review-submit">Submit Review</button>
+              </div>
+            `;
+          });
+        }
+
+        if (html === '') {
+          html = '<div class="empty">📭 No reviews yet.</div>';
+        }
+
+        list.innerHTML = html;
+
+        // Attach review submit
+        document.querySelectorAll('.review-submit').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const form = btn.closest('.review-form');
+            const order_item_id = form.dataset.orderItemId;
+            const product_id = form.dataset.productId;
+            const rating = parseInt(form.querySelector('.review-rating').value);
+            const comment = form.querySelector('.review-comment').value.trim();
+
+            try {
+              const res = await fetch('/api/reviews?action=create', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ product_id, order_item_id, rating, comment })
+              });
+              if (res.ok) {
+                alert('✅ Review submitted!');
+                loadReviews();
+              } else {
+                alert('Failed to submit review.');
+              }
+            } catch (err) {
+              alert('Error submitting review.');
+            }
+          });
+        });
+
+      } catch (err) {
+        list.innerHTML = '<div class="empty">⚠️ Error loading reviews.</div>';
+      }
+    }
+
+    // ===== Init =====
+    loadProfile();
+    loadAddresses();
+    loadOrders();
+    loadReviews();
+  </script>
+</body>
+</html>
