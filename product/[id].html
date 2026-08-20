@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product — Batisha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 1rem 1rem 2rem; }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1.2rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-icons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .top-nav .nav-icons a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 1.2rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-icons a:hover { color: #1a1f36; }
+    .top-nav .logout-btn {
+      padding: 0.2rem 0.8rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    .product-detail {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid #e8edf2;
+      margin-bottom: 1.5rem;
+    }
+    .product-detail .image {
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      background: #f8fbf9;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .product-detail .title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .product-detail .description {
+      color: #6b7a86;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+    .product-detail .price {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1f8b4c;
+      margin-bottom: 0.3rem;
+    }
+    .product-detail .category {
+      display: inline-block;
+      background: #f0f5fc;
+      color: #1e3a5f;
+      padding: 0.1rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin-bottom: 0.8rem;
+    }
+    .product-detail .shop-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: #1f8b4c;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .product-detail .shop-link:hover { text-decoration: underline; }
+    .product-detail .add-btn {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 1.2rem;
+      background: #1f8b4c;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .product-detail .add-btn:hover { background: #0f6e3a; }
+
+    .reviews-section { margin-top: 1.5rem; }
+    .reviews-section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.8rem; }
+    .review-item {
+      background: white;
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      border: 1px solid #e8edf2;
+      margin-bottom: 0.5rem;
+    }
+    .review-item .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .review-item .name { font-weight: 600; font-size: 0.9rem; }
+    .review-item .rating { color: #f59e0b; font-weight: 600; }
+    .review-item .comment { color: #1a1f36; font-size: 0.9rem; margin-top: 0.2rem; }
+    .review-item .date { font-size: 0.7rem; color: #6b7a86; }
+
+    .loader { text-align: center; padding: 2rem; color: #6b7a86; }
+    .loader .spinner {
+      display: inline-block; width: 24px; height: 24px;
+      border: 3px solid #e2ebe6; border-top-color: #1f8b4c;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .not-found { text-align: center; padding: 3rem; color: #6b7a86; }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.4rem 0 0.6rem;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex; flex-direction: column; align-items: center;
+      text-decoration: none; color: #4b5f6b;
+      font-size: 0.55rem; font-weight: 500; gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-icons a { font-size: 1rem; }
+      .bottom-nav { display: flex; }
+      .product-detail .title { font-size: 1.3rem; }
+      .product-detail .price { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="brand">🛒 <span>Batisha</span></div>
+    <div class="nav-icons">
+      <a href="/feed/" title="Home">🏠</a>
+      <a href="/offers/" title="Offers">🏷️</a>
+      <a href="/cart/" title="Cart">🛒</a>
+      <a href="/profile/" title="Profile">👤</a>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div id="content">
+      <div class="loader">
+        <div class="spinner"></div>
+        <p>Loading product...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/feed/"><span class="icon">🏠</span> Home</a>
+    <a href="/offers/"><span class="icon">🏷️</span> Offers</a>
+    <a href="/cart/"><span class="icon">🛒</span> Cart</a>
+    <a href="/profile/"><span class="icon">👤</span> Profile</a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('user_token');
+    if (!token) {
+      window.location.href = '/';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('user_token');
+      window.location.href = '/';
+    });
+
+    // ===== Get product ID from URL =====
+    const path = window.location.pathname;
+    const productId = path.split('/').pop();
+
+    if (!productId || isNaN(productId)) {
+      document.getElementById('content').innerHTML = `<div class="not-found">❌ Product not found.</div>`;
+    }
+
+    // ===== Add to cart =====
+    function addToCart(id, title, price, image_url, shop_product_id) {
+      let cart = JSON.parse(localStorage.getItem('user_cart') || '[]');
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          id,
+          title,
+          price,
+          image_url,
+          shop_product_id,
+          quantity: 1,
+        });
+      }
+      localStorage.setItem('user_cart', JSON.stringify(cart));
+      alert('Added to cart!');
+    }
+
+    // ===== Load product =====
+    async function loadProduct() {
+      try {
+        // Fetch product details from feed home (we need shop_product_id)
+        const res = await fetch(`/api/feed?action=home&limit=100`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        const products = data.products || [];
+
+        const product = products.find(p => p.product_id == productId);
+
+        if (!product) {
+          document.getElementById('content').innerHTML = `<div class="not-found">❌ Product not found.</div>`;
+          return;
+        }
+
+        // Fetch reviews
+        const reviewsRes = await fetch(`/api/reviews?action=list&product_id=${productId}`);
+        const reviewsData = await reviewsRes.json();
+        const reviews = reviewsData.reviews || [];
+
+        const img = product.image_url || '/assets/placeholder.png';
+
+        let reviewsHtml = '';
+        if (reviews.length === 0) {
+          reviewsHtml = `<p style="color:#6b7a86;">No reviews yet.</p>`;
+        } else {
+          reviews.forEach(r => {
+            reviewsHtml += `
+              <div class="review-item">
+                <div class="header">
+                  <span class="name">${r.user_name || 'Anonymous'}</span>
+                  <span class="rating">⭐ ${r.rating}</span>
+                  <span class="date">${new Date(r.created_at).toLocaleDateString()}</span>
+                </div>
+                <div class="comment">${r.comment || ''}</div>
+              </div>
+            `;
+          });
+        }
+
+        document.getElementById('content').innerHTML = `
+          <div class="product-detail">
+            <img src="${img}" class="image" onerror="this.src='/assets/placeholder.png'" />
+            <div class="title">${product.title}</div>
+            <div class="description">${product.description || ''}</div>
+            <div class="category">${product.category || 'Uncategorized'}</div>
+            <div class="price">৳${parseFloat(product.price).toFixed(2)}</div>
+            <a class="shop-link" href="/shop/${product.shop_id}">🏪 ${product.shop_name}</a>
+            <button class="add-btn" data-id="${product.product_id}" data-title="${product.title}" data-price="${product.price}" data-image="${product.image_url || ''}" data-shop-product="${product.shop_product_id}">Add to Cart</button>
+          </div>
+
+          <div class="reviews-section">
+            <h2>⭐ Reviews</h2>
+            ${reviewsHtml}
+          </div>
+        `;
+
+        // Add to cart button
+        document.querySelector('.add-btn').addEventListener('click', (e) => {
+          const btn = e.currentTarget;
+          const id = parseInt(btn.dataset.id);
+          const title = btn.dataset.title;
+          const price = parseFloat(btn.dataset.price);
+          const image_url = btn.dataset.image;
+          const shop_product_id = parseInt(btn.dataset.shopProduct);
+          addToCart(id, title, price, image_url, shop_product_id);
+        });
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById('content').innerHTML = `<div class="not-found">⚠️ Error loading product.</div>`;
+      }
+    }
+
+    // ===== Init =====
+    loadProduct();
+  </script>
+</body>
+</html>
