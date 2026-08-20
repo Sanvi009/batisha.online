@@ -32,15 +32,16 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Role must be "user" or "merchant".' });
     }
 
-    // Check if phone already exists
+    // ✅ Check if the SAME role already uses this phone
     const { data: existing } = await supabaseAdmin
       .from('profiles')
-      .select('phone')
+      .select('phone, role')
       .eq('phone', phone)
+      .eq('role', role)
       .maybeSingle();
 
     if (existing) {
-      return res.status(409).json({ error: 'Phone number already registered.' });
+      return res.status(409).json({ error: `Phone number already registered as a ${role}.` });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -88,7 +89,18 @@ export default async function handler(req, res) {
       }
     }
 
-    // Generate JWT
+    // If user, create a default address
+    if (role === 'user' && address) {
+      await supabaseAdmin
+        .from('user_addresses')
+        .insert({
+          user_id: profile.id,
+          name: full_name,
+          phone,
+          address,
+        });
+    }
+
     const token = jwt.sign(
       { id: profile.id, phone: profile.phone, role: profile.role },
       process.env.JWT_SECRET,
@@ -120,7 +132,6 @@ export default async function handler(req, res) {
       const adminPassword = process.env.USER_PASSWORD;
 
       if (username === adminUsername && password === adminPassword) {
-        // Fetch or create admin profile
         let { data: adminProfile } = await supabaseAdmin
           .from('profiles')
           .select('id, phone, role, full_name, is_banned')
@@ -128,7 +139,6 @@ export default async function handler(req, res) {
           .maybeSingle();
 
         if (!adminProfile) {
-          // Create admin profile if it doesn't exist
           const { data: newAdmin, error } = await supabaseAdmin
             .from('profiles')
             .insert({
