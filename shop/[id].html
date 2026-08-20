@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop — Batisha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 1000px; margin: 0 auto; padding: 1rem 1rem 2rem; }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1.2rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-icons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .top-nav .nav-icons a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 1.2rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-icons a:hover { color: #1a1f36; }
+    .top-nav .logout-btn {
+      padding: 0.2rem 0.8rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    .shop-header {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid #e8edf2;
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .shop-header .image {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #f8fbf9;
+      border: 3px solid #e8edf2;
+    }
+    .shop-header .info { flex: 1; min-width: 200px; }
+    .shop-header .info .name { font-size: 1.4rem; font-weight: 700; }
+    .shop-header .info .detail { color: #6b7a86; font-size: 0.9rem; }
+    .shop-header .info .rating { color: #f59e0b; font-weight: 600; margin-top: 0.2rem; }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.8rem;
+      margin-top: 0.5rem;
+    }
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      padding: 0.8rem;
+      border: 1px solid #e8edf2;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      transition: 0.15s;
+      cursor: pointer;
+    }
+    .product-card:hover {
+      border-color: #1f8b4c;
+      box-shadow: 0 2px 8px rgba(31,139,76,0.06);
+    }
+    .product-card .image {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
+      background: #f8fbf9;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .product-card .title {
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .product-card .price {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #1a1f36;
+      margin-top: 0.2rem;
+    }
+    .product-card .add-btn {
+      width: 100%;
+      padding: 0.3rem 0;
+      margin-top: 0.5rem;
+      background: #1f8b4c;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .product-card .add-btn:hover { background: #0f6e3a; }
+    .product-card .add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .loader { text-align: center; padding: 2rem; color: #6b7a86; }
+    .loader .spinner {
+      display: inline-block; width: 24px; height: 24px;
+      border: 3px solid #e2ebe6; border-top-color: #1f8b4c;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty { text-align: center; padding: 2rem; color: #6b7a86; }
+    .not-found { text-align: center; padding: 3rem; color: #6b7a86; }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.4rem 0 0.6rem;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex; flex-direction: column; align-items: center;
+      text-decoration: none; color: #4b5f6b;
+      font-size: 0.55rem; font-weight: 500; gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-icons a { font-size: 1rem; }
+      .bottom-nav { display: flex; }
+      .shop-header { flex-direction: column; align-items: flex-start; }
+      .products-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    }
+    @media (max-width: 480px) {
+      .products-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="brand">🛒 <span>Batisha</span></div>
+    <div class="nav-icons">
+      <a href="/feed/" title="Home">🏠</a>
+      <a href="/offers/" title="Offers">🏷️</a>
+      <a href="/cart/" title="Cart">🛒</a>
+      <a href="/profile/" title="Profile">👤</a>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div id="content">
+      <div class="loader">
+        <div class="spinner"></div>
+        <p>Loading shop...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/feed/"><span class="icon">🏠</span> Home</a>
+    <a href="/offers/"><span class="icon">🏷️</span> Offers</a>
+    <a href="/cart/"><span class="icon">🛒</span> Cart</a>
+    <a href="/profile/"><span class="icon">👤</span> Profile</a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('user_token');
+    if (!token) {
+      window.location.href = '/';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('user_token');
+      window.location.href = '/';
+    });
+
+    // ===== Get shop ID from URL =====
+    const path = window.location.pathname;
+    const shopId = path.split('/').pop();
+
+    if (!shopId || isNaN(shopId)) {
+      document.getElementById('content').innerHTML = `<div class="not-found">❌ Shop not found.</div>`;
+    }
+
+    // ===== Add to cart =====
+    function addToCart(id, title, price, image_url, shop_product_id) {
+      let cart = JSON.parse(localStorage.getItem('user_cart') || '[]');
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          id,
+          title,
+          price,
+          image_url,
+          shop_product_id,
+          quantity: 1,
+        });
+      }
+      localStorage.setItem('user_cart', JSON.stringify(cart));
+      alert('Added to cart!');
+    }
+
+    // ===== Load shop =====
+    async function loadShop() {
+      try {
+        const res = await fetch(`/api/feed?action=shop&shop_id=${shopId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem('user_token');
+            window.location.href = '/';
+            return;
+          }
+          throw new Error('Failed to load shop');
+        }
+
+        const data = await res.json();
+        const shop = data.shop;
+        const products = data.products || [];
+
+        if (!shop) {
+          document.getElementById('content').innerHTML = `<div class="not-found">❌ Shop not found.</div>`;
+          return;
+        }
+
+        const img = shop.image_url || '/assets/placeholder.png';
+        const rating = shop.rating || '0.0';
+
+        let productsHtml = '';
+        if (products.length === 0) {
+          productsHtml = `<div class="empty">📭 No products available from this shop.</div>`;
+        } else {
+          productsHtml = `<div class="products-grid">`;
+          products.forEach(p => {
+            const pImg = p.image_url || '/assets/placeholder.png';
+            productsHtml += `
+              <div class="product-card" data-id="${p.product_id}">
+                <img src="${pImg}" class="image" onerror="this.src='/assets/placeholder.png'" />
+                <div class="title">${p.title}</div>
+                <div class="price">৳${parseFloat(p.price).toFixed(2)}</div>
+                <button class="add-btn" data-id="${p.product_id}" data-title="${p.title}" data-price="${p.price}" data-image="${p.image_url || ''}" data-shop-product="${p.shop_product_id}">Add to Cart</button>
+              </div>
+            `;
+          });
+          productsHtml += `</div>`;
+        }
+
+        document.getElementById('content').innerHTML = `
+          <div class="shop-header">
+            <img src="${img}" class="image" onerror="this.src='/assets/placeholder.png'" />
+            <div class="info">
+              <div class="name">🏪 ${shop.shop_name}</div>
+              <div class="detail">👤 ${shop.proprietor_name}</div>
+              <div class="detail">📞 ${shop.phone}</div>
+              <div class="detail">📍 ${shop.address}</div>
+              <div class="rating">⭐ ${rating} / 5</div>
+            </div>
+          </div>
+
+          ${productsHtml}
+        `;
+
+        // Add to cart buttons
+        document.querySelectorAll('.add-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = parseInt(btn.dataset.id);
+            const title = btn.dataset.title;
+            const price = parseFloat(btn.dataset.price);
+            const image_url = btn.dataset.image;
+            const shop_product_id = parseInt(btn.dataset.shopProduct);
+            addToCart(id, title, price, image_url, shop_product_id);
+          });
+        });
+
+        // Product card click → go to product page
+        document.querySelectorAll('.product-card').forEach(card => {
+          card.addEventListener('click', (e) => {
+            if (e.target.closest('.add-btn')) return;
+            const id = card.dataset.id;
+            window.location.href = `/product/${id}`;
+          });
+        });
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById('content').innerHTML = `<div class="not-found">⚠️ Error loading shop.</div>`;
+      }
+    }
+
+    // ===== Init =====
+    loadShop();
+  </script>
+</body>
+</html>
