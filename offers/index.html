@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offers — Batisha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 1000px; margin: 0 auto; padding: 1rem 1rem 2rem; }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1.2rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-icons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .top-nav .nav-icons a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 1.2rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-icons a:hover { color: #1a1f36; }
+    .top-nav .nav-icons .cart-badge {
+      position: relative;
+    }
+    .top-nav .nav-icons .cart-badge span {
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      background: #dc2626;
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.05rem 0.4rem;
+      border-radius: 30px;
+    }
+    .top-nav .logout-btn {
+      padding: 0.2rem 0.8rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    /* Page Header */
+    .page-header { margin-top: 1rem; }
+    .page-header h1 { font-size: 1.4rem; font-weight: 700; }
+    .page-header p { color: #6b7a86; font-size: 0.9rem; }
+
+    /* Offer Grid */
+    .offer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.8rem;
+      margin-top: 1.2rem;
+    }
+    .offer-card {
+      background: white;
+      border-radius: 12px;
+      padding: 0.8rem;
+      border: 1px solid #e8edf2;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      transition: 0.15s;
+      cursor: pointer;
+      position: relative;
+    }
+    .offer-card:hover {
+      border-color: #dc2626;
+      box-shadow: 0 2px 8px rgba(220,38,38,0.06);
+    }
+    .offer-card .image {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
+      background: #f8fbf9;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .offer-card .discount-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #dc2626;
+      color: white;
+      padding: 0.1rem 0.5rem;
+      border-radius: 30px;
+      font-size: 0.6rem;
+      font-weight: 700;
+    }
+    .offer-card .title {
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .offer-card .shop {
+      font-size: 0.7rem;
+      color: #1f8b4c;
+      margin-top: 0.1rem;
+    }
+    .offer-card .prices {
+      margin-top: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .offer-card .prices .old {
+      color: #9ca3af;
+      text-decoration: line-through;
+      font-size: 0.75rem;
+    }
+    .offer-card .prices .new {
+      font-weight: 700;
+      color: #dc2626;
+      font-size: 0.95rem;
+    }
+    .offer-card .expiry {
+      font-size: 0.6rem;
+      color: #6b7a86;
+      margin-top: 0.1rem;
+    }
+    .offer-card .add-btn {
+      width: 100%;
+      padding: 0.3rem 0;
+      margin-top: 0.5rem;
+      background: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .offer-card .add-btn:hover { background: #b91c1c; }
+    .offer-card .add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .loader {
+      text-align: center;
+      padding: 2rem;
+      color: #6b7a86;
+      grid-column: 1 / -1;
+    }
+    .loader .spinner {
+      display: inline-block;
+      width: 24px; height: 24px;
+      border: 3px solid #e2ebe6;
+      border-top-color: #1f8b4c;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #6b7a86;
+      grid-column: 1 / -1;
+    }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.4rem 0 0.6rem;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 0.55rem;
+      font-weight: 500;
+      gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-icons a { font-size: 1rem; }
+      .bottom-nav { display: flex; }
+      .offer-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.6rem; }
+    }
+    @media (max-width: 480px) {
+      .offer-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+      .offer-card .title { font-size: 0.75rem; }
+      .offer-card .prices .new { font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Nav -->
+  <nav class="top-nav">
+    <div class="brand">🛒 <span>Batisha</span></div>
+    <div class="nav-icons">
+      <a href="/feed/" title="Home">🏠</a>
+      <a href="/cart/" class="cart-badge" title="Cart">
+        🛒 <span id="cartCount">0</span>
+      </a>
+      <a href="/profile/" title="Profile">👤</a>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>🔥 Limited Offers</h1>
+      <p>Grab these deals before they expire</p>
+    </div>
+
+    <div class="offer-grid" id="offerGrid">
+      <div class="loader">
+        <div class="spinner"></div>
+        <p>Loading offers...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <a href="/feed/">
+      <span class="icon">🏠</span> Home
+    </a>
+    <a href="/offers/" class="active">
+      <span class="icon">🏷️</span> Offers
+    </a>
+    <a href="/cart/">
+      <span class="icon">🛒</span> Cart
+    </a>
+    <a href="/profile/">
+      <span class="icon">👤</span> Profile
+    </a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('user_token');
+    if (!token) {
+      window.location.href = '/';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('user_token');
+      window.location.href = '/';
+    });
+
+    // ===== Cart count =====
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('user_cart') || '[]');
+      const total = cart.reduce((sum, i) => sum + i.quantity, 0);
+      document.getElementById('cartCount').textContent = total;
+    }
+    updateCartCount();
+
+    // ===== Add to cart =====
+    function addToCart(id, title, price, image_url, offer_id) {
+      let cart = JSON.parse(localStorage.getItem('user_cart') || '[]');
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          id,
+          title,
+          price,
+          image_url,
+          offer_id,
+          quantity: 1,
+        });
+      }
+      localStorage.setItem('user_cart', JSON.stringify(cart));
+      updateCartCount();
+      alert('Added to cart!');
+    }
+
+    // ===== Load offers =====
+    let offset = 0;
+    const limit = 20;
+    let hasMore = true;
+    let loading = false;
+
+    async function loadOffers(reset = false) {
+      if (loading || (!hasMore && !reset)) return;
+      loading = true;
+      if (reset) {
+        offset = 0;
+        hasMore = true;
+        document.getElementById('offerGrid').innerHTML = `
+          <div class="loader">
+            <div class="spinner"></div>
+            <p>Loading offers...</p>
+          </div>
+        `;
+      }
+
+      try {
+        const res = await fetch(`/api/feed?action=offers&limit=${limit}&offset=${offset}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem('user_token');
+            window.location.href = '/';
+            return;
+          }
+          throw new Error('Failed to load offers');
+        }
+
+        const data = await res.json();
+        const offers = data.offers || [];
+
+        if (reset) {
+          document.getElementById('offerGrid').innerHTML = '';
+        }
+
+        if (offers.length === 0 && reset) {
+          document.getElementById('offerGrid').innerHTML = `<div class="empty">📭 No active offers right now.</div>`;
+          loading = false;
+          return;
+        }
+
+        offers.forEach(o => {
+          const card = document.createElement('div');
+          card.className = 'offer-card';
+
+          const img = o.image_url || '/assets/placeholder.png';
+          const shop = o.shops || { shop_name: 'Unknown' };
+          const expires = new Date(o.expires_at).toLocaleDateString();
+
+          card.innerHTML = `
+            <img src="${img}" class="image" onerror="this.src='/assets/placeholder.png'" />
+            <div class="discount-badge">-${o.discount_percent}%</div>
+            <div class="title">${o.title}</div>
+            <div class="shop">🏪 ${shop.shop_name}</div>
+            <div class="prices">
+              <span class="old">৳${parseFloat(o.old_price).toFixed(2)}</span>
+              <span class="new">৳${parseFloat(o.offer_price).toFixed(2)}</span>
+            </div>
+            <div class="expiry">Expires: ${expires}</div>
+            <button class="add-btn" data-id="${o.id}" data-title="${o.title}" data-price="${o.offer_price}" data-image="${o.image_url || ''}">Add to Cart</button>
+          `;
+
+          card.addEventListener('click', (e) => {
+            if (e.target.closest('.add-btn')) return;
+            // Optional: open offer detail page if you have one
+          });
+
+          document.getElementById('offerGrid').appendChild(card);
+        });
+
+        hasMore = data.hasMore;
+        offset += offers.length;
+
+      } catch (err) {
+        console.error(err);
+        if (reset) {
+          document.getElementById('offerGrid').innerHTML = `<div class="empty">⚠️ Error loading offers.</div>`;
+        }
+      }
+
+      loading = false;
+    }
+
+    // ===== Infinite scroll =====
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight;
+        if (scrollY + windowHeight >= docHeight - 300) {
+          loadOffers();
+        }
+      }, 150);
+    });
+
+    // ===== Add to cart button =====
+    document.getElementById('offerGrid').addEventListener('click', (e) => {
+      const btn = e.target.closest('.add-btn');
+      if (!btn) return;
+      const id = parseInt(btn.dataset.id);
+      const title = btn.dataset.title;
+      const price = parseFloat(btn.dataset.price);
+      const image_url = btn.dataset.image;
+      addToCart(id, title, price, image_url, id);
+    });
+
+    // ===== Init =====
+    loadOffers(true);
+  </script>
+</body>
+</html>
