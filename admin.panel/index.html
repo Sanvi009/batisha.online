@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Batisha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+    .card h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      text-align: center;
+    }
+    .card p.sub {
+      color: #6b7a86;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #1a1f36;
+      margin-bottom: 0.2rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #e4ece8;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      background: #f8fbf9;
+      outline: none;
+      transition: 0.15s;
+    }
+    .form-group input:focus {
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
+      background: white;
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 0.7rem;
+      background: #1f8b4c;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.15s;
+      margin-top: 0.5rem;
+    }
+    .btn-primary:hover { background: #0f6e3a; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .error-msg {
+      color: #dc2626;
+      text-align: center;
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      display: none;
+    }
+    .success-msg {
+      color: #16a34a;
+      text-align: center;
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      display: none;
+    }
+    @media (max-width: 480px) {
+      .card { padding: 1.5rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔐 Admin</h1>
+    <p class="sub">Secure access to the Batisha management panel</p>
+
+    <form id="adminLoginForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Admin username" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="btn-primary" id="loginBtn">Login</button>
+    </form>
+
+    <div class="error-msg" id="errorMsg">Invalid credentials</div>
+    <div class="success-msg" id="successMsg">Redirecting...</div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('admin_token');
+    if (token) {
+      fetch('/api/auth?action=verify', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.user.role === 'admin') {
+          window.location.href = '/admin.panel/dashboard/';
+        } else {
+          localStorage.removeItem('admin_token');
+        }
+      })
+      .catch(() => localStorage.removeItem('admin_token'));
+    }
+
+    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+      const successMsg = document.getElementById('successMsg');
+      const loginBtn = document.getElementById('loginBtn');
+
+      errorMsg.style.display = 'none';
+      successMsg.style.display = 'none';
+
+      if (!username || !password) {
+        errorMsg.textContent = 'Username and password are required.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Logging in...';
+
+      try {
+        const res = await fetch('/api/auth?action=login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success && data.user.role === 'admin') {
+          localStorage.setItem('admin_token', data.token);
+          successMsg.textContent = 'Login successful! Redirecting...';
+          successMsg.style.display = 'block';
+          setTimeout(() => {
+            window.location.href = '/admin.panel/dashboard/';
+          }, 1000);
+        } else {
+          errorMsg.textContent = data.error || 'Invalid credentials.';
+          errorMsg.style.display = 'block';
+        }
+      } catch (err) {
+        errorMsg.textContent = 'Connection error. Please try again.';
+        errorMsg.style.display = 'block';
+      }
+
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Login';
+    });
+  </script>
+</body>
+</html>
