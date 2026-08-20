@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart — Batisha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 1rem 1rem 2rem; }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1.2rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-icons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .top-nav .nav-icons a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 1.2rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-icons a:hover { color: #1a1f36; }
+    .top-nav .logout-btn {
+      padding: 0.2rem 0.8rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    .page-header { margin: 1rem 0 1.2rem; }
+    .page-header h1 { font-size: 1.4rem; font-weight: 700; }
+    .page-header .count { color: #6b7a86; font-size: 0.9rem; font-weight: 400; }
+
+    .cart-item {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e8edf2;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .cart-item .image {
+      width: 64px; height: 64px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #f8fbf9;
+      border: 1px solid #e8edf2;
+      flex-shrink: 0;
+    }
+    .cart-item .info { flex: 1; }
+    .cart-item .info .title { font-weight: 600; font-size: 0.95rem; }
+    .cart-item .info .price { color: #1f8b4c; font-weight: 600; font-size: 0.9rem; }
+    .cart-item .controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .cart-item .controls button {
+      width: 28px; height: 28px;
+      border: none;
+      border-radius: 50%;
+      background: #f3f6f8;
+      color: #1a1f36;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .cart-item .controls button:hover { background: #e8edf2; }
+    .cart-item .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+    .cart-item .controls .qty { font-weight: 600; min-width: 20px; text-align: center; }
+    .cart-item .controls .total { font-weight: 700; color: #1f8b4c; min-width: 60px; text-align: right; }
+    .cart-item .remove-btn {
+      background: none; border: none;
+      color: #9ca3af; cursor: pointer;
+      font-size: 1.2rem; transition: 0.15s;
+    }
+    .cart-item .remove-btn:hover { color: #dc2626; }
+
+    .cart-summary {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e8edf2;
+      margin-top: 1.2rem;
+    }
+    .cart-summary .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.3rem 0;
+      font-size: 0.9rem;
+    }
+    .cart-summary .row.total {
+      border-top: 1px solid #e8edf2;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .cart-summary .row.total .amount { color: #1f8b4c; }
+    .checkout-btn {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 1rem;
+      background: #1f8b4c;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .checkout-btn:hover { background: #0f6e3a; }
+    .checkout-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #6b7a86;
+    }
+    .empty .icon { font-size: 3rem; margin-bottom: 0.5rem; }
+
+    /* Checkout Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 20px;
+      padding: 1.5rem 1.8rem;
+      max-width: 480px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .modal p { color: #6b7a86; font-size: 0.85rem; margin-bottom: 1rem; }
+    .modal .form-group { margin-bottom: 0.8rem; }
+    .modal .form-group label {
+      display: block; font-weight: 600; font-size: 0.75rem;
+      text-transform: uppercase; color: #1a1f36; margin-bottom: 0.2rem;
+    }
+    .modal .form-group select, .modal .form-group textarea {
+      width: 100%;
+      padding: 0.5rem 0.8rem;
+      border: 1px solid #e4ece8;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: #f8fbf9;
+      outline: none;
+    }
+    .modal .form-group select:focus, .modal .form-group textarea:focus {
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
+    }
+    .modal .form-group textarea { resize: vertical; min-height: 50px; }
+    .modal .actions {
+      display: flex; gap: 0.8rem; margin-top: 1rem;
+    }
+    .modal .actions button {
+      padding: 0.5rem 1.2rem;
+      border: none; border-radius: 30px;
+      font-weight: 600; font-size: 0.85rem; cursor: pointer; flex: 1;
+    }
+    .modal .actions .btn-cancel { background: #f3f6f8; color: #1a1f36; }
+    .modal .actions .btn-cancel:hover { background: #e8edf2; }
+    .modal .actions .btn-place { background: #1f8b4c; color: white; }
+    .modal .actions .btn-place:hover { background: #0f6e3a; }
+    .modal .actions .btn-place:disabled { opacity: 0.5; cursor: not-allowed; }
+    .modal .error-msg { color: #dc2626; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+    .modal .success-msg { color: #16a34a; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.4rem 0 0.6rem;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 0.55rem;
+      font-weight: 500;
+      gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-icons a { font-size: 1rem; }
+      .bottom-nav { display: flex; }
+      .cart-item { flex-wrap: wrap; }
+      .cart-item .controls { width: 100%; justify-content: flex-end; }
+    }
+    @media (max-width: 480px) {
+      .cart-item .image { width: 48px; height: 48px; }
+      .cart-item .info .title { font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="brand">🛒 <span>Batisha</span></div>
+    <div class="nav-icons">
+      <a href="/feed/" title="Home">🏠</a>
+      <a href="/offers/" title="Offers">🏷️</a>
+      <a href="/profile/" title="Profile">👤</a>
+      <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>🛒 Your Cart <span class="count" id="itemCount">(0 items)</span></h1>
+    </div>
+
+    <div id="cartItems"></div>
+
+    <div id="emptyCart" class="empty" style="display:none;">
+      <div class="icon">🛒</div>
+      <p>Your cart is empty.</p>
+      <a href="/feed/" style="color:#1f8b4c;font-weight:600;text-decoration:none;">Start shopping →</a>
+    </div>
+
+    <div id="cartSummary" class="cart-summary" style="display:none;">
+      <div class="row"><span>Subtotal</span><span id="subtotal">৳0.00</span></div>
+      <div class="row"><span>Delivery Fee</span><span id="deliveryFee">৳30.00</span></div>
+      <div class="row total"><span>Total</span><span class="amount" id="totalAmount">৳0.00</span></div>
+      <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal">
+      <h2>📦 Confirm Order</h2>
+      <p>Choose a delivery address and add any special notes.</p>
+
+      <div class="form-group">
+        <label for="addressSelect">Delivery Address</label>
+        <select id="addressSelect">
+          <option value="">Loading addresses...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="specialNote">Special Note (optional)</label>
+        <textarea id="specialNote" placeholder="e.g. Call before delivery"></textarea>
+      </div>
+
+      <div class="error-msg" id="checkoutError"></div>
+      <div class="success-msg" id="checkoutSuccess">✅ Order placed successfully!</div>
+
+      <div class="actions">
+        <button class="btn-cancel" id="checkoutCancel">Cancel</button>
+        <button class="btn-place" id="checkoutPlace">Place Order</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/feed/"><span class="icon">🏠</span> Home</a>
+    <a href="/offers/"><span class="icon">🏷️</span> Offers</a>
+    <a href="/cart/" class="active"><span class="icon">🛒</span> Cart</a>
+    <a href="/profile/"><span class="icon">👤</span> Profile</a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('user_token');
+    if (!token) {
+      window.location.href = '/';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('user_token');
+      window.location.href = '/';
+    });
+
+    const DELIVERY_FEE = 30;
+    let addresses = [];
+    let selectedAddressId = null;
+
+    // ===== Cart functions =====
+    function getCart() {
+      return JSON.parse(localStorage.getItem('user_cart') || '[]');
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem('user_cart', JSON.stringify(cart));
+    }
+
+    function updateCartUI() {
+      const cart = getCart();
+      const itemCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+      document.getElementById('itemCount').textContent = `(${itemCount} items)`;
+
+      const container = document.getElementById('cartItems');
+      const empty = document.getElementById('emptyCart');
+      const summary = document.getElementById('cartSummary');
+
+      if (cart.length === 0) {
+        container.innerHTML = '';
+        empty.style.display = 'block';
+        summary.style.display = 'none';
+        return;
+      }
+
+      empty.style.display = 'none';
+      summary.style.display = 'block';
+
+      let subtotal = 0;
+      container.innerHTML = '';
+
+      cart.forEach(item => {
+        subtotal += item.price * item.quantity;
+        const total = item.price * item.quantity;
+
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        const img = item.image_url || '/assets/placeholder.png';
+
+        div.innerHTML = `
+          <img src="${img}" class="image" onerror="this.src='/assets/placeholder.png'" />
+          <div class="info">
+            <div class="title">${item.title}</div>
+            <div class="price">৳${parseFloat(item.price).toFixed(2)} each</div>
+          </div>
+          <div class="controls">
+            <button class="decrease" data-id="${item.id}">−</button>
+            <span class="qty">${item.quantity}</span>
+            <button class="increase" data-id="${item.id}">+</button>
+            <span class="total">৳${total.toFixed(2)}</span>
+          </div>
+          <button class="remove-btn" data-id="${item.id}">🗑️</button>
+        `;
+
+        container.appendChild(div);
+      });
+
+      document.getElementById('subtotal').textContent = `৳${subtotal.toFixed(2)}`;
+      document.getElementById('deliveryFee').textContent = `৳${DELIVERY_FEE.toFixed(2)}`;
+      document.getElementById('totalAmount').textContent = `৳${(subtotal + DELIVERY_FEE).toFixed(2)}`;
+    }
+
+    // ===== Cart controls =====
+    document.getElementById('cartItems').addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+
+      const id = parseInt(btn.dataset.id);
+      let cart = getCart();
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+
+      if (btn.classList.contains('increase')) {
+        item.quantity += 1;
+      } else if (btn.classList.contains('decrease')) {
+        if (item.quantity > 1) {
+          item.quantity -= 1;
+        } else {
+          return;
+        }
+      } else if (btn.classList.contains('remove-btn')) {
+        cart = cart.filter(i => i.id !== id);
+      }
+
+      saveCart(cart);
+      updateCartUI();
+    });
+
+    // ===== Load addresses =====
+    async function loadAddresses() {
+      try {
+        const res = await fetch('/api/profile?action=address-list', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        addresses = data.addresses || [];
+
+        const select = document.getElementById('addressSelect');
+        if (addresses.length === 0) {
+          select.innerHTML = `<option value="">No addresses saved. Add one in Profile.</option>`;
+          return;
+        }
+
+        select.innerHTML = `<option value="">Select an address</option>`;
+        addresses.forEach(addr => {
+          const opt = document.createElement('option');
+          opt.value = addr.id;
+          opt.textContent = `${addr.name} — ${addr.address} (${addr.phone})`;
+          select.appendChild(opt);
+        });
+      } catch (err) {
+        console.error('Address error:', err);
+      }
+    }
+
+    // ===== Checkout =====
+    document.getElementById('checkoutBtn').addEventListener('click', async () => {
+      const cart = getCart();
+      if (cart.length === 0) return;
+
+      await loadAddresses();
+      document.getElementById('checkoutModal').classList.add('active');
+      document.getElementById('checkoutError').style.display = 'none';
+      document.getElementById('checkoutSuccess').style.display = 'none';
+    });
+
+    document.getElementById('checkoutCancel').addEventListener('click', () => {
+      document.getElementById('checkoutModal').classList.remove('active');
+    });
+
+    document.getElementById('checkoutModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        document.getElementById('checkoutModal').classList.remove('active');
+      }
+    });
+
+    document.getElementById('checkoutPlace').addEventListener('click', async () => {
+      const cart = getCart();
+      if (cart.length === 0) return;
+
+      const addressId = document.getElementById('addressSelect').value;
+      const specialNote = document.getElementById('specialNote').value.trim();
+
+      if (!addressId) {
+        document.getElementById('checkoutError').textContent = 'Please select a delivery address.';
+        document.getElementById('checkoutError').style.display = 'block';
+        return;
+      }
+
+      const btn = document.getElementById('checkoutPlace');
+      btn.disabled = true;
+      btn.textContent = 'Placing...';
+
+      try {
+        // Group items by shop
+        const shopGroups = {};
+        cart.forEach(item => {
+          const shopProductId = item.shop_product_id || item.offer_id;
+          if (!shopProductId) return;
+          const shopId = Math.floor(shopProductId / 1000); // placeholder — we need real shop_id
+          if (!shopGroups[shopId]) shopGroups[shopId] = [];
+          shopGroups[shopId].push({
+            shop_product_id: shopProductId,
+            quantity: item.quantity,
+            offer_id: item.offer_id || null,
+          });
+        });
+
+        // Place order for the first shop (simplified)
+        const firstShopId = Object.keys(shopGroups)[0];
+        const items = shopGroups[firstShopId];
+
+        const res = await fetch('/api/orders?action=place', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            shop_id: firstShopId,
+            items,
+            delivery_fee: DELIVERY_FEE,
+            special_note: specialNote || null,
+            address_id: addressId,
+          })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          document.getElementById('checkoutSuccess').style.display = 'block';
+          document.getElementById('checkoutError').style.display = 'none';
+          localStorage.removeItem('user_cart');
+          setTimeout(() => {
+            document.getElementById('checkoutModal').classList.remove('active');
+            updateCartUI();
+            alert('✅ Order placed! Check your profile for details.');
+          }, 1500);
+        } else {
+          document.getElementById('checkoutError').textContent = data.error || 'Failed to place order.';
+          document.getElementById('checkoutError').style.display = 'block';
+        }
+      } catch (err) {
+        document.getElementById('checkoutError').textContent = 'Connection error. Please try again.';
+        document.getElementById('checkoutError').style.display = 'block';
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Place Order';
+    });
+
+    // ===== Init =====
+    updateCartUI();
+  </script>
+</body>
+</html>
