@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — Merchant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1a1f36;
+      padding-bottom: 80px;
+    }
+    .container { max-width: 700px; margin: 0 auto; padding: 1.5rem; }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: white;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #1a1f36;
+    }
+    .top-nav .brand span { color: #1f8b4c; }
+    .top-nav .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .top-nav .nav-links a {
+      text-decoration: none;
+      color: #4b5f6b;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.15s;
+    }
+    .top-nav .nav-links a:hover { color: #1a1f36; }
+    .top-nav .nav-links a.active { color: #1f8b4c; }
+    .top-nav .logout-btn {
+      padding: 0.3rem 1rem;
+      background: #fef2f2;
+      color: #991b1b;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .page-header { margin: 1.5rem 0 1rem; }
+    .page-header h1 { font-size: 1.6rem; font-weight: 700; }
+    .page-header p { color: #6b7a86; }
+
+    .profile-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e8edf2;
+      padding: 1.5rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .avatar-section {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .avatar-section .avatar-wrap {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #f0f3f7;
+      border: 3px solid #e8edf2;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #1f8b4c;
+      flex-shrink: 0;
+    }
+    .avatar-section .avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .avatar-section .avatar-actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .avatar-section .avatar-actions button {
+      padding: 0.4rem 1rem;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-upload { background: #f0f5fc; color: #1e3a5f; border: 1px solid #dde5ed; }
+    .btn-upload:hover { background: #e4edf7; }
+    .btn-remove { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .btn-remove:hover { background: #fee2e2; }
+
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #1a1f36;
+      margin-bottom: 0.2rem;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #e4ece8;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: #f8fbf9;
+      outline: none;
+      transition: 0.15s;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: #1f8b4c;
+      box-shadow: 0 0 0 3px rgba(31,139,76,0.08);
+      background: white;
+    }
+    .form-group textarea { resize: vertical; min-height: 50px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+
+    .file-upload-wrapper { position: relative; }
+    .file-upload-label {
+      display: none;
+    }
+    .file-upload-wrapper input[type="file"] { display: none; }
+
+    .btn-primary {
+      padding: 0.6rem 1.5rem;
+      background: #1f8b4c;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-primary:hover { background: #0f6e3a; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .error-msg { color: #dc2626; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+    .success-msg { color: #16a34a; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e8edf2;
+      padding: 0.5rem 0;
+      justify-content: space-around;
+      z-index: 200;
+    }
+    .bottom-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #4b5f6b;
+      font-size: 0.6rem;
+      font-weight: 500;
+      gap: 0.1rem;
+    }
+    .bottom-nav a .icon { font-size: 1.2rem; }
+    .bottom-nav a.active { color: #1f8b4c; }
+
+    @media (max-width: 768px) {
+      .top-nav .nav-links { display: none; }
+      .bottom-nav { display: flex; }
+      .container { padding: 1rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .avatar-section { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="brand">🛍️ <span>Merchant</span></div>
+    <div class="nav-links">
+      <a href="/merchant/dashboard/">Dashboard</a>
+      <a href="/merchant/orders/">Orders</a>
+      <a href="/merchant/products/">Products</a>
+      <a href="/merchant/add-product/">Add Product</a>
+      <a href="/merchant/offers/">Offers</a>
+      <a href="/merchant/profile/" class="active">Profile</a>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>👤 Shop Profile</h1>
+      <p>Manage your shop details</p>
+    </div>
+
+    <div class="profile-card" id="profileCard">
+      <div class="avatar-section">
+        <div class="avatar-wrap" id="avatarPreview">
+          <span id="avatarPlaceholder">🏪</span>
+        </div>
+        <div class="avatar-actions">
+          <button class="btn-upload" id="uploadAvatarBtn">📷 Change Photo</button>
+          <button class="btn-remove" id="removeAvatarBtn" style="display:none;">🗑️ Remove</button>
+        </div>
+        <!-- Hidden file input -->
+        <div class="file-upload-wrapper">
+          <input type="file" id="avatarFileInput" accept="image/*" />
+        </div>
+      </div>
+
+      <form id="profileForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="shopName">Shop Name *</label>
+            <input type="text" id="shopName" required />
+          </div>
+          <div class="form-group">
+            <label for="proprietorName">Proprietor Name *</label>
+            <input type="text" id="proprietorName" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="shopPhone">Phone Number *</label>
+          <input type="tel" id="shopPhone" required />
+        </div>
+        <div class="form-group">
+          <label for="shopAddress">Shop Address *</label>
+          <textarea id="shopAddress" required></textarea>
+        </div>
+        <div class="error-msg" id="formError"></div>
+        <div class="success-msg" id="formSuccess">✅ Profile updated successfully!</div>
+        <button type="submit" class="btn-primary" id="saveBtn">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="/merchant/dashboard/"><span class="icon">📊</span> Dashboard</a>
+    <a href="/merchant/orders/"><span class="icon">📦</span> Orders</a>
+    <a href="/merchant/products/"><span class="icon">📋</span> Products</a>
+    <a href="/merchant/profile/" class="active"><span class="icon">👤</span> Profile</a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('merchant_token');
+    if (!token) {
+      window.location.href = '/merchant/';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('merchant_token');
+      window.location.href = '/merchant/';
+    });
+
+    // ===== Load profile =====
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/shops?action=detail', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem('merchant_token');
+            window.location.href = '/merchant/';
+            return;
+          }
+          throw new Error('Failed to load profile');
+        }
+
+        const data = await res.json();
+        const shop = data.shop;
+
+        document.getElementById('shopName').value = shop.shop_name || '';
+        document.getElementById('proprietorName').value = shop.proprietor_name || '';
+        document.getElementById('shopPhone').value = shop.phone || '';
+        document.getElementById('shopAddress').value = shop.address || '';
+
+        // Avatar
+        const avatarWrap = document.getElementById('avatarPreview');
+        const placeholder = document.getElementById('avatarPlaceholder');
+        if (shop.image_url) {
+          avatarWrap.innerHTML = `<img src="${shop.image_url}" alt="Shop Avatar" />`;
+          document.getElementById('removeAvatarBtn').style.display = 'inline-block';
+        } else {
+          avatarWrap.innerHTML = `<span id="avatarPlaceholder">🏪</span>`;
+          document.getElementById('removeAvatarBtn').style.display = 'none';
+        }
+      } catch (err) {
+        console.error('Profile error:', err);
+        document.getElementById('profileCard').innerHTML = `<div class="error-msg" style="display:block;">Error loading profile. Please refresh.</div>`;
+      }
+    }
+
+    // ===== Upload avatar =====
+    document.getElementById('uploadAvatarBtn').addEventListener('click', () => {
+      document.getElementById('avatarFileInput').click();
+    });
+
+    document.getElementById('avatarFileInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const uploadRes = await fetch('/api/upload?bucket=shop-images', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: formData,
+        });
+
+        const uploadData = await uploadRes.json();
+        if (uploadData.url) {
+          // Update shop with new image
+          const updateRes = await fetch('/api/shops?action=update', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ image_url: uploadData.url })
+          });
+
+          if (updateRes.ok) {
+            loadProfile();
+            showSuccess('Avatar updated successfully!');
+          } else {
+            showError('Failed to update avatar.');
+          }
+        } else {
+          showError('Upload failed.');
+        }
+      } catch (err) {
+        showError('Upload error: ' + err.message);
+      }
+    });
+
+    // ===== Remove avatar =====
+    document.getElementById('removeAvatarBtn').addEventListener('click', async () => {
+      if (!confirm('Remove your shop profile picture?')) return;
+
+      try {
+        const res = await fetch('/api/shops?action=update', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ image_url: null })
+        });
+
+        if (res.ok) {
+          loadProfile();
+          showSuccess('Avatar removed.');
+        } else {
+          showError('Failed to remove avatar.');
+        }
+      } catch (err) {
+        showError('Error: ' + err.message);
+      }
+    });
+
+    // ===== Save profile =====
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const shopName = document.getElementById('shopName').value.trim();
+      const proprietorName = document.getElementById('proprietorName').value.trim();
+      const phone = document.getElementById('shopPhone').value.trim();
+      const address = document.getElementById('shopAddress').value.trim();
+
+      if (!shopName || !proprietorName || !phone || !address) {
+        showError('All fields are required.');
+        return;
+      }
+
+      const saveBtn = document.getElementById('saveBtn');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+
+      try {
+        const res = await fetch('/api/shops?action=update', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ shop_name: shopName, proprietor_name: proprietorName, phone, address })
+        });
+
+        if (res.ok) {
+          showSuccess('Profile updated successfully!');
+        } else {
+          const data = await res.json();
+          showError(data.error || 'Failed to update profile.');
+        }
+      } catch (err) {
+        showError('Connection error. Please try again.');
+      }
+
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Save Changes';
+    });
+
+    // ===== Helpers =====
+    function showError(msg) {
+      const el = document.getElementById('formError');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+
+    function showSuccess(msg) {
+      const el = document.getElementById('formSuccess');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+
+    // ===== Init =====
+    loadProfile();
+  </script>
+</body>
+</html>
